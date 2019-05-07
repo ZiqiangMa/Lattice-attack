@@ -111,7 +111,7 @@ Then explain the figure.
 We totally run 10 experiments, i.e. monitoring the ECDSA signature 10 times.
 The accurate rate is defined as the value of the actual number of bits obtained divided by the ideal number of bits available.
 Thus, from these experiments the average accurate rate of the data obtained from the Flush + Flush attack is xx\%.
- 
+
 
 
 %对这个示例进行解释：
@@ -150,7 +150,7 @@ When applying pre-processing of BKZ-2.0 we limit to only one round of execution.
 Then we apply an enumeration technique to search the closest vector.
 We restrict the number of nodes in the enumeration tree to $2^{29}$,
    so as to ensure the enumeration did not go on for an excessive amount of time in the cases where the solution vector is hard to find (this mainly affected the experiments in dimension greater than 150).
-   
+
 We want to find the optimal strategy for our attack in terms of the following parameters:
 \begin{itemize}
  \item  SVP or CVP
@@ -169,20 +169,20 @@ The block size in BKZ is ranged from $10$ to $40$ by step being $10$.
 The number of consecutive bits for constructing the lattice denoted as $d$ is ranged from $50$ to $230$,
 i.e. the dimension of the lattice for the SVP or CVP is $d + 1$ or $d + 2$.
 
-Table \ref{svp9} shows the probability of success for different dimensions and block sizes of solving the SVP instance in the 
+Table \ref{svp9} shows the probability of success for different dimensions and block sizes of solving the SVP instance in the
              case that the length of the consecutive bits is larger than 9 and no pruning strategy is used.
 As shown from the table, only need $60$ fragments of consecutive bits we successfully retrieve the private key of a 256-bit ECDSA.
   For fixed  minimal length of consecutive bits,
  increasing the dimension generally increases the probability of success.
-In some sense, as the dimension increases 
+In some sense, as the dimension increases
      more information is being added to the lattice and this makes the desired solution vector stand out more.
 Also, the higher block sizes perform with a higher probability of success,
  as the stronger reduction allows them to isolate the solution vector better.
- 
+
 Table \ref{svp8} and Table \ref{svp10} show the probability of success in the case that the length of the consecutive bits is larger than 8 and 10, respectively.
 The probability of success also increases as the the dimension or the block size increase.
 Moreover, while the minimal length of consecutive bits increases, the probability of success becomes higher.
-It is because that more information is being added to the lattice making it easier to search for the desired solution vector. 
+It is because that more information is being added to the lattice making it easier to search for the desired solution vector.
 
 \begin{table}[b]
   \centering
@@ -268,10 +268,10 @@ It is because that more information is being added to the lattice making it easi
 %\end{table}
 
 Table \ref{svp8, svp9, svp10} show the probability of success when solving the CVP instance.
-As shown from the table, 
+As shown from the table,
   the number of fragments of consecutive bits that we need to retrieve the private key of a 256-bit ECDSA is only $60$, less than the result of the SVP instance with the low block size.
  The probability of success also increases as the the dimension or the block size increase.
-Moreover, while the minimal length of consecutive bits increases, the probability of success becomes higher. 
+Moreover, while the minimal length of consecutive bits increases, the probability of success becomes higher.
 %再加一段或几句CVP结果和SVP结果进行比较。
 
 
@@ -310,7 +310,7 @@ Moreover, while the minimal length of consecutive bits increases, the probabilit
 \subsection{Comparison with Other Attack Methods}
 \label{compare}
 
- Generally,  to attack the ECDSA implementation with the wNAF representation, 
+ Generally,  to attack the ECDSA implementation with the wNAF representation,
    the attackers target the implementation of scalar multiplication
       and use cache side channel attacks to achieve the information about the ephemeral key $k$.
 Through side channels attackers can get a "double-and-add" chain for the scalar multiplication.
@@ -357,11 +357,11 @@ Wang et al. \cite{Wang2017} obtain the positions of two non-zero digits and the 
 They can obtain no less than 2.99 bits information per signature and exploit the HNP to recover the private key for the 256-bit curve using $85$ signatures.
 Obviously, our method obtains more information and uses less signatures to recover the private key.
 
-In summary, our method obtain the sign and the position of the ephemeral key $k$ from the Flush + Flush attack. 
+In summary, our method obtain the sign and the position of the ephemeral key $k$ from the Flush + Flush attack.
 It can extract the largest amount of data, on average $154.2$ bits information per signature.
 In theory, the number of signatures need to retrieve the private is $2$.
   However, due to the limit of our method of lattice construction, we need at least $60$ signatures, which is more than Fan's and van's.
-   
+
 
 %2017年，范团队还在science China information sciences 上发了一篇，使用HNP的文章，
 %这是一个b类的期刊。(交叉综合新兴)
