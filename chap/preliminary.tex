@@ -1,0 +1,356 @@
+\section{Preliminaries}
+\label{sec:background}
+In this section, we present the relevant background knowledge about the attack.
+First we describe the ECDSA and its implementation using the wNAF representation in OpenSSL.
+Then we explain the attack method of the cache side channels.
+Also, the hidden number problem and its corresponding lattice attack are introduced
+ for processing the data obtained from cache side channels.
+
+\subsection{The Elliptic Curve Digital Signature Algorithm}
+\label{intro_ecdsa}
+The Elliptic Curve Digital Signature Algorithm (ECDSA) \cite{Johnson2001, ansi2005} is the adaption of one step of the Digital Signature Algorithm (DSA) \cite{DSS186} from the multiplicative group of a finite field to the group of points on an elliptic curve.
+
+Let $E$ be an elliptic curve defined over a finite field $\mathbb{F}_{p}$ where $p$ is prime.
+$G \in E$ is a fixed point of a large prime order $q$, that is $G$ is the generator of the group of points of order $q$.
+These curve and point parameters are publicly known.
+The private key of ECDSA is an integer $\alpha$ that satisfies $0 < \alpha < q$,
+ and the public key is the point $Q = \alpha G$.
+Given a hash function $h$, the ECDSA signature of a message $m$ is computed as follows:
+\begin{enumerate}
+  \item
+    Select a random ephemeral key $0 < k < q$.
+  \item
+    Compute the point $(x, y) = kG$, and let $r = x$ mod $q$;
+    if $r = 0$, then return to the first step.
+  \item
+    Compute $s = k^{-1} (h(m) + r\cdot\alpha)$ mod $q$;
+    if $s = 0$, then return to the first step.
+\end{enumerate}
+
+The pair $(r, s)$ is the ECDSA signature of the message $m$.
+For ECDSA signature, the ephemeral key $k$ is very important that must be kept random and confidential.
+The equation in the third step shows the private key can be easily computed if $k$ is leaked.
+If some signatures use the same $k$, or the random number generator in use has the predictability, attackers can obtain the private key without difficulty.
+Even if portion of $k$ is known, the private key can be retrieved by lattice attacks.
+Therefore, the target of most attackers is the scalar multiplication $kG$ expecting to get some effective bits information about $k$.
+
+%Given the knowledge of the ephemeral key k and all the
+%known information of (s, r,m), the secret key can be easily
+%recovered by
+%α = r−1(s · k − H(m)) mod q .
+
+
+\subsection{The Scalar Multiplication Using wNAF Representation}
+\label{intro_wnaf}
+%wnaf 是什么
+%K 是有限域， P 是定义在域 K上的椭圆曲线 E(K)上的点，k是一个大整数,根据椭圆曲线上点的加法公式将点P与自身相加 k次, k 称为标量， kP称为椭圆曲线点乘，或标量乘法
+$G$ is a point defined on the elliptic curve over the finite field,
+ and the scalar $k$ is a big integer.
+Scalar multiplication $kG$ on the elliptic curve means that the point $G$ is added to itself $k$ times.
+There are several algorithms to implement the scalar multiplication.
+In OpenSSL, scalar multiplication in the prime field is implemented using the windowed Non-adjacent Form (wNAF) representation \cite{GORDON1998129,Miyaji1997,Koyama1002,Solinas2000} of the scalar $k$.
+In wNAF, a number $k$ is represented by a sequence of digits which value is either zero or an odd number satisfied $-2^{w} < k_{i} < 2^{w}$,
+ where $w$ is the window size. In this representation, any continuous non-zero digit interval is at least $w$ zero digits.
+The value of $k$ can be expressed as $k = \sum{2^{i}\cdot k_{i}}$.
+Algorithm \ref{alg:wnaf} introduces the concrete method for converting a scalar into its wNAF representation.
+
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+ \begin{algorithm}[t]
+        \caption{Conversion to wNAF Representation}
+        \label{alg:wnaf}
+        \begin{algorithmic}[1]
+            \Require Scalar $k$, window size $w$
+            \Ensure $k$ in wNAF: $k_0$, $k_1$, $k_2$, ...
+
+            \State $i \gets 0$
+            \While{$k > 0$}
+                \If {$k$ mod $2 = 1$}
+                    \State $k_i \gets k$ mod $2^{w+1}$
+                    \If {$k_{i} \geq 2^{w} $}
+                        \State $k_{i} \gets k_{i} - 2^{w+1}$
+                    \EndIf
+                    \State $k \gets k - k_{i}$
+                \Else
+                    \State $k_{i} \gets 0 $
+                \EndIf
+                \State $k \gets k/2 $
+                \State $i \gets i+1 $
+            \EndWhile
+        \end{algorithmic}
+    \end{algorithm}
+
+%二进制转化成naf
+%转化后如何计算标量乘法
+When computing the scalar multiplication $kG$,
+first, a window size $w$ is chosen.
+Then precomputation and storage of the points $\{\pm G, \pm 3G, ..., \pm(2^{w - 1})G\}$ are executed.
+After converting $k$ to the wNAF form, the multiplication $kG$ is executed as the Algorithm \ref{alg:kg} describes.
+
+
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+ \begin{algorithm}[b]
+        \caption{Implementation of $kG$ Using wNAF}
+        \label{alg:kg}
+        \begin{algorithmic}[1]
+            \Require Scalar $k$ in wNAF: $k_0$, $k_1$, .., $k_{l-1}$ and precomputed points $\{\pm G, \pm 3G, ..., \pm(2^{w - 1})G\}$
+            \Ensure $kG$
+
+            \State $Q \gets G$
+            \For{$i$ from $l-1$ to $0$}
+                \State $Q \gets 2\cdot Q$
+                \If {$k_i \neq 0$}
+                    \State $Q \gets Q + k_{i}G$
+                \EndIf
+            \EndFor
+        \end{algorithmic}
+    \end{algorithm}
+
+From the algorithm we can find that the \textbf{if-then} block is vulnerable.
+An attacker can use a spy process to monitor the conditional branches through side channels.
+Then he can get an "double-and-add" chain, and through it whether the value of $k_i$ is zero can be inferred.
+The attacker can use these information to retrieve the private key.
+
+In the actual OpenSSL execution, the bit length of $k$ is set to a fixed value$\lfloor\log_{2}{q}\rfloor + 1$ of by adding itself $q$
+or $2q$, which can resist the Brumley and Tuveri remote timing attack \cite{Brumley2011}.
+In most cases, the multiplication is done as $(k + q)G$.
+Also OpenSSL uses the modified wNAF representation instead of the generalized one as stated in Algorithm\ref{alg:wnaf} to avoid length expansion in some cases and to make exponentiation more efficient.
+The representation of modified wNAF is very similar to the wNAF.
+Each non-zero coefficient is followed by at least $w$ zero coefficients,
+ except for the most significant digit which is allowed to violate this condition in some cases.
+As the use of modified wNAF affects the attack results little,
+ we only consider the case of the wNAF for simplification. %最后一段需要修改，且这一节需要和多篇文章对比完善, 还有需要在合适的位置加上我们使用256的曲线，window大小为3
+
+
+%对其进行一些分析，有条件判断 可以通过侧信道获取信息。
+%
+%实际中的使用k+q
+\subsection{The Scalar Multiplication in OpenSSL}
+\label{intro_smulinssl}
+In OpenSSL1.1.0h \cite{openssl}, the scalar multiplication with wNAF representation is implemented in the function \verb+ec_wNAF_mul()+.
+The core computing part of the function is shown in Algorithm  \ref{alg:smopenssl}.
+
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+\begin{algorithm}[t]
+        \caption{The Implementation of The Scalar Multiplication in OpenSSL}
+        \label{alg:smopenssl}
+        \begin{algorithmic}[1]
+            \Require Scalar $k$ in wNAF: $k_0$, $k_1$, .., $k_{l-1}$ and precomputed points $\{G, 3G, ..., (2^{w} - 1)G\}$
+            \Ensure $kG$
+			
+			\State $r \gets 0$, $is\_neg \gets 0$, $r\_is\_inverted \gets 0$
+            \For{$i$ from $l-1$ to $0$}
+            	\If {$r \neq 0$}
+            		\State \Call{$EC\_POINT\_dbl$}{$r$}     {   }  $//$ $double$
+                \EndIf
+                \If {$k_i \neq 0$}
+                	\State $is\_neg \gets (k_i < 0)$
+                	\If {$is\_neg$}
+                		\State $k_i \gets -k_i$
+                	\EndIf
+                	\If {$is\_neg \neq r\_is\_inverted$}
+                		\If {$r \neq 0$}
+                			\State \Call{$EC\_POINT\_invert$}{$r$}   {   }  $//$ $invert$
+                		\EndIf                	
+                    	\State $r\_is\_inverted \gets !r\_is\_inverted$
+                	\EndIf
+                	\If {$r = 0$}
+                		\State $r \gets $ \Call{$EC\_POINT\_copy$}{$k_{i}G$}
+                	\Else
+                		\State $r \gets $ \Call{$EC\_POINT\_add$}{$r, k_{i}G$} {   }  $//$   $add$
+                	\EndIf
+                \EndIf
+            \EndFor
+            \State \Return r
+        \end{algorithmic}
+\end{algorithm}
+
+In this function, it iterates the $k$ from the most significant digit to the least significant digit in its wNAF representation.
+ In each digit, it performs a double operation (the \verb+EC_POINT_dbl()+ function).
+  If the digit is not zero, it runs into the if-then block in line 6, and it  performs an addition operation (the \verb+EC_POINT_add()+ function).
+Also, the \verb+EC_POINT_invert()+ is only called under certain circumstances (line 13).
+If the sign of the non-zero digit $k_i$ is opposite to the previous  non-zero digit, the invert operation (\verb+EC_POINT_invert()+) is performed.
+This makes it only need the precomputation and storage of the points $\{G, 3G, ..., (2^{w - 1})G\}$.
+
+From Algorithm \ref{alg:smopenssl}, it is obviously that the two conditional branches are vulnerable.
+In each loop, the double operation is always performed.
+But the add operation is only performed if the digit is not zero and the invert operation is only performed if the sign of the digit is opposite to previous one.
+Therefore, if a spy process can obtain the execution sequence of
+  the double and addition operations while this function is running,
+one can determine whether each digit of $k$ is zero or not according to this sequence.
+Also,  the execution sequence of the invert operation can be used to determine the sign of the non-zero digits combining the former sequence.
+
+
+
+\subsection{Cache Side Channel Attacks}
+\label{intro_cacheattack}
+Cache side-channel attacks take advantage of the characteristic of cache activity
+ that accessing data from caches is much faster than from memory.
+Attackers exploit these time variations to deduce the operations of the target process and then infer the key information.
+
+Cache side-channel attacks are roughly divided into three categories: trace-driven, time-driven and access-driven attacks.
+The trace-driven attackers probe the variation of electromagnetic fields or power, to capture the profile of cache activities and deduce cache hits and misses \cite{ac2006}.
+In time-driven attacks \cite{Bonneau2006, Bernstein2005Cache}, the adversary passively measures the execution time to disclose the secret keys.
+In these two categories of attacks, the cache states are changed by the victim cryptographic engine (and the system activities),
+ while an access-driven attacker \cite{Osvik2006, cachegame2011, flushreload} actively manipulates the cache states by running a malicious process that shares caches with the victim.
+
+In recent years, access-driven attacks have been favored by researchers,
+ because it has higher attack accuracy which means it has the ability to accurately obtain the cache access of the target process.
+Also it has a wider application scenarios, such as the attacks in the virtualization environments and cloud environments.
+Next, we introduce two typical access-driven attacks called Flush + Reload \cite{flushreload} and Flush + Flush \cite{gruss2016flush} that are relevant to our work.
+%在近些年的研究中，访问驱动的攻击受到研究者们的青睐，因为其具有更高的攻击精度，能够很准确的获取到目标进程对cache的访问情况，以及更广的使用场景，例如对虚拟化云环境进行攻击。接下来，我们对两种典型的访问驱动攻击进行介绍，这两种攻击和本文相关。
+
+The Flush + Reload attack \cite{flushreload} employs a spy process to monitor if the specific memory lines have been accessed or not by the victim process.
+So this attack relies on sharing pages between the spy and the victim processes.
+For attacks in the same machine, the spy can map the victim program file, the victim data file or shared libraries to its own address space to shared these pages with the victim.
+While in the virtualizition environments, the page de-duplication technique of the VMM ensures the page sharing between the spy and the victim.
+%监控LLC，需要写一下
+
+One round of the attack consists of three phases:
+\begin{itemize}
+  \item
+    \textbf{Flush:}
+    In this phase, the attacker uses the \verb+clflush+ instruction to flush the desired memory lines out from the caches.
+    This ensures that the next time these lines are accessed from the memory instead of the caches.
+  \item
+    \textbf{Waiting:}
+    In this phase, the attacker waits a moment while the victim runs.
+  \item
+    \textbf{Reload:}
+    This phase detects whether the victim accesses the memory lines flushed in the first phase during the waiting time.
+    The attacker accesses the desired memory lines to reload them into caches, and measures the time it takes.
+    Depending on the reloading time, the attacker can determine whether the memory lines are accessed by the victim.
+    If the time is longer, it means that the attacker reloads the memory lines from the memory.
+    That is the victim does not access these memory lines during the waiting time.
+    Otherwise it means that these memory lines are already in the caches.
+    So these memory lines are accessed by the victim during the waiting time.%需要精简
+\end{itemize}
+
+The Flush + Flush attack \cite{gruss2016flush} also needs the shared pages.
+Unlike measuring the reload time directly affected by the cache access,
+ this attack relies on the execution time of the \verb+clflush+ instruction,
+  which is affected by whether the data is cached or not.
+The execution time of the \verb+clflush+ instruction is shorter if the data is not cached
+ and higher if the data is cached.
+So depending on this time, the attackers can determine the victim's cache activities.
+
+The Flush + Flush attack also has three phases.
+The first two phases are the same as in the Flush + Reload attack.
+But in the third phase it flushes the cache again and measures the flush time instead of the reload time.
+As the third phase flushes the caches, it doubles as the first phase for subsequent observations.
+
+%再一段F+F 和 F+R进行对比：更加高效，精度更高，F阶段可以当成是下一循环的F，
+The execution time of the \verb+clflush+ instruction is less than the reload time on average.
+    Also the first and third phases are merged together in Flush + Flush attack.
+  Therefore the Flush + Flush attack is faster and can obtain more information than the Flush + Reload attack over the same time scale.
+Thus, the Flush + Flush attack has a better accuracy.
+Furthermore, compared with the Flush + Reload attack,
+The Flush + Flush attack does not trigger prefetches when monitoring consecutive memory lines, otherwise it may affect the validity of the attack.
+
+
+%这一节要和多篇文章进行对比改进，f+r攻击需要精简。
+%f+r的算法伪代码考虑需不需要添加。
+
+
+\subsection{The Hidden Number Problem}
+\label{intro_hnp}
+The Hidden Number Problem (HNP) is first presented by Boneh and Venkatesan \cite{boneh1996} in 1996.
+It is used to recover the secret key of Diffie-Hellman algorithm, DSA and ECDSA, given some leaked consecutive bits of the ephemeral key.
+
+Given a prime number $q$ and a positive $l$,
+ and let $t_1, t_2, ..., t_d$ be randomly chosen, which are uniformly and independently in $\mathbb{F}_q$.
+The HNP can be stated as follows:
+  recover an unknown number $\alpha \in \mathbb{F}_q$ such that the known number pairs $(t_i, u_i)$ satisfy $v_i = |\alpha t_i - u_i|_{q} \leq q/2^{l+1}$ for $1 \leq i \leq d$,
+   where $|\cdot|_q$ denotes the reduction modulo $q$ into range $[-q/2, ..., q/2)$.
+If $|\alpha t - u|_{q} \leq q/2^{l+1}$ is satisfied,
+the integer $u$ represents the $l$ most significant bits of $\alpha t$ which is defined as ${MSB}_l(\alpha t)$.
+
+%这一段说，用cache攻击可以获得信息，然后将其转化成hnp问题来求解。
+The HNP problem can be solved by the lattice basis reduction algorithm.
+For the ECDSA algorithm implemented by OpenSSL with the wNAF,
+  the attackers can obtain the double-and-add chain through the cache side channels,
+    and then extract some consecutive bit fragments of the ephemeral key $k$.
+Consequentially, the attackers transform the problem of recovering the secret key to the HNP problem.
+ By solving the HNP problem the attackers can recover the secret key.
+
+\subsection{Lattice}
+\label{intro_lattice}
+To solve the HNP problem, we need to use the knowledge of the lattice.
+Here we provide a briefly introduce to the lattice.
+For more detailed references on lattice we refer to the literature \cite{latticereduction2000}.
+Consider the Euclidean space $\mathbb{R}^{d}$
+ and let $B = \{b_1, b_2, ..., b_r\}$ be a set of linearly independent vectors in $\mathbb{R}^d$.
+The set of vectors
+$$
+L = L(B) = \{\sum_{i=1}^{r}{n_ib_i} \  |\ n_i \in \mathbb{Z} \}
+$$
+is the \textbf{lattice} generated by $B$.
+The set $B$ is called a basis of $L$, and $L$ is spanned by $B$.
+The number $r$ representing the number of vectors in $B$ is the dimension or rank of $L(B)$.
+If $r = d$, the lattice $L(B)$ is a full-dimension lattice.
+
+\noindent\textbf{Hard Lattice Problems} Since the lattice is a set of vectors,
+ it has a shortest non-zero vector, and the norm this vector is known as the first minima and denoted by $\lambda_1(L)$.
+That is, $\lambda_1(L) = \min\{\|u\| \ |\  0 \neq u \in L\}$, where $\|u\|$ denotes the Euclidean norm of the vector $u$.
+The problem of finding a non-zero vector $v \in L$ with minimal norm is called the shortest vector problem (SVP).
+ While for a lattice $L$ and an arbitrary vector $v \in \mathbb{R}^d$,
+ the problem of finding a lattice vector $u \in L$ of minimum distance from $v$ is called the closest vector problem (CVP) similarly.
+  In other words, finding a vector $u$ satisfied $\|u\| = \min\{\|u - v\| \ |\   u \in L\}$.
+
+Exploiting lattices to solve the HNP problem, we construct a $d+1$ dimensional lattice $L(B)$ spanned by the rows of the following matrix:
+$$B =
+\left(
+  \begin{array}{ccccc}
+    q & 0 & \cdots & 0 & 0 \\
+    0 & q & \ddots & \vdots & \vdots \\
+    \vdots & \ddots & \ddots & 0 & \vdots \\
+    0 & \cdots & 0 & q & 0 \\
+    t_1 & \cdots & \cdots & t_d & 1/2^{l+1} \\
+  \end{array}
+\right).
+$$
+Considering the vector $h = (\alpha t_1 \bmod q, ..., \alpha t_d \bmod q, \alpha /2^{l+1})$,
+ it can be obtained by multiplying the last row vector of $B$ by $\alpha$ and then subtracting appropriate multiples of the first $d$ row vectors.
+Thus the vector $h$ belongs to $L(B)$.
+We call $h$ the hidden vector because the last coordinate of $h$ discloses the hidden number $\alpha$.
+Let the vector $u = (u_1, ..., u_d, 0)$,
+ so the distance between $h$ and $u$ is $\|h - u\| \leq q\sqrt{d+1}/2^{l+1}$.
+While the lattice determinant of $L(B)$ is $q^d/2^{l+1}$,
+ thus the vector $h$ is very close to the vector $u$.
+Solving the CVP problem with imput $B$ and $u$ reveals the vector $h$,
+ hence the private key $\alpha$ is retrieved.
+
+Because solving the CVP instance requires exponential time in the lattice rank,
+ we can use the embedding technique \cite{Nguyen1999} to transform it to a SVP instance which just requires the polynomial time to solve.
+We construct a $d+2$ dimensional lattice $L(B')$ spanned by the rows of the matrix
+$$
+\left(
+  \begin{array}{cc}
+    B & 0 \\
+    u & q/2^{l+1} \\
+  \end{array}
+\right).
+$$
+Similarly, the vector $h' = (\alpha t_1 - u_1 \bmod q, ..., \alpha t_d - u_d \bmod q, \alpha /2^{l+1}, -q/2^{l+1})$ belongs to the lattice $L(B')$.
+ Its norm satisfies that $\|h'\| \leq q\sqrt{d+2}/2^{l+1}$,
+  while the lattice determinant of $L(B')$ is $q^{d+1}/2^{2l+2}$.
+   This indicates that the vector $h'$ is a very short vector.
+Note that this lattice also contains other vector $(-t_1, ..., -t_d, q, 0)\cdot B = (0, ..., 0, q/2^{l+1}, 0)$,
+ which is most likely the shortest vector of the lattice.
+So we expect the second vector in a reduced basis of the lattice is equal to $h'$ with a "good" chance for a suitably strong lattice reduction algorithm.
+Then we can acquire the secret key $\alpha$.
+
+we can use LLL \cite{Lenstra1982} or BKZ \cite{Schnorr1994} algorithm to solve the SVP problem, while use Babai \cite{Babai1986} algorithm or Enumeration technique to solve the CVP problem.
+
+%1 什么是格
+
+%2 什么是格困难问题
+
+%3 HNP问题如何用格来求解
+
+

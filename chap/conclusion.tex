@@ -1,0 +1,18 @@
+\section{conclusion}
+\label{sec:conclusion}
+In this paper, we demonstrate a practical attack on the ECDSA algorithm implemented by OpenSSL with the scalar multiplication using the wNAF representation.
+We improve the original cache side channel attack by adding an extra monitor to the invert function and get the extra information about the sign of the non-zero digits of the ephemeral key.
+Then we exploit a new method to get the consecutive bits of the ephemeral key at the position of the non-zero digits through the "double-add-invert" chain obtained by the cache side channel attack.
+From the side channel, we obtain $154.2$ bits of information per signature for the secp256k1 curve.
+We construct a lattice attack using the HNP problem to recover the ECDSA private key.
+We implement our method to attack the secp256k1 curve.
+The experiments shows that we successfully recover the private key only using $60$ signatures.
+
+
+
+
+%这篇文章干了一件什么事情
+%怎么干的这件事
+%得到了怎样的结果
+
+

@@ -1,0 +1,1377 @@
+@Article{Johnson2001,
+author="Johnson, Don
+and Menezes, Alfred
+and Vanstone, Scott",
+title="The Elliptic Curve Digital Signature Algorithm (ECDSA)",
+journal="International Journal of Information Security",
+year="2001",
+month="Aug",
+day="01",
+volume="1",
+number="1",
+pages="36--63",
+abstract="The Elliptic Curve Digital Signature Algorithm (ECDSA) is the elliptic curve analogue of the Digital Signature Algorithm (DSA). It was accepted in 1999 as an ANSI standard and in 2000 as IEEE and NIST standards. It was also accepted in 1998 as an ISO standard and is under consideration for inclusion in some other ISO standards. Unlike the ordinary discrete logarithm problem and the integer factorization problem, no subexponential-time algorithm is known for the elliptic curve discrete logarithm problem. For this reason, the strength-per-key-bit is substantially greater in an algorithm that uses elliptic curves. This paper describes the ANSI X9.62 ECDSA, and discusses related security, implementation, and interoperability issues.",
+issn="1615-5262",
+doi="10.1007/s102070100002",
+url="https://doi.org/10.1007/s102070100002"
+}
+
+@MANUAL{DSS186,
+  title =        {{FIPS} PUB 186-4 Digital Signature Standard (DSS)},
+  author =       "{National Institute of Standards and Technology}",
+  note =         {},
+  month =        {July 19},
+  year =         {2013},
+}
+
+@MANUAL{ansi2005,
+  title =        {ANSI X9.62-2005, Public Key Cryptography for the Financial Services Industry : The Elliptic Curve Digital Signature Algorithm (ECDSA)},
+  author =       "{{American} {National} {Standards} Institute}",
+  year =         {2005},
+}
+
+@MANUAL{rfc5246,
+  title =        { The Transport Layer Security (TLS) Protocol Version 1.2 (RFC 5246)},
+  author =       "{T. Dierks and E. Rescorla}",
+  year =         {2008},
+}
+
+@MANUAL{openpgp2007,
+  title =        {OpenPGP Message Format (RFC 4880)},
+  author =       "{J. Callas, L. Donnerhacke, H. Finney, D. Shaw and R. Thayer}",
+  year =         {2007},
+}
+
+@article{smartcard2007,
+author = {Rankl, W},
+year = {2007},
+month = {01},
+title = {Smart Card Applications: Design Models for Using and Programming Smart Cards},
+doi = {10.1002/9780470511954}
+}
+
+@InProceedings{bitcoin2008,
+author="Satoshi Nakamoto",
+title="Bitcoin: a peer-to-peer electronic cash system",
+year="2008",
+url="https://bitcoin.org/bitcoin.pdf"
+}
+
+@InProceedings{Nguyen2001,
+author="Nguyen, Phong Q.",
+title="The Dark Side of the Hidden Number Problem: Lattice Attacks on DSA",
+booktitle="Cryptography and Computational Number Theory",
+year="2001",
+publisher="Birkh{\"a}user Basel",
+address="Basel",
+pages="321--330",
+abstract="At Crypto `86, Boneh and Venkatesan introduced the so-called hidden number problem: in a prime field ℤ q, recover a number $\alpha$ such that for many known random t, the most significant bits of t$\alpha$ are known. They showed that Babai's LLL-based polynomial-time nearest plane algorithm for approximating the lattice closest vector problem solves the problem with probability at least {\$}{\$}{\backslash}frac{\{}1{\}}{\{}2{\}}{\$}{\$}, provided that the number of bits known (for each t$\alpha$) is greater than {\$}{\$}{\backslash}sqrt {\{}{\backslash}log q{\}}  + {\backslash}log {\backslash}log q{\$}{\$}. That result is often cited as the only positive application known in cryptology of the LLL algorithm, because it enables to prove the hardness of the most significant bits of secret keys in Diffie-Hellman and related schemes. The purpose of this short and elementary note is to highlight the fact that the result also has a dark side. Indeed, we remark that the hidden number problem is an idealized version of the problem which HowgraveGraham and Smart recently tried to solve heuristically in their (lattice-based) attacks on DSA and related signature schemes: given a few bits of the random nonces k used in sufficiently many DSA signatures, recover the secret key. This suggests to determine what can be achieved in practice, rather than in theory. Since lattice reduction algorithms are known to behave much more nicely than their proved worst-case bounds, we give the number of bits that enables the Boneh-Venkatesan technique to succeed, provided an oracle for the lattice closest vector problem in the Euclidean norm or the infinity norm. An analogous assumption is used in the well-known lattice-based attacks against low-density subset sums. Interestingly, our experiments support our theoretical bounds and improve the experimental bounds of Howgrave-Graham and Smart.",
+isbn="978-3-0348-8295-8"
+}
+
+@Article{Schnorr1994,
+author="Schnorr, C. P.
+and Euchner, M.",
+title="Lattice basis reduction: Improved practical algorithms and solving subset sum problems",
+journal="Mathematical Programming",
+year="1994",
+month="Aug",
+day="01",
+volume="66",
+number="1",
+pages="181--199",
+abstract="We report on improved practical algorithms for lattice basis reduction. We propose a practical floating point version of theL3-algorithm of Lenstra, Lenstra, Lov{\'a}sz (1982). We present a variant of theL3-algorithm with ``deep insertions'' and a practical algorithm for block Korkin---Zolotarev reduction, a concept introduced by Schnorr (1987). Empirical tests show that the strongest of these algorithms solves almost all subset sum problems with up to 66 random weights of arbitrary bit length within at most a few hours on a UNISYS 6000/70 or within a couple of minutes on a SPARC1 + computer.",
+issn="1436-4646",
+doi="10.1007/BF01581144",
+url="https://doi.org/10.1007/BF01581144"
+}
+
+@Article{HG2001,
+author="Howgrave-Graham, N. A.
+and Smart, N. P.",
+title="Lattice Attacks on Digital Signature Schemes",
+journal="Designs, Codes and Cryptography",
+year="2001",
+month="Aug",
+day="01",
+volume="23",
+number="3",
+pages="283--290",
+abstract="We describe a lattice attack on the Digital Signature Algorithm (DSA) when used to sign many messages, mi, under the assumption that a proportion of the bits of each of the associated ephemeral keys, yi, can be recovered by alternative techniques.",
+issn="1573-7586",
+doi="10.1023/A:1011214926272",
+url="https://doi.org/10.1023/A:1011214926272"
+}
+
+@InProceedings{Brumley2009,
+author="Brumley, Billy Bob
+and Hakala, Risto M.",
+editor="Matsui, Mitsuru",
+title="Cache-Timing Template Attacks",
+booktitle="Advances in Cryptology -- ASIACRYPT 2009",
+year="2009",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="667--684",
+abstract="Cache-timing attacks are a serious threat to security-critical software. We show that the combination of vector quantization and hidden Markov model cryptanalysis is a powerful tool for automated analysis of cache-timing data; it can be used to recover critical algorithm state such as key material. We demonstrate its effectiveness by running an attack on the elliptic curve portion of OpenSSL (0.9.8k and under). This involves automated lattice attacks leading to key recovery within hours. We carry out the attack on live cache-timing data without simulating the side channel, showing these attacks are practical and realistic.",
+isbn="978-3-642-10366-7"
+}
+
+@Article{Nguyen2003,
+author="Nguyen, Phong Q.
+and Shparlinski, Igor E.",
+title="The Insecurity of the Elliptic Curve Digital Signature Algorithm with Partially Known Nonces",
+journal="Designs, Codes and Cryptography",
+year="2003",
+month="Sep",
+day="01",
+volume="30",
+number="2",
+pages="201--217",
+abstract="Nguyen and Shparlinski have recently presented a polynomial-time algorithm that provably recovers the signer's secret DSA key when a few consecutive bits of the random nonces k (used at each signature generation) are known for a number of DSA signatures at most linear in log q (q denoting as usual the small prime of DSA), under a reasonable assumption on the hash function used in DSA. The number of required bits is about log1/2q, but can be decreased to log log q with a running time qO(1/log log q) subexponential in log q, and even further to two in polynomial time if one assumes access to ideal lattice basis reduction, namely an oracle for the lattice closest vector problem for the infinity norm. All previously known results were only heuristic, including those of Howgrave-Graham and Smart who introduced the topic. Here, we obtain similar results for the elliptic curve variant of DSA (ECDSA).",
+issn="1573-7586",
+doi="10.1023/A:1025436905711",
+url="https://doi.org/10.1023/A:1025436905711"
+}
+
+@InProceedings{Brumley2011,
+author="Brumley, Billy Bob
+and Tuveri, Nicola",
+editor="Atluri, Vijay
+and Diaz, Claudia",
+title="Remote Timing Attacks Are Still Practical",
+booktitle="Computer Security -- ESORICS 2011",
+year="2011",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="355--371",
+abstract="For over two decades, timing attacks have been an active area of research within applied cryptography. These attacks exploit cryptosystem or protocol implementations that do not run in constant time. When implementing an elliptic curve cryptosystem with a goal to provide side-channel resistance, the scalar multiplication routine is a critical component. In such instances, one attractive method often suggested in the literature is Montgomery's ladder that performs a fixed sequence of curve and field operations. This paper describes a timing attack vulnerability in OpenSSL's ladder implementation for curves over binary fields. We use this vulnerability to steal the private key of a TLS server where the server authenticates with ECDSA signatures. Using the timing of the exchanged messages, the messages themselves, and the signatures, we mount a lattice attack that recovers the private key. Finally, we describe and implement an effective countermeasure.",
+isbn="978-3-642-23822-2"
+}
+
+@InProceedings{Brumley2010,
+author="Ac{\i}i{\c{c}}mez, Onur
+and Brumley, Billy Bob
+and Grabher, Philipp",
+editor="Mangard, Stefan
+and Standaert, Fran{\c{c}}ois-Xavier",
+title="New Results on Instruction Cache Attacks",
+booktitle="Cryptographic Hardware and Embedded Systems, CHES 2010",
+year="2010",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="110--124",
+abstract="We improve instruction cache data analysis techniques with a framework based on vector quantization and hidden Markov models. As a result, we are capable of carrying out efficient automated attacks using live I-cache timing data. Using this analysis technique, we run an I-cache attack on OpenSSL's DSA implementation and recover keys using lattice methods. Previous I-cache attacks were proof-of-concept: we present results of an actual attack in a real-world setting, proving these attacks to be realistic. We also present general software countermeasures, along with their performance impact, that are not algorithm specific and can be employed at the kernel and/or compiler level.",
+isbn="978-3-642-15031-9"
+}
+
+@inproceedings{Allan2016,
+ author = {Allan, Thomas and Brumley, Billy Bob and Falkner, Katrina and van de Pol, Joop and Yarom, Yuval},
+ title = {Amplifying Side Channels Through Performance Degradation},
+ booktitle = {Proceedings of the 32Nd Annual Conference on Computer Security Applications},
+ series = {ACSAC '16},
+ year = {2016},
+ isbn = {978-1-4503-4771-6},
+ location = {Los Angeles, California, USA},
+ pages = {422--435},
+ numpages = {14},
+ url = {http://doi.acm.org/10.1145/2991079.2991084},
+ doi = {10.1145/2991079.2991084},
+ acmid = {2991084},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+}
+
+@inproceedings{Genkin2016,
+ author = {Genkin, Daniel and Pachmanov, Lev and Pipman, Itamar and Tromer, Eran and Yarom, Yuval},
+ title = {ECDSA Key Extraction from Mobile Devices via Nonintrusive Physical Side Channels},
+ booktitle = {Proceedings of the 2016 ACM SIGSAC Conference on Computer and Communications Security},
+ series = {CCS '16},
+ year = {2016},
+ isbn = {978-1-4503-4139-4},
+ location = {Vienna, Austria},
+ pages = {1626--1638},
+ numpages = {13},
+ url = {http://doi.acm.org/10.1145/2976749.2978353},
+ doi = {10.1145/2976749.2978353},
+ acmid = {2978353},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {electromagnetic analysis, elliptic curve, power analysis, side channel attack},
+}
+
+@InProceedings{Liu2013,
+author="Liu, Mingjie
+and Nguyen, Phong Q.",
+editor="Dawson, Ed",
+title="Solving BDD by Enumeration: An Update",
+booktitle="Topics in Cryptology -- CT-RSA 2013",
+year="2013",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="293--309",
+abstract="Bounded Distance Decoding (BDD) is a basic lattice problem used in cryptanalysis: the security of most lattice-based encryption schemes relies on the hardness of some BDD, such as LWE. We study how to solve BDD using a classical method for finding shortest vectors in lattices: enumeration with pruning speedup, such as Gama-Nguyen-Regev extreme pruning from EUROCRYPT '10. We obtain significant improvements upon Lindner-Peikert's Search-LWE algorithm (from CT-RSA '11), and update experimental cryptanalytic results, such as attacks on DSA with partially known nonces and GGH encryption challenges. Our work shows that any security estimate of BDD-based cryptosystems must take into account enumeration attacks, and that BDD enumeration can be practical even in high dimension like 350.",
+isbn="978-3-642-36095-4"
+}
+
+@Article{Nguyen2002,
+author="Nguyen, Phong Q.
+and Shparlinski, Igor E.",
+title="The Insecurity of the Digital Signature Algorithm with Partially Known Nonces",
+journal="Journal of Cryptology",
+year="2002",
+month="Jun",
+day="01",
+volume="15",
+number="3",
+pages="151--176",
+abstract="We present a polynomial-time algorithm that provably recovers the signer's secret DSA key when a few consecutive bits of the random nonces k  (used at each signature generation) are known for a number of DSA signatures at most linear in log q  (q  denoting as usual the small prime of DSA), under a reasonable assumption on the hash function used in DSA. For most significant or least significant bits, the number of required bits is about log1/2q , but can be decreased to log log q  with a running time qO(1/log log q)  subexponential in log q , and even further to two in polynomial time if one assumes access to ideal lattice basis reduction, namely an oracle for the lattice closest vector problem for the infinity norm. For arbitrary consecutive bits, the attack requires twice as many bits. All previously known results were only heuristic, including those of Howgrave-Graham and Smart who recently introduced that topic. Our attack is based on a connection with the hidden number problem  (HNP) introduced at Crypto '96 by Boneh and Venkatesan in order to study the bit-security of the Diffie---Hellman key exchange. The HNP consists, given a prime number q , of recovering a number $\alpha$ ∈  Fqsuch that for many known random t ∈   Fqa certain approximation of t $\alpha$  is known. To handle the DSA case, we extend Boneh and Venkatesan's results on the HNP to the case where t  has not necessarily perfectly uniform distribution, and establish uniformity statements on the DSA signatures, using exponential sum techniques. The efficiency of our attack has been validated experimentally, and illustrates once again the fact that one should be very cautious with the pseudo-random generation of the nonce within DSA.",
+issn="1432-1378",
+doi="10.1007/s00145-002-0021-3",
+url="https://doi.org/10.1007/s00145-002-0021-3"
+}
+
+@InProceedings{Benger2014,
+author="Benger, Naomi
+and van de Pol, Joop
+and Smart, Nigel P.
+and Yarom, Yuval",
+editor="Batina, Lejla
+and Robshaw, Matthew",
+title="``Ooh Aah... Just a Little Bit'' : A Small Amount of Side Channel Can Go a Long Way",
+booktitle="Cryptographic Hardware and Embedded Systems -- CHES 2014",
+year="2014",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="75--92",
+abstract="We apply the Flush+Reload side-channel attack based on cache hits/misses to extract a small amount of data from OpenSSL ECDSA signature requests. We then apply a ``standard'' lattice technique to extract the private key, but unlike previous attacks we are able to make use of the side-channel information from almost all of the observed executions. This means we obtain private key recovery by observing a relatively small number of executions, and by expending a relatively small amount of post-processing via lattice reduction. We demonstrate our analysis via experiments using the curve secp256k1 used in the Bitcoin protocol. In particular we show that with as little as 200 signatures we are able to achieve a reasonable level of success in recovering the secret key for a 256-bit curve. This is significantly better than prior methods of applying lattice reduction techniques to similar side channel information.",
+isbn="978-3-662-44709-3"
+}
+
+@InProceedings{Van2015,
+author="van de Pol, Joop
+and Smart, Nigel P.
+and Yarom, Yuval",
+editor="Nyberg, Kaisa",
+title="Just a Little Bit More",
+booktitle="Topics in Cryptology --- CT-RSA 2015",
+year="2015",
+publisher="Springer International Publishing",
+address="Cham",
+pages="3--21",
+abstract="We extend the Flush+Reload side-channel attack of Benger et al. to extract a significantly larger number of bits of information per observed signature when using OpenSSL. This means that by observing only 25 signatures, we can recover secret keys of the secp256k1 curve, used in the Bitcoin protocol, with a probability greater than 50 percent. This is an order of magnitude improvement over the previously best known result.",
+isbn="978-3-319-16715-2"
+}
+
+@Article{Wang2017,
+author="Wang, Wenbo
+and Fan, Shuqin",
+title="Attacking OpenSSL ECDSA with a small amount of side-channel information",
+journal="Science China Information Sciences",
+year="2017",
+month="Aug",
+day="30",
+volume="61",
+number="3",
+pages="032105",
+abstract="In this work, we mount a lattice attack on the ECDSA signatures implemented by the latest version of OpenSSL which uses the windowed non-adjacent form method to implement the scalar multiplication. We first develop a new way of extracting information from the side-channel results of the ECDSA signatures. Just given a small fraction of the information about a side-channel result denoted as double-and-add chain, we take advantage of the length of the chain together with positions of two non-zero digits to recover information about the ephemeral key. Combining the information of both the most significant digits and the least significant bits, we are able to gain more information about the ephemeral key. The problem of recovering ECDSA secret key is then translated to the hidden number problem which can be solved by lattice reduction algorithms. Our attack is mounted to the secp256k1 curve, and the result shows that 85 signatures would be enough to recover the secret key, which is better than the result that previous attack gained only utilizing the information extracted from the least significant bits, using about 200 signatures to recover the secret key.",
+issn="1869-1919",
+doi="10.1007/s11432-016-9030-0",
+url="https://doi.org/10.1007/s11432-016-9030-0"
+}
+
+@inproceedings{Fan2016,
+ author = {Fan, Shuqin and Wang, Wenbo and Cheng, Qingfeng},
+ title = {Attacking OpenSSL Implementation of ECDSA with a Few Signatures},
+ booktitle = {Proceedings of the 2016 ACM SIGSAC Conference on Computer and Communications Security},
+ series = {CCS '16},
+ year = {2016},
+ isbn = {978-1-4503-4139-4},
+ location = {Vienna, Austria},
+ pages = {1505--1515},
+ numpages = {11},
+ url = {http://doi.acm.org/10.1145/2976749.2978400},
+ doi = {10.1145/2976749.2978400},
+ acmid = {2978400},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {ECDSA, OpenSSL, extended hidden number problem, f lush+r eload attack, lattice attack, windowed non-adjacent form},
+}
+
+@InProceedings{Dahmun2016,
+author="Goudarzi, Dahmun
+and Rivain, Matthieu
+and Vergnaud, Damien",
+editor="Avanzi, Roberto
+and Heys, Howard",
+title="Lattice Attacks Against Elliptic-Curve Signatures with Blinded Scalar Multiplication",
+booktitle="Selected Areas in Cryptography -- SAC 2016",
+year="2017",
+publisher="Springer International Publishing",
+address="Cham",
+pages="120--139",
+abstract="Elliptic curve cryptography is today the prevailing approach to get efficient public-key cryptosystems and digital signatures. Most of elliptic curve signature schemes use a nonce in the computation of each signature and the knowledge of this nonce is sufficient to fully recover the secret key of the scheme. Even a few bits of the nonce over several signatures allow a complete break of the scheme by lattice-based attacks. Several works have investigated how to efficiently apply such attacks when partial information on the nonce can be recovered through side-channel attacks. However, these attacks usually target unprotected implementation and/or make ideal assumptions on the recovered information, and it is not clear how they would perform in a scenario where common countermeasures are included and where only noisy information leaks via side channels. In this paper, we close this gap by applying such attack techniques against elliptic-curve signature implementations based on a blinded scalar multiplication. Specifically, we extend the famous Howgrave-Graham and Smart lattice attack when the nonces are blinded by the addition of a random multiple of the elliptic-curve group order or by a random Euclidean splitting. We then assume that noisy information on the blinded nonce can be obtained through a template attack targeting the underlying scalar multiplication and we show how to characterize the obtained likelihood scores under a realistic leakage assumption. To deal with this scenario, we introduce a filtering method which given a set of signatures and associated likelihood scores maximizes the success probability of the lattice attack. Our approach is backed up with attack simulation results for several signal-to-noise ratio of the exploited leakage.",
+isbn="978-3-319-69453-5"
+}
+
+@InProceedings{Cao2015,
+author="Cao, Weiqiong
+and Feng, Jingyi
+and Chen, Hua
+and Zhu, Shaofeng
+and Wu, Wenling
+and Han, Xucang
+and Zheng, Xiaoguang",
+editor="Kwon, Soonhak
+and Yun, Aaram",
+title="Two Lattice-Based Differential Fault Attacks Against ECDSA with wNAF Algorithm",
+booktitle="Information Security and Cryptology - ICISC 2015",
+year="2016",
+publisher="Springer International Publishing",
+address="Cham",
+pages="297--313",
+abstract="Elliptic curve cryptosystem (ECC) is widely used in cryptographic device. Despite its solid mathematical security, ECC is still vulnerable to many kinds of physical attacks. In this paper, we present two new lattice-based differential fault attacks (DFA) against the famous ECC signature algorithm standard-ECDSA with wNAF algorithm of scalar multiplication. Compared with the fault attack proposed in Crypto'2000, our first attack adopts a different way to deduce parts of the nonce k. The former recovered parts of k mainly by guessing technique, while our attack combines the guessing technique and solving equation with one unknown. So our attack is applicable for the weaker attack scenes allowing more random faulty bits. In our second proposed attack, instead of injecting faults during calculating kG, we focus on injecting faults during calculating wNAF transformation of k before calculating kG. If the targets during wNAF transformation of k are skipped by fault injection, we can build some DFA models to retrieve parts of k. In both of the two attacks, the attacker can mount lattice attack to recover the private key in ECDSA with the derived parts of k. Finally, we verify the feasibility of our proposed attacks by experiments.",
+isbn="978-3-319-30840-1"
+}
+
+@article{GORDON1998129,
+title = "A Survey of Fast Exponentiation Methods",
+journal = "Journal of Algorithms",
+volume = "27",
+number = "1",
+pages = "129 - 146",
+year = "1998",
+issn = "0196-6774",
+doi = "https://doi.org/10.1006/jagm.1997.0913",
+url = "http://www.sciencedirect.com/science/article/pii/S0196677497909135",
+author = "Daniel M. Gordon",
+abstract = "Public-key cryptographic systems often involve raising elements of some group (e.g.,GF(2n),Z/NZ, or elliptic curves) to large powers. An important question is how fast this exponentiation can be done, which often determines whether a given system is practical. The best method for exponentiation depends strongly on the group being used, the hardware the system is implemented on, and whether one element is being raised repeatedly to different powers, different elements are raised to a fixed power, or both powers and group elements vary. This problem has received much attention, but the results are scattered through the literature. In this paper we survey the known methods for fast exponentiation, examining their relative strengths and weaknesses."
+}
+
+@InProceedings{boneh1996,
+author="Boneh, Dan
+and Venkatesan, Ramarathnam",
+editor="Koblitz, Neal",
+title="Hardness of Computing the Most Significant Bits of Secret Keys in Diffie-Hellman and Related Schemes",
+booktitle="Advances in Cryptology --- CRYPTO '96",
+year="1996",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="129--142",
+abstract="We show that computing the most significant bits of the secret key in a Diffie-Hellman key-exchange protocol from the public keys of the participants is as hard as computing the secret key itself. This is done by studying the following hidden number problem: Given an oracle {\$}{\$}{\backslash}mathcal{\{}O{\}}{\$}{\$}$\alpha$(x) that on input x computes the k most significant bits of $\alpha$ {\textperiodcentered} gx mod p, find $\alpha$ modulo p. Our solution can be used to show the hardness of MSB's in other schemes such s ElGamal's public key system, scheme. Our results lead us to suggest a new variant of Diffie-Hellman key exchange (and other systems), for which we prove the most significant bit is hard to compute.",
+isbn="978-3-540-68697-2"
+}
+
+@misc{openssl,
+  title = {{OpenSSL: Cryptography and SSL/TLS Toolkit}},
+  howpublished = "\url{ https://www.openssl.org/}",
+}
+
+@inproceedings{Miyaji1997,
+ author = {Miyaji, Atsuko and Ono, Takatoshi and Cohen, Henri},
+ title = {Efficient Elliptic Curve Exponentiation},
+ booktitle = {Proceedings of the First International Conference on Information and Communication Security},
+ series = {ICICS '97},
+ year = {1997},
+ isbn = {3-540-63696-X},
+ pages = {282--291},
+ numpages = {10},
+ url = {http://dl.acm.org/citation.cfm?id=646277.687183},
+ acmid = {687183},
+ publisher = {Springer-Verlag},
+ address = {London, UK, UK},
+}
+
+@InProceedings{Koyama1002,
+author="Koyama, Kenji
+and Tsuruoka, Yukio",
+editor="Brickell, Ernest F.",
+title="Speeding up Elliptic Cryptosystems by Using a Signed Binary Window Method",
+booktitle="Advances in Cryptology --- CRYPTO' 92",
+year="1992",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="345--357",
+abstract="The basic operation in elliptic cryptosystems is the computation of a multiple d{\textperiodcentered}P of a point P on the elliptic curve modulo n. We propose a fast and systematic method of reducing the number of operations over elliptic curves. The proposed method is based on pre-computation to generate an adequate addition-subtraction chain for multiplier the d. By increasing the average length of zero runs in a signed binary representation of d, we can speed up the window method. Formulating the time complexity of the proposed method makes clear that the proposed method is faster than other methods. For example, for d with length 512 bits, the proposed method requires 602.6 multiplications on average. Finally, we point out that each addition/subtraction over the elliptic curve using homogeneous coordinates can be done in 3 multiplications if parallel processing is allowed.",
+isbn="978-3-540-48071-6"
+}
+
+@Article{Solinas2000,
+author="Solinas, Jerome A.",
+title="Efficient Arithmetic on Koblitz Curves",
+journal="Designs, Codes and Cryptography",
+year="2000",
+month="Mar",
+day="01",
+volume="19",
+number="2",
+pages="195--249",
+abstract="It has become increasingly common to implement discrete-logarithm based public-key protocols on elliptic curves over finite fields. The basic operation is scalar multiplication: taking a given integer multiple of a given point on the curve. The cost of the protocols depends on that of the elliptic scalar multiplication operation.",
+issn="1573-7586",
+doi="10.1023/A:1008306223194",
+url="https://doi.org/10.1023/A:1008306223194"
+}
+
+@inproceedings{flushreload,
+ author = {Yarom, Yuval and Falkner, Katrina},
+ title={{Flush}+{Reload}: A High Resolution, Low Noise, {L}3 Cache Side-Channel Attack},
+ booktitle = {Proceedings of the 23rd USENIX Conference on Security Symposium},
+ series = {SEC'14},
+ year = {2014},
+ isbn = {978-1-931971-15-7},
+ location = {San Diego, CA},
+ pages = {719--732},
+ numpages = {14},
+ url = {http://dl.acm.org/citation.cfm?id=2671225.2671271},
+ acmid = {2671271},
+ publisher = {USENIX Association},
+ address = {Berkeley, CA, USA},
+}
+
+@InProceedings{gruss2016flush,
+author="Gruss, Daniel
+and Maurice, Cl{\'e}mentine
+and Wagner, Klaus
+and Mangard, Stefan",
+editor="Caballero, Juan
+and Zurutuza, Urko
+and Rodr{\'i}guez, Ricardo J.",
+title="{F}lush+ {F}lush: A fast and stealthy cache attack",
+booktitle="Detection of Intrusions and Malware, and Vulnerability Assessment",
+year="2016",
+publisher="Springer International Publishing",
+address="Cham",
+pages="279--299",
+abstract="Research on cache attacks has shown that CPU caches leak significant information. Proposed detection mechanisms assume that all cache attacks cause more cache hits and cache misses than benign applications and use hardware performance counters for detection.",
+isbn="978-3-319-40667-1"
+}
+
+@InProceedings{ac2006,
+author="Ac{\i}i{\c{c}}mez, Onur
+and Ko{\c{c}}, {\c{C}}etin Kaya",
+editor="Ning, Peng
+and Qing, Sihan
+and Li, Ninghui",
+title="Trace-Driven Cache Attacks on AES (Short Paper)",
+booktitle="Information and Communications Security",
+year="2006",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="112--121",
+abstract="Cache based side-channel attacks have recently been attracted significant attention due to the new developments in the field. In this paper, we present an efficient trace-driven cache attack on a widely used implementation of the AES cryptosystem. We also evaluate the cost of the proposed attack in detail under the assumption of a noiseless environment. We develop an accurate mathematical model that we use in the cost analysis of our attack. We use two different metrics, specifically, the expected number of necessary traces and the cost of the analysis phase, for the cost evaluation purposes. Each of these metrics represents the cost of a different phase of the attack.",
+isbn="978-3-540-49497-3"
+}
+
+@InProceedings{Bonneau2006,
+author="Bonneau, Joseph
+and Mironov, Ilya",
+editor="Goubin, Louis
+and Matsui, Mitsuru",
+title="Cache-Collision Timing Attacks Against AES",
+booktitle="Cryptographic Hardware and Embedded Systems - CHES 2006",
+year="2006",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="201--215",
+abstract="This paper describes several novel timing attacks against the common table-driven software implementation of the AES cipher. We define a general attack strategy using a simplified model of the cache to predict timing variation due to cache-collisions in the sequence of lookups performed by the encryption. The attacks presented should be applicable to most high-speed software AES implementations and computing platforms, we have implemented them against OpenSSL v. 0.9.8.(a) running on Pentium III, Pentium IV Xeon, and UltraSPARC III+ machines. The most powerful attack has been shown under optimal conditions to reliably recover a full 128-bit AES key with 213 timing samples, an improvement of almost four orders of magnitude over the best previously published attacks of this type [Ber05]. While the task of defending AES against all timing attacks is challenging, a small patch can significantly reduce the vulnerability to these specific attacks with no performance penalty.",
+isbn="978-3-540-46561-4"
+}
+
+@misc{Bernstein2005Cache,
+  title={Cache-timing attacks on {AES}},
+  author={Bernstein, Daniel J},
+  year={2005},
+  howpublished = "\url{http://cr.yp.to/antiforgery/cachetiming-20050414.pdf}"
+}
+
+@INPROCEEDINGS{cachegame2011,
+author={D. {Gullasch} and E. {Bangerter} and S. {Krenn}},
+booktitle={2011 IEEE Symposium on Security and Privacy},
+title={Cache Games -- Bringing Access-Based Cache Attacks on AES to Practice},
+year={2011},
+volume={},
+number={},
+pages={490-505},
+keywords={cache storage;cryptography;Linux;cache games;access-based cache attacks;AES-128;advanced encryption standard;side channel attacks;cryptographic systems;memory location leakage;AES block cipher;OpenS SL 0.9.8n;current Linux systems;CFS;denial of service attack;task scheduler;Cryptography;Random access memory;Linux;Matrices;Memory management;Monitoring;AES;side channel;access-based cache attacks},
+doi={10.1109/SP.2011.22},
+ISSN={2375-1207},
+month={May},}
+
+@InProceedings{Osvik2006,
+author="Osvik, Dag Arne
+and Shamir, Adi
+and Tromer, Eran",
+editor="Pointcheval, David",
+title="Cache Attacks and Countermeasures: The Case of AES",
+booktitle="Topics in Cryptology -- CT-RSA 2006",
+year="2006",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="1--20",
+abstract="We describe several software side-channel attacks based on inter-process leakage through the state of the CPU's memory cache. This leakage reveals memory access patterns, which can be used for cryptanalysis of cryptographic primitives that employ data-dependent table lookups. The attacks allow an unprivileged process to attack other processes running in parallel on the same processor, despite partitioning methods such as memory protection, sandboxing and virtualization. Some of our methods require only the ability to trigger services that perform encryption or MAC using the unknown key, such as encrypted disk partitions or secure network links. Moreover, we demonstrate an extremely strong type of attack, which requires knowledge of neither the specific plaintexts nor ciphertexts, and works by merely monitoring the effect of the cryptographic process on the cache. We discuss in detail several such attacks on AES, and experimentally demonstrate their applicability to real systems, such as OpenSSL and Linux's dm-crypt encrypted partitions (in the latter case, the full key can be recovered after just 800 writes to the partition, taking 65 milliseconds). Finally, we describe several countermeasures for mitigating such attacks.",
+isbn="978-3-540-32648-9"
+}
+
+@Article{Lenstra1982,
+author="Lenstra, A. K.
+and Lenstra, H. W.
+and Lov{\'a}sz, L.",
+title="Factoring polynomials with rational coefficients",
+journal="Mathematische Annalen",
+year="1982",
+month="Dec",
+day="01",
+volume="261",
+number="4",
+pages="515--534",
+issn="1432-1807",
+doi="10.1007/BF01457454",
+url="https://doi.org/10.1007/BF01457454"
+}
+
+@unpublished{fplll,
+    author = {The {FPLLL} development team},
+    title = {{fplll}, a lattice reduction library},
+    year = 2016,
+    note = {Available at \url{https://github.com/fplll/fplll}},
+    url = {https://github.com/fplll/fplll}
+}
+
+@article{Babai1986,
+ author = {Babai, L},
+ title = {On Lova\&Acute;Sz' Lattice Reduction and the Nearest Lattice Point Problem},
+ journal = {Combinatorica},
+ issue_date = {1986},
+ volume = {6},
+ number = {1},
+ month = jan,
+ year = {1986},
+ issn = {0209-9683},
+ pages = {1--13},
+ numpages = {13},
+ url = {http://dx.doi.org/10.1007/BF02579403},
+ doi = {10.1007/BF02579403},
+ acmid = {18113},
+ publisher = {Springer-Verlag New York, Inc.},
+ address = {Secaucus, NJ, USA},
+}
+
+@InProceedings{Nguyen1999,
+author="Nguyen, Phong",
+editor="Wiener, Michael",
+title="Cryptanalysis of the Goldreich-Goldwasser-Halevi Cryptosystem from Crypto '97",
+booktitle="Advances in Cryptology --- CRYPTO' 99",
+year="1999",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="288--304",
+abstract="Recent results of Ajtai on the hardness of lattice problems have inspired several cryptographic protocols. At Crypto '97, Goldreich, Goldwasser and Halevi proposed a public-key cryptosystem based on the closest vector problem in a lattice, which is known to be NP-hard. We show that there is a major flaw in the design of the scheme which has two implications: any ciphertext leaks information on the plaintext, and the problem of decrypting ciphertexts can be reduced to a special closest vector problem which is much easier than the general problem. As an application, we solved four out of the five numerical challenges proposed on the Internet by the authors of the cryptosystem. At least two of those four challenges were conjectured to be intractable. We discuss ways to prevent the flaw, but conclude that, even modified, the scheme cannot provide sufficient security without being impractical.",
+isbn="978-3-540-48405-9"
+}
+
+@InProceedings{latticereduction2000,
+author="Nguyen, Phong Q.
+and Stern, Jacques",
+editor="Bosma, Wieb",
+title="Lattice Reduction in Cryptology: An Update",
+booktitle="Algorithmic Number Theory",
+year="2000",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="85--112",
+abstract="Lattices are regular arrangements of points in space, whose study appeared in the 19th century in both number theory and crystallography. The goal of lattice reduction is to find useful representations of lattices. A major breakthrough in that field occurred twenty years ago, with the appearance of Lov{\'a}sz's reduction algorithm, also known as LLL or L3. Lattice reduction algorithms have since proved invaluable in many areas of mathematics and computer science, especially in algorithmic number theory and cryptology. In this paper, we survey some applications of lattices to cryptology. We focus on recent developments of lattice reduction both in cryptography and cryptanalysis, which followed seminal works of Ajtai and Coppersmith.",
+isbn="978-3-540-44994-2"
+}
+
+@InProceedings{bkz2,
+author="Chen, Yuanmi
+and Nguyen, Phong Q.",
+editor="Lee, Dong Hoon
+and Wang, Xiaoyun",
+title="BKZ 2.0: Better Lattice Security Estimates",
+booktitle="Advances in Cryptology -- ASIACRYPT 2011",
+year="2011",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="1--20",
+abstract="The best lattice reduction algorithm known in practice for high dimension is Schnorr-Euchner's BKZ: all security estimates of lattice cryptosystems are based on NTL's old implementation of BKZ. However, recent progress on lattice enumeration suggests that BKZ and its NTL implementation are no longer optimal, but the precise impact on security estimates was unclear. We assess this impact thanks to extensive experiments with BKZ 2.0, the first state-of-the-art implementation of BKZ incorporating recent improvements, such as Gama-Nguyen-Regev pruning. We propose an efficient simulation algorithm to model the behaviour of BKZ in high dimension with high blocksize ≥{\thinspace}50, which can predict approximately both the output quality and the running time, thereby revising lattice security estimates. For instance, our simulation suggests that the smallest NTRUSign parameter set, which was claimed to provide at least 93-bit security against key-recovery lattice attacks, actually offers at most 65-bit security.",
+isbn="978-3-642-25385-0"
+}
+
+@inproceedings{Pereida2016,
+ author = {Pereida Garc\'{\i}a, Cesar and Brumley, Billy Bob and Yarom, Yuval},
+ title = {"Make Sure DSA Signing Exponentiations Really Are Constant-Time"},
+ booktitle = {Proceedings of the 2016 ACM SIGSAC Conference on Computer and Communications Security},
+ series = {CCS '16},
+ year = {2016},
+ isbn = {978-1-4503-4139-4},
+ location = {Vienna, Austria},
+ pages = {1639--1650},
+ numpages = {12},
+ url = {http://doi.acm.org/10.1145/2976749.2978420},
+ doi = {10.1145/2976749.2978420},
+ acmid = {2978420},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {CVE-2016-2178, DSA, OpenSSL, applied cryptography, cache-timing attacks, digital signatures, side-channel analysis, timing attacks},
+}
+
+@Article{Gomez2019,
+author="Gomez, Ana I.
+and Gomez-Perez, Domingo
+and Renault, Gu{\'e}na{\"e}l",
+title="A probabilistic analysis on a lattice attack against DSA",
+journal="Designs, Codes and Cryptography",
+year="2019",
+month="Apr",
+day="08",
+abstract="Analyzing the security of cryptosystems under attacks based on the malicious modification of memory registers is a research topic of high importance. This type of attack may affect the randomness of the secret parameters by forcing a limited number of bits to a certain value which can be unknown to the attacker. In this context, we revisit the attack on DSA presented by Faug{\`e}re, Goyet and Renault during the conference SAC 2012: we modify their method and provide a probabilistic approach in opposition to the heuristic proposed therein to measure the limits of the attack. More precisely, the main problem is formulated as a closest vector problem in a lattice, then we study the distribution of vectors with bounded norm in the lattices involved and apply the result to predict the attack behavior. The benefits of this approach are several: The probability of success of this attack can be lower bounded under some conjecture, which is validated by computational experiments. Also, it finds applications to the FLUSH+RELOAD side-channel attack, studied by van de Pol et al. At the end of the article, there is a summary of findings.",
+issn="1573-7586",
+doi="10.1007/s10623-019-00633-w",
+url="https://doi.org/10.1007/s10623-019-00633-w"
+}
+
+@INPROCEEDINGS{Zhang2017,
+author={K. {Zhang} and S. {Xu} and D. {Gu} and H. {Gu} and J. {Liu} and Z. {Guo} and R. {Liu} and L. {Liu} and X. {Hu}},
+booktitle={2017 13th International Conference on Computational Intelligence and Security (CIS)},
+title={Practical Partial-Nonce-Exposure Attack on ECC Algorithm},
+year={2017},
+volume={},
+number={},
+pages={248-252},
+keywords={digital signatures;microcontrollers;public key cryptography;partial-nonce-exposure attack;elliptic curve digital signature algorithm;differential power analysis;secret key;secure SM2-DSA implementation;lattice attack;ECC algorithm;SM2 digital signature algorithm;simple power analysis;Atmega128 microcontroller;optimal key-recovery strategy;Lattices;Algorithm design and analysis;Elliptic curves;Digital signatures;Electronic mail;Microcontrollers;Side-Channel Attacks;Public Key Cryptosystems;Lattice Attack;SM2},
+doi={10.1109/CIS.2017.00061},
+ISSN={},
+month={Dec},}
+
+@InProceedings{Mulder2013,
+author="De Mulder, Elke
+and Hutter, Michael
+and Marson, Mark E.
+and Pearson, Peter",
+editor="Bertoni, Guido
+and Coron, Jean-S{\'e}bastien",
+title="Using Bleichenbacher''s Solution to the Hidden Number Problem to Attack Nonce Leaks in 384-Bit ECDSA",
+booktitle="Cryptographic Hardware and Embedded Systems - CHES 2013",
+year="2013",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="435--452",
+abstract="In this paper we describe an attack against nonce leaks in 384-bit ECDSA using an FFT-based attack due to Bleichenbacher. The signatures were computed by a modern smart card. We extracted the low-order bits of each nonce using a template-based power analysis attack against the modular inversion of the nonce. We also developed a BKZ-based method for the range reduction phase of the attack, as it was impractical to collect enough signatures for the collision searches originally used by Bleichenbacher. We confirmed our attack by extracting the entire signing key using a 5-bit nonce leak from 4000 signatures.",
+isbn="978-3-642-40349-1"
+}
+
+@InProceedings{jean2012,
+author="Faug{\`e}re, Jean-Charles
+and Goyet, Christopher
+and Renault, Gu{\'e}na{\"e}l",
+editor="Knudsen, Lars R.
+and Wu, Huapeng",
+title="Attacking (EC)DSA Given Only an Implicit Hint",
+booktitle="Selected Areas in Cryptography",
+year="2012",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="252--274",
+isbn="978-3-642-35999-6"
+}
+
+@article{Page2002,
+  title={Theoretical Use of Cache Memory as a Cryptanalytic Side-Channel},
+  author={Dan Page},
+  journal={IACR Cryptology ePrint Archive},
+  year={2002},
+  volume={2002},
+  pages={169}
+}
+
+@inproceedings{Tsunoo2003Cryptanalysis,
+  title={Cryptanalysis of {DES} Implemented on Computers with Cache},
+  author={Tsunoo, Yukiyasu and Saito, Teruo and Suzaki, Tomoyasu and Shigeri, Maki and Miyauchi, Hiroshi},
+  booktitle={CHES},
+  year={2003},
+  %pages={62-76},
+  %address={Berlin, Heidelberg},
+  %organization={Springer}
+}
+
+@misc{joseph2006,
+  title={Robust Final-Round Cache-Trace Attacks Against AES},
+  booktitle={IACR Eprint archive},
+  keywords={implementation / AES, cryptanalysis, side-channel attack, power analysis, cache},
+  url={http://eprint.iacr.org/2006/374},
+  note={ jbonneau@stanford.edu 13450 received 29 Oct 2006},
+  author={Joseph Bonneau},
+  year=2006
+}
+
+@inproceedings{Onur2007Yet,
+  title={Yet another MicroArchitectural Attack: Exploiting {I}-Cache},
+  author={Onur Ac{\i}i{\c{c}}mez},
+  booktitle={ACM Workshop on Computer Security Architecture},
+  year={2007},
+  %pages={11--18},
+  %organization={ACM}
+}
+
+@article{Brumley2005Remote,
+  title={Remote timing attacks are practical},
+  author={Brumley, David and Boneh, Dan},
+  journal={Computer Networks},
+  year={2005},
+  volume={48},
+  number={5},
+  %pages={701--716},
+  %publisher={Elsevier}
+}
+
+@inproceedings{get-off-my-cloud,
+  title={Hey, you, get off of my cloud: Exploring information leakage in third-party compute clouds},
+  author={Ristenpart, Thomas and Tromer, Eran and Shacham, Hovav and Savage, Stefan},
+  booktitle={ACM CCS},
+  year={2009},
+  %pages={199--212},
+  %organization={ACM}
+}
+
+@article{yarom2014recovering,
+  title={Recovering {OpenSSL} {ECDSA} Nonces Using the FLUSH+ RELOAD Cache Side-channel Attack},
+  author={Yarom, Yuval and Benger, Naomi},
+  journal={IACR Cryptology ePrint Archive},
+  volume={2014},
+  pages={140},
+  year={2014}
+}
+
+@InProceedings{Irazoqui2014,
+author="Irazoqui, Gorka
+and Inci, Mehmet Sinan
+and Eisenbarth, Thomas
+and Sunar, Berk",
+editor="Stavrou, Angelos
+and Bos, Herbert
+and Portokalidis, Georgios",
+title="Wait a Minute! A fast, Cross-VM Attack on AES",
+booktitle="Research in Attacks, Intrusions and Defenses",
+year="2014",
+publisher="Springer International Publishing",
+address="Cham",
+pages="299--319",
+abstract="In cloud computing, efficiencies are reaped by resource sharing such as co-location of computation and deduplication of data. This work exploits resource sharing in virtualization software to build a powerful cache-based attack on AES. We demonstrate the vulnerability by mounting Cross-VM Flush+Reload cache attacks in VMware VMs to recover the keys of an AES implementation of OpenSSL 1.0.1 running inside the victim VM. Furthermore, the attack works in a realistic setting where different VMs are located on separate cores. The modified flush+reload attack we present, takes only in the order of seconds to minutes to succeed in a cross-VM setting. Therefore long term co-location, as required by other fine grain attacks in the literature, are not needed. The results of this study show that there is a great security risk to OpenSSL AES implementation running on VMware cloud services when the deduplication is not disabled.",
+isbn="978-3-319-11379-1"
+}
+
+@INPROCEEDINGS{fine2014,
+author={G. {Irazoqui} and M. S. {Inci} and T. {Eisenbarth} and B. {Sunar}},
+booktitle={2014 IEEE Fourth International Conference on Big Data and Cloud Computing},
+title={Fine Grain Cross-VM Attacks on Xen and VMware},
+year={2014},
+volume={},
+number={},
+pages={737-744},
+keywords={cache storage;cloud computing;cryptography;risk management;virtual machines;virtualisation;fine grain cross-VM cache attacks;virtual machines;Xen VM;VMware VM;vulnerabilities;virtualized cloud servers;AES implementations;cryptographic libraries;Open SSL;Polar SSL;Libgcrypt;nonconstant execution times;Bernstein correlation attack;Amazon EC2;Google Compute Engine;security risk;cloud services;Servers;Prefetching;Conferences;Big data;Cloud computing;Abstracts;Government;Cryptographic Libraries;Cross-VM attacks;cache timing attacks;virtualization;AES key recovery attack},
+doi={10.1109/BDCloud.2014.102},
+ISSN={},
+month={Dec},}
+
+@inproceedings{liu2015last,
+  title={Last-level cache side-channel attacks are practical},
+  author={Liu, Fangfei and Yarom, Yuval and Ge, Qian and Heiser, Gernot and Lee, Ruby B},
+  booktitle={IEEE S\&P},
+  year={2015},
+  %pages={605--622},
+  %organization={IEEE}
+}
+
+@inproceedings{disselkoen2017prime+abort,
+  title={Prime+ {A}bort: A Timer-Free High-Precision {L}3 Cache Attack using {I}ntel {TSX}},
+  author={Disselkoen, Craig and Kohlbrenner, David and Porter, Leo and Tullsen, Dean},
+  booktitle={USENIX Security},
+  year={2017}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+@inproceedings{Acii2005Improving,
+  title={Improving {B}rumley and {B}oneh timing attack on unprotected {SSL} implementations},
+  author={Ac{\i}i{\c{c}}mez, Onur and Schindler, Werner and Ko{\c{c}}, {\c{C}}etin K},
+  booktitle={ACM CCS},
+  year={2005},
+  %pages={139--146},
+  %organization={ACM}
+}
+
+@inproceedings{Ac2006Trace,
+  title={Trace-driven cache attacks on {AES}},
+  author={Ac{\i}i{\c{c}}mez, Onur and Ko{\c{c}}, {\c{C}}etin Kaya},
+  booktitle={ICICS},
+  year={2006},
+  %pages={112--121},
+  %organization={Springer}
+}
+
+@inproceedings{Bonneau2006Cache,
+  title={Cache-Collision Timing Attacks Against {AES}},
+  author={Bonneau, Joseph and Mironov, Ilya},
+  booktitle={CHES},
+  year={2006},
+  %pages={201--215},
+  %organization={Springer}
+}
+
+@inproceedings{Gullasch2011Cache,
+  title={Cache games: Bringing access-based cache attacks on {AES} to practice},
+  author={Gullasch, David and Bangerter, Endre and Krenn, Stephan},
+  booktitle={IEEE S\&P},
+  year={2011},
+  %pages={490--505},
+  %organization={IEEE},
+}
+
+@inproceedings{Kocher1996Timing,
+  title={Timing Attacks on Implementations of {D}iffie-{H}ellman, {RSA}, {DSS}, and Other Systems},
+  author={Kocher, Paul C},
+  booktitle={CRYPTO},
+  year={1996},
+  %pages={104--113},
+  %organization={Springer}
+}
+
+@inproceedings{Neve2006A,
+  title={A refined look at {B}ernstein's {AES} side-channel analysis},
+  author={Neve, Michael and Seifert, Jean Pierre and Wang, Zhenghong},
+  booktitle={ACM AsiaCCS},
+  year={2006},
+  %pages={369},
+  %organization={ACM}
+}
+
+@inproceedings{Osvik2006Cache,
+  title={Cache Attacks and Countermeasures: The Case of {AES}},
+  author={Osvik, Dag Arne and Shamir, Adi and Tromer, Eran},
+  booktitle={CT-RSA},
+  year={2006},
+  %pages={1--20},
+  %organization={Springer}
+}
+
+@article{Tromer2010Efficient,
+  title={Efficient Cache Attacks on {AES}, and Countermeasures},
+  author={Tromer, Eran and Osvik, Dag Arne and Shamir, Adi},
+  journal={Journal of Cryptology},
+  year={2010},
+  %volume={23},
+  %number={1},
+  %pages={37--71},
+  %publisher={Springer}
+}
+
+@inproceedings{Electromagnetic-sidechannel,
+    title = {Stealing Keys from {PCs} by Radio: Cheap Electromagnetic Attacks on Windowed Exponentiation},
+    author={Genkin, Daniel and Pachmanov, Lev and Pipman, Itamar and Tromer, Eran},
+    booktitle = {CHES},
+    year={2015},
+    %pages={207-228},
+    %organization={Springer}
+}
+
+@article{power-pc,
+  title={How not to protect {PCs} from power analysis},
+  author={Oren, Yossi and Shamir, Adi},
+  journal={Rump Session, CRYPTO},
+  year={2006}
+}
+
+@inproceedings{Bertoni2005AES,
+  title={{AES} Power Attack Based on Induced Cache Miss and Countermeasure},
+  author={Bertoni, Guido and Zaccaria, Vittorio and Breveglieri, Luca and Monchiero, Matteo and Palermo, Gianluca},
+  booktitle={ITCC},
+  year={2005},
+  %pages={586--591},
+  %organization={IEEE}
+}
+
+@inproceedings{electric-potential-sidechannel,
+  title={Get Your Hands Off My Laptop: Physical Side-Channel Key-Extraction Attacks on {PC}s},
+  author={Genkin, Daniel and Pipman, Itamar and Tromer, Eran},
+  booktitle={CHES},
+  year={2014},
+  %pages={242-260},
+  %organization={Springer}
+}
+
+@inproceedings{Acoustic-sidechannel,
+  title = {{RSA} Key Extraction via Low-Bandwidth Acoustic Cryptanalysis},
+  author={Genkin, Daniel and Shamir, Adi and Tromer, Eran},
+  booktitle={CRYPTO},
+  year={2014},
+  %pages={444--461},
+  %organization={Springer}
+}
+
+@article{Tsunoo2002Cryptanalysis,
+  title={Cryptanalysis of Block Ciphers Implemented on Computers with Cache},
+  author={Tsunoo, Yukiyasu},
+  journal={ISITA 2002},
+  year={2002}
+}
+
+@inproceedings{Brumley2011Remote,
+  title={Remote timing attacks are still practical},
+  author={Brumley, Billy Bob and Tuveri, Nicola},
+  booktitle={ESORICS},
+  year={2011},
+  %pages={355-371},
+}
+
+@inproceedings{Ac2007Cache,
+  title={Cache based remote timing attack on the {AES}},
+  author={Ac{\i}i{\c{c}}mez, Onur and Schindler, Werner and Ko{\c{c}}, {\c{C}}etin K},
+  booktitle={CT-RSA},
+  year={2007},
+  %pages={271--286},
+  %organization={Springer}
+}
+
+@article{atici2016remote,
+  title={Remote Cache-Timing Attack without Learning Phase},
+  author={Atici, Ali Can and Yilmaz, Cemal and Savas, Erkay},
+  journal={IACR Cryptology ePrint Archive},
+  year={2016},
+  %volume={2016},
+  %pages={2},
+}
+
+@inproceedings{saraswat2014remote,
+  title={Remote cache-timing attacks against {AES}},
+  author={Saraswat, Vishal and Feldman, Daniel and Kune, Denis Foo and Das, Satyajit},
+  booktitle={CS2 Workshop},
+  year={2014},
+  %pages={45--48},
+  %organization={ACM}
+%  booktitle={1st Workshop on Cryptography and Security in Computing Systems},
+
+}
+
+
+@inproceedings{YinqianZhang2012-cross-vm,
+  title={Cross-{VM} side channels and their use to extract private keys},
+  author={Zhang, Yinqian and Juels, Ari and Reiter, Michael K and Ristenpart, Thomas},
+  booktitle={ACM CCS},
+  year={2012},
+  %pages={305--316},
+  %organization={ACM}
+}
+
+
+
+
+
+@article{Braun2015Robust,
+  title={Robust and efficient elimination of cache and timing side channels},
+  author={Braun, Benjamin A and Jana, Suman and Boneh, Dan},
+  journal={arXiv:1506.00189},
+  year={2015}
+}
+
+@inproceedings{Zhang2011Predictive,
+  title={Predictive mitigation of timing channels in interactive systems},
+  author={Zhang, Danfeng and Askarov, Aslan and Myers, Andrew C},
+  booktitle={ACM CCS},
+  year={2011},
+  %pages={563-574},
+  %organization={ACM}
+}
+
+@book{Daemen2002The,
+  title={The design of Rijndael: {AES} - The advanced encryption standard},
+  author={Daemen, Joan and Rijmen, Vincent},
+  year={2013},
+  publisher={Springer Science \& Business Media}
+}
+
+@inproceedings{Schneier1993Description,
+  title={Description of a New Variable-Length Key, 64-bit Block Cipher ({Blowfish})},
+  author={Schneier, Bruce},
+  booktitle={FSE},
+  year={1993},
+  %pages={191-204},
+}
+
+@misc{Adams1997The,
+  title={{IETF} {RFC} 2144: The {CAST}-128 Encryption Algorithm},
+  author={Adams, C},
+  year={1997},
+}
+
+@misc{openssh,
+  title = {{OpenSSH}},
+  howpublished = "\url{http://www.openssh.com/}",
+}
+
+@techreport{drepper2007every,
+  title={What every programmer should know about memory},
+  author={Drepper, Ulrich},
+  institution={Red Hat},
+  year={2007}
+}
+
+
+
+
+@inproceedings{Cock2014The,
+  title={The Last Mile: An Empirical Study of Some Timing Channels on {seL4}},
+  author={Cock, David and Ge, Qian and Murray, Toby and Heiser, Gernot},
+  booktitle={ACM CCS},
+  year={2014},
+  %pages={570--581},
+  %organization={ACM}
+}
+
+@article{Dan2005Partitioned,
+  title={Partitioned Cache Architecture as a Side-Channel Defence Mechanism},
+  author={Page, Dan},
+  journal={IACR Cryptology ePrint archive},
+  year={2005},
+  %volume={2005},
+  %number={2005},
+  %pages={280},
+}
+
+@inproceedings{Yinqian2013D,
+  title={D{\"u}ppel: Retrofitting commodity operating systems to mitigate cache side channels in the cloud},
+  author={Zhang, Yinqian and Reiter, Michael K},
+  booktitle={ACM CCS},
+  year={2013},
+  %pages={827--838},
+  %organization={ACM}
+}
+
+@inproceedings{kasper2009faster,
+  title={Faster and timing-attack resistant {AES-GCM}},
+  author={K{\"a}sper, Emilia and Schwabe, Peter},
+  booktitle = {CHES},
+  year={2009},
+  %pages={1--17},
+  %organization={Springer}
+}
+
+@inproceedings{K2008A,
+  title={A Fast and Cache-Timing Resistant Implementation of the {AES}},
+  author={K\"{o}nighofer, Robert},
+  booktitle={CT-RSA},
+  year={2008},
+  %pages={187-202},
+}
+
+@article{Taha2014Cache,
+  title={Cache-timing attack against {AES} crypto system - countermeasures review},
+  author={Taha, Yaseen H. and Abdulh, Settana M. and Sadalla, Naila A. and Elshoush, Huwaida},
+  year={2014},
+}
+
+@inproceedings{jayasinghe2010remote,
+  title={Remote cache timing attack on advanced encryption standard and countermeasures},
+  author={Jayasinghe, Darshana and Fernando, Jayani and Herath, Ranil and Ragel, Roshan},
+  booktitle={ICIAFS},
+  year={2010},
+  %pages={177--182},
+  %organization={IEEE}
+}
+
+@article{Page2003Defending,
+  title={Defending against cache-based side-channel attacks},
+  author={Page, D.},
+  journal={Information Security Technical Report},
+  year={2003},
+  %volume={8},
+  %number={1},
+  %pages={30--44},
+  %publisher={Elsevier}
+}
+
+@inproceedings{Kim2012STEALTHMEM,
+  title={{STEALTHMEM}: System-level protection against cache-based side channel attacks in the cloud},
+  author={Kim, Taesoo and Peinado, Marcus and Mainar-Ruiz, Gloria},
+  booktitle={USENIX Security},
+  year={2012},
+  %pages={189--204},
+}
+
+@inproceedings{Kong2009Hardware,
+  title={Hardware-software integrated approaches to defend against software cache-based side channel attacks},
+  author={Kong, J and Ac{\i}i\c{c}mez, O and Seifert, J. P and Zhou, Huiyang},
+  booktitle={HPCA},
+  year={2009},
+  %pages={393--404},
+  %organization={IEEE}
+}
+
+@inproceedings{Wang2007New,
+  title={New cache designs for thwarting software cache-based side channel attacks},
+  author={Wang, Zhenghong and Lee, Ruby B},
+  booktitle={ISCA},
+  year={2007},
+  %pages={494--505},
+  %organization={ACM}
+}
+
+@inproceedings{Wang2008A,
+  title={A novel cache architecture with enhanced performance and security},
+  author={Wang, Zhenghong and Lee, Ruby B},
+  booktitle={MICRO},
+  year={2008},
+  %pages={83--93},
+  %organization={IEEE}
+}
+
+@inproceedings{wang2016secdcp,
+  title={{SecDCP}: secure dynamic cache partitioning for efficient timing channel protection},
+  author={Wang, Yao and Ferraiuolo, Andrew and Zhang, Danfeng and Myers, Andrew C and Suh, G Edward},
+  booktitle={DAC},
+  year={2016},
+  %pages={1--6},
+  %organization={IEEE}
+}
+
+@inproceedings{Askarov2010Predictive,
+  title={Predictive black-box mitigation of timing channels},
+  author={Askarov, Aslan and Zhang, Danfeng and Myers, Andrew C},
+  booktitle={ACM CCS},
+  year={2010},
+  %pages={297--307},
+  %organization={ACM}
+}
+
+@inproceedings{Ferdinand2004Worst,
+  title={Worst case execution time prediction by static program analysis},
+  author={Ferdinand, Christian},
+  booktitle={IPDPS},
+  year={2004},
+  %pages={125},
+  %organization={IEEE},
+}
+
+@article{cleemput2012compiler,
+  title={Compiler mitigations for time attacks on modern x86 processors},
+  author={Cleemput, Jeroen V and Coppens, Bart and De Sutter, Bjorn},
+  journal={TACO},
+  year={2012},
+  %volume={8},
+  %number={4},
+  %pages={23},
+  %publisher={ACM}
+}
+
+@inproceedings{Coppens2009Practical,
+  title={Practical Mitigations for Timing-Based Side-Channel Attacks on Modern x86 Processors},
+  author={Coppens, Bart and Verbauwhede, Ingrid and Bosschere, Koen De and Sutter, Bjorn De},
+  booktitle={IEEE S\&P},
+  year={2009},
+  %pages={45-60},
+  %organization={IEEE},
+}
+
+@inproceedings{stefan2013eliminating,
+  title={Eliminating cache-based timing attacks with instruction-based scheduling},
+  author={Stefan, Deian and Buiras, Pablo and Yang, Edward Z and Levy, Amit and Terei, David and Russo, Alejandro and Mazi{\`e}res, David},
+  booktitle={ESORICS},
+  year={2013},
+  %pages={718--735},
+  %organization={Springer}
+}
+
+@inproceedings{varadarajan2014scheduler,
+  title={Scheduler-based Defenses against Cross-{VM} Side-channels},
+  author={Varadarajan, Venkatanathan and Ristenpart, Thomas and Swift, Michael M},
+  booktitle={USENIX Security},
+  year={2014},
+  %pages={687--702},
+}
+
+@inproceedings{herath2013software,
+  title={Software implementation level countermeasures against the cache timing attack on advanced encryption standard},
+  author={Herath, Udyani and Alawatugoda, Janaka and Ragel, Roshan},
+  booktitle={ICIIS},
+  year={2013},
+  %pages={75--80},
+  %organization={IEEE}
+}
+
+@inproceedings{jayasinghe2012constant,
+  title={Constant time encryption as a countermeasure against remote cache timing attacks},
+  author={Jayasinghe, Darshana and Ragel, Roshan and Elkaduwe, Dhammika},
+  booktitle={ICIAFS},
+  year={2012},
+  %pages={129--134},
+  %organization={IEEE}
+}
+
+@inproceedings{Crane2015Thwarting,
+  title={Thwarting Cache Side-Channel Attacks Through Dynamic Software Diversity},
+  author={Crane, Stephen and Homescu, Andrei and Brunthaler, Stefan and Larsen, Per and Franz, Michael},
+  booktitle={NDSS},
+  year={2015},
+}
+
+@inproceedings{Bl2005Provably,
+  title={Provably secure masking of {AES}},
+  author={Bl{\"o}mer, Johannes and Guajardo, Jorge and Krummel, Volker},
+  booktitle={SAC},
+  year={2004},
+  %pages={69--83},
+  %organization={Springer}
+}
+
+@inproceedings{Mer2007Analysis,
+  title={Analysis of countermeasures against access driven cache attacks on {AES}},
+  author={Bl{\"o}mer, Johannes and Krummel, Volker},
+  booktitle={SAC},
+  year={2007},
+  %pages={96--109},
+  %organization={Springer}
+}
+
+@inproceedings{K2009A,
+  title={A Provably Secure and Efficient Countermeasure against Timing Attacks},
+  author={Kopf, Boris and Durmuth, Markus},
+  booktitle={CSF},
+  year={2009},
+  %pages={324-335},
+  %organization={IEEE}
+}
+
+@inproceedings{Li2013Mitigating,
+  title={Mitigating access-driven timing channels in clouds using {StopWatch}},
+  author={Li, Peng and Gao, Debin and Reiter, Michael K.},
+  booktitle={DSN},
+  year={2013},
+  %pages={1-12},
+  %organization={IEEE}
+}
+
+@inproceedings{Martin2012TimeWarp,
+  title={{TimeWarp}: Rethinking timekeeping and performance monitoring mechanisms to mitigate side-channel attacks},
+  author={Martin, Robert and Demme, John and Sethumadhavan, Simha},
+  booktitle={ISCA},
+  year={2012},
+  %pages={118--129},
+  %organization={IEEE}
+}
+
+@article{Brickell2006Software,
+  title={Software mitigations to hedge {AES} against cache-based software side channel vulnerabilities},
+  author={Brickell, Ernie and Graunke, Gary and Neve, Michael and Seifert, Jean-Pierre},
+  journal={IACR Cryptology ePrint Archive},
+  year={2006},
+  %volume={2006},
+  %pages={52},
+}
+
+@inproceedings{lickly2008predictable,
+  title={Predictable programming on a precision timed architecture},
+  author={Lickly, Ben and Liu, Isaac and Kim, Sungjun and Patel, Hiren D and Edwards, Stephen A and Lee, Edward A},
+  booktitle={Proceedings of the 2008 international conference on Compilers, architectures and synthesis for embedded systems},
+  year={2008},
+  %pages={137--146},
+  %organization={ACM}
+}
+
+@article{liu2009elimination,
+  title={Elimination of side channel attacks on a precision timed architecture},
+  author={Liu, Isaac and McGrogan, David},
+  journal={Technical Report},
+  year={2009}
+}
+
+@phdthesis{Canteaut2006Understanding,
+  title={Understanding cache attacks},
+  author={Canteaut, Anne and Lauradoux, C\'{e}dric and Seznec, Andr\'{e}},
+  year={2006},
+  school={INRIA}
+}
+
+@misc{polarssl,
+  title = {{SSL Library mbed TLS / PolarSSL}},
+  howpublished = "\url{https://tls.mbed.org/}",
+}
+
+@inproceedings{guan2014copker,
+  title={Copker: Computing with Private Keys without {RAM}},
+  author={Guan, Le and Lin, Jingqiang and Luo, Bo and Jing, Jiwu},
+  booktitle={NDSS},
+  year={2014},
+  %pages={23--26},
+}
+
+@misc{bitsliced,
+  title = {{bitcoin-core/ctaes: Simple constant-time AES implementation}},
+  howpublished = "\url{https://github.com/bitcoin-core/ctaes/}",
+}
+
+
+
+@inproceedings{Lauradoux2005Collision,
+  title={Collision attacks on processors with cache and countermeasures},
+  author={Lauradoux, C\'{e}dric},
+  booktitle={Western European Workshop on Research in Cryptology, July 5-7, 2005, Leuven, Belgium (WEWoRC2005)},
+  year={2005},
+  %volume={5},
+  %pages={76-85},
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+%article{Daemen2002The,
+%  title={The Design of Rijndael: AES - The Advanced Encryption Standard},
+%  author={Daemen, Joan and Rijmen, Vincent},
+%  year={2002},
+%}
+
+%article{Acii2006Trace,
+%  title={Trace-driven cache attacks on {AES}},
+%  author={Ac{\i}i{\c{c}}mez, Onur and Ko{\c{c}}, {\c{C}}etin Kaya},
+%  year={2006},
+%  publisher={Citeseer}
+%}
+@misc{aesimp,
+  title = {{ANSI C Reference Code V2.0 (October 24, 2000)}. {National Institute of Standards and Technology}},
+  howpublished = "\url{http://csrc.nist.gov/CryptoToolkit/aes/rijndael/}",
+}
+
+@inproceedings{Neve2006Advances,
+  title={Advances on Access-Driven Cache Attacks on {AES}},
+  author={Neve, Michael and Seifert, Jean Pierre},
+  booktitle={SAC},
+  pages={147--162},
+  year={2006},
+  organization={Springer}
+}
+
+@inproceedings{Irazoqui2014Wait,
+  title={Wait a Minute! A fast, Cross-VM Attack on {AES}},
+  author={Irazoqui, Gorka and Inci, Mehmet Sinan and Eisenbarth, Thomas and Sunar, Berk},
+  booktitle={RAID},
+  pages={299--319},
+  year={2014},
+  organization={Springer}
+}

@@ -1,0 +1,184 @@
+\section{Related work}
+\label{sec:relatedwork}
+%我现在相关工作分成了两块，一块是部分密钥泄露攻击，一块是cache侧信道攻击，
+%林老师您看下这块是否需要调整，增加哪些，删去哪些，或者结构调整？
+%前面讲过的这里还需要再说吗？
+\subsection{Partial Nonce Disclosure Attacks on DSA/ECDSA}
+Several works propose different attacks that exploit partial nonce disclosure to recover long-term private keys on the signature algorithms.
+
+
+Boneh and Venkatesan \cite{boneh1996} initially investigate HNP and recover the private key of Diffie-Hellman by using the lattice reduction algorithm to solving the HNP problem.
+Howgrave-Graham and Smart \cite{HG2001} extend the work of Boneh and Venkatesan \cite{boneh1996} and  show how to construct an HNP instance from leaked LSBs and MSBs of the DSA nonces.
+Nguyen and Shparlinski \cite{Nguyen2002} prove that for a good enough hash function and for a linear number of randomly chosen nonces, knowing the $l$ LSBs of a certain number of nonces, the $l+1$ MSBs or $2l$ consecutive bits anywhere in the nonces is enough for recovering the DSA private key.
+ They further demonstrate that a DSA-160 key can be broken if only the $3$ LSBs of a certain number of nonces are known.
+Nguyen and Shparlinski \cite{Nguyen2003} extend this results to ECDSA,
+and Liu and Nguyen \cite{Liu2013} demonstrate that only 2 LSBs are required for breaking a DSA-160 key.
+ Benger et al. \cite{Benger2014} use the Flush+Reload technique to find some LSBs of the nonces
+  and extend the technique to use a different number of leaked LSBs for each signature.
+ They recover the secret key of OpenSSL's ECDSA implementation for the curve secp256k1 using less than 256 signatures.
+
+Brumley and Hakala \cite{Brumley2009} use an L1 data cache-timing attack to recover the LSBs of ECDSA nonces from the \verb+dgst+ command line tool in OpenSSL 0.9.8k.
+ They collect $2,600$ signatures ($8K$ with noise) and use the Howgrave-Graham and Smart \cite{HG2001} attack to recover a 160-bit ECDSA private key.
+In a similar vein, Ac{\i}i{\c{c}}mez et al. \cite{Brumley2010} use an L1 instruction cache-timing attack to recover the LSBs of DSA nonces from the same tool in OpenSSL 0.9.8l, requiring $2,400$ signatures ($17K$ with noise) to recover a 160-bit DSA private key.
+ Both attacks require HyperThreading architectures.
+
+Brumley and Tuveri \cite{Brumley2011} mount a remote timing attack on the implementation of ECDSA with binary curves in OpenSSL 0.9.8o.
+ They show that the timing leaks information on the MSBs of the nonce used and that after collecting that information over 8,000 TLS handshakes the private key can be recovered.
+Mulder et al. \cite{Mulder2013} take advantage of the bits in the ephemeral key using the Fast Fourier Transform.
+Van de Pol et al. \cite{Van2015} exploit the structure of the modulus in some elliptic curves to use all of the information leaked in consecutive sequences of bits anywhere in the top half of the nonces, allowing them to recover the secret key after observing only a handful of signatures.
+Allan et al. \cite{Allan2016} improve on these results by using a performance-degradation attack to amplify the side-channel. The amplification allows them
+to observe the sign bit in the wNAF representation used in OpenSSL 1.0.2a and to recover a 256 bit key after observing only 6 signatures.
+Fan et al. \cite{Fan2016} proposed a new way of extracting and utilizing information from the Flush+Reload attack. The problem of recovering the
+secret key is then transformed to the extended hidden number problem (EHNP) which is solved by lattice reduction algorithm. The number of signatures needed is reduced to $4$.
+Genkin et al. \cite{Genkin2016} perform electromagnetic and power analysis attacks on mobile phones. They show how to construct HNP triples when the signature uses the low $s$-value.
+Pereida et al. \cite{Pereida2016} show that the DSA implementation in OpenSSL is vulnerable to cache-timing attacks due to a programming error, and exploit the vulnerability to attack against SSH (via OpenSSH) and TLS (via stunnel).
+
+
+%\cite{Zhang2017}
+%Faug{\`e}re et al. \cite{jean2012}
+%\cite{Gomez2019}
+%\cite{}
+%\cite{}
+%\cite{}
+
+\subsection{Cache Side Channel Attacks}
+In 2002, Page \cite{Page2002} first described a theoretical chosen plaintext attack based on the collection of cache profiles.
+One year later Tsunoo et al. \cite{Tsunoo2003Cryptanalysis} proposed the first practical implementation of cache attacks on the DES cryptographic algorithm.
+The first practical cache side-channel attack on AES appeared in 2005 by Bernstein \cite{Bernstein2005Cache} showing that the table look up operations from different cache lines have different access times in an AES encryption.
+Bonneau and Mironov’s study \cite{Bonneau2006} shows how to exploit cache collisions in AES as a source for time leakage.
+In a similar attack, Osvik et al. \cite{Osvik2006} presented two spy processes that are able to monitor the cache usage: Evict+Prime and Prime+Probe.
+Although the latter one proved to be significantly more efficient, both spy processes recovered the AES encryption key used by an OpenSSL server.
+A few months later, Bonneau and Mironov \cite{joseph2006} and Ac{\i}i{\c{c}}mez and Ko¸c \cite{ac2006} presented new attacks targeting AES that exploited internal table look up collisions in the cache during the last and first rounds respectively.
+Also,
+in another study done by Gullasch et al. \cite{cachegame2011} flush+reload is used to attack AES encryption by blocking the execution of AES after each memory access.
+
+Ac{\i}i{\c{c}}mez in \cite{Onur2007Yet} was the first one discovering that the instruction cache as well as the data cache leaked information when performing RSA encryption.
+Brumley and Boneh performed a practical attack against RSA in \cite{Brumley2005Remote}.
+Later Chen et al. developed the trace driven instruction cache attacks on RSA.
+ Finally Yarom et al. were the first ones proposing a flush+reload attack on RSA using the instruction cache \cite{flushreload}.
+  Then, again Yarom et al. used the Flush+Reload technique to recover the secret key from a ECDSA signature algorithm \cite{yarom2014recovering}.
+
+Cloud computing systems became the next challenge for side-channel attack researchers.
+In 2009, after Ristenpart et al. \cite{get-off-my-cloud} demonstrated that they were able to co-locate an attacker’s virtual machine (VM) with a potential victim’s VM with a success probability of 40\% in the Amazon EC2 cloud.
+ Even further, the authors managed to recover keystrokes from the co-resident victim’s VM, showing that the cache side-channel attacks are both practical and applicable to real world scenarios.
+The possibility of co-location fueled further research on new cache side-channel techniques and cache leakages in VMs.
+For instance, Flush+Reload is used to attack AES \cite{Irazoqui2014} and RSA\cite{flushreload}.
+At the same time, previous side-channel techniques such as Prime+Probe were also
+adapted to work in virtualized settings by Zhang et al. \cite{YinqianZhang2012-cross-vm} and Liu \cite{liu2015last}.
+They utilized a spy process to detect co-resident tenants and to recover ElGamal encryption keys.
+Irazoqui et al. \cite{fine2014} recovered AES keys in virtualized environments with Bernstein’s attack.
+Benger et al. \cite{Benger2014} demonstrated the viability of the Flush+Reload technique to recover ECDSA encryption keys,
+and Van de Pol et al. \cite{Van2015} improved this work by using less signatures.
+Fan et al. \cite{Fan2016} proposed a new way of extracting and utilizing information from the Flush+Reload attack.
+Flush+Flush \cite{gruss2016flush} and Prime+Abort \cite{disselkoen2017prime+abort} are the variants of Flush+Reload.
+They exploit different methods to observe the cache access patterns to recover the private key.
+
+
+
+
+
+%Several works have been presented to attack the ECDSA implementation with the wNAF representation.
+% Generally, the attackers target the implementation of scalar multiplication
+%  and use cache side channel attacks to achieve the information about the ephemeral key $k$.
+%Through the cache side channels attackers can get a "double-and-add" chain for the scalar multiplication.
+%However, because the wNAF representation of $k$ is a sequence of signed digits,
+% it is hard to directly recover the whole ephemeral key just depending on the "double-and-add" chain.
+%From the obtained information it can only determine the position of the non-digital bits and some least significants bits of the ephemeral key.
+%Hence attackers exploit the incomplete information of $k$ to transform the problem of private key recovery into one that can be solved by lattice, such as HNP or EHNP problem.
+% Then the attackers retrieve the private key by solving the HNP or EHNP problem through being converted to the CVP/SVP problem in the lattice.
+%
+%%攻击一般有以下几个步骤，对标量乘法进行攻击，首先是通过cache侧信道攻击获取有关k的一些信息，
+%%然后通过侧信道获取的信息，得到k的某些bit位的信息，或者k的信息。
+%%通过获得到的信息，将求解私钥的问题转化为可以通过格来求解的问题，进而通过求解格困难问题来获取私钥。
+%%ECDSA wNAF 部分密钥泄露攻击
+%
+%%找到一个共同的点，论文在这个点，或这几个点相关，然后进行分析。
+%%
+%%首先对这些论文按某些特点进行分类
+%%在每个类别里，每个工作和本文进行详细对比，
+%%它是怎么实现的，用了什么技术，达到了什么效果
+%%本文的情况如何
+%%从数据获取，到数据分析方法，然后结果进行比较
+%%相同点，不同点
+%
+%Benger et al. \cite{Benger2014} presented an attack to the ECDSA implementation with the wNAF representation in 2014.
+%They got the least significant bits (LSBs) of the ephemeral key through the Flush + Reload attack
+%although this is not all the information obtained from the side channel.
+%Then they used the LSBs of many signatures to construct a HNP problem and
+%successfully retrieved the private key by solving the CVP/SVP instance of a specific lattice converted from the HNP problem.
+%The number of bits extracted from each signature is very small, only an average of 2 bits information can be obtained.
+%Thus made it require more than 200 signatures to recover a 256-bit private key
+%with the probability being 3.5\%.
+%In our work, not only do we get more information from the cache side channel,
+% but also we can exploit it to extract the consecutive bits at the position of every non-zero bits for the ephemeral key.
+%All the consecutive bits can be used to construct the lattice attack.
+%Therefore, we can get much more bits per signature and the number of signatures is decreased for retrieve the private key.
+%
+%In 2015, van de Pol et al. improved Benger's attack.
+%Their method relied on the property of some specific elliptic curves, that is the order $q$ of the base point is a pseudo-Mersenne prime.
+%This prime can be expressed as $2^n - \epsilon$, where $|\epsilon| < 2^p $, $p \approx n/2$.
+%With this property, this attack can use the information from the consecutive non-zero digits whose positions are between $p+1$ and $n$ extracted from the Flush + Reload attack, not only the LSBs.
+%This means that they can use about half of the information they got from the side channel.
+%Then they constructed a new HNP instance using this information and
+%successfully retrieved the private key.
+%According to this paper, it is able to extract 47.6 bits per signature on average for the secp256k1 curve and recover the private key with 13 signatures.
+%Although this work greatly reduced the number of signatures needed to recover the private key,
+%the information from the cache side channel is not fully utilized.
+%But our work can use all the information from the cache side channel.
+%Moreover, their work is only effective to some special curves,
+% but ours can be applied to all the curves without any restriction.
+%%the curves with the special property is just a small part of all the curves. This method of constructing the HNP instance can not be extended to other kinds of curves.
+%
+%Both of the two works exploited the HNP instance to retrieve the ECDSA private key.
+%While Fan et al.\cite{Fan2016} proposed a new method to
+% extract information from the Flush + Reload attack.
+%It takes advantage of all positions of digits to construct an EHNP instance.
+%The EHNP problem is solved in the same way as the HNP problem,
+%being converted into the SVP problem on the lattice.
+%They managed to obtain on average 105.8 bits per signature for the secp256k1 curve
+% and only need 4 signatures to retrieve the private key with the probability being 8\%.
+% Compared with their work, ours obtains more information about the ephemeral key, i.e. the sign of all non-zero digits, from the side channel by analysing the OpenSSL implementation.
+%Furthermore, we transform the information of the wNAF representation to the binary information of $k$ to construct the lattice attack for the first time.
+%We can extract xx bits information per signature.
+%Although it uses more signatures to retrieve the private key through our lattice attack,
+%theoretically the number of signatures needed is less than Fan's if a suitable lattice is constructed.
+%
+%2017年，范团队还在science China information sciences 上发了一篇，使用HNP的文章，
+%这是一个b类的期刊。(交叉综合新兴)
+%需要在这里和它进行对比吗，还是这三篇就够了。
+%我们比这个期刊的文章效果要好的。
+%
+%
+%%In 2017, \cite{Wang2017} give a lattice attack on the ECDSA implementation in the
+%%latest version of OpenSSL which uses the wNAF method to implement the scalar multiplication, using
+%%only a small fraction of information of the double-and-add chain of the ephemeral key.
+%%we only need to know the positions of the second non-zero digit and the last non-zero
+%%digit (from the higher index) together with the length of the chain rather than obtaining a perfect one
+%%from the side-channel attack.
+%%
+%%
+%%In 2015, \cite{Cao2015} presents two Lattice-Based Differential Fault Attacks Against ECDSA with wNAF Algorithm.
+%%
+%%In 2016, \cite{Dahmun2016}  extend the famous Howgrave-Graham and Smart lattice attack when the nonces are blinded by the addition of a random multiple of the elliptic-curve group order or by a random Euclidean splitting.
+%
+%%In 2015, van de Pol et al. improved Benger's attack.
+%%They also used the Flush + Reload method to attack the scalar multiplication.
+%%They used the position information of the non-zero digits extracted from the side channel, not only the LSBs.
+%%Their method relied on the property of some specific elliptic curves, that is the order $q$ of the base point is a pseudo-Mersenne prime.
+%%This prime can be expressed as $2^n - \epsilon$, where $|\epsilon| < 2^p $, $p \approx n/2$.
+%%With this property, this attack can use the information from the consecutive non-zero digits whose positions are between $p+1$ and $n$ extracted from the side channel.
+%%This means that they can use about half of the information they got from the side channel.
+%%Then they constructed a new HNP instant using this information and
+%%successfully retrieved the private key.
+%%According to this paper, it is able to extract 47.6 bits per signature on average for the secp256k1 curve and recover the private key with 13 signatures.
+%%This work greatly reduced the number of signatures needed to recover the private.
+%%Although it used half of the information more than the Benger's, the information from the cache side channel is not fully utilized.
+%%Moreover, the curves with the special property is just a small part of all the curves. This method of constructing the HNP instance can not be extended to other kinds of curves.
+
+
+
+
+
+
+
+
