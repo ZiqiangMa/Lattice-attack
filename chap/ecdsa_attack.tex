@@ -3,48 +3,48 @@
 In this section, we propose a new method to retrieve the private key of ECDSA.
 First, we analyse the invert function in the scalar multiplication with wNAF representation in the ECDSA algorithm.
  Then we use the invert function for improving the cache side channel attacks, from which the sign of the non-zero digits of $k$ is determined.
-After that, we make use of the obtained information to recover the consecutive bits at the position of every non-zero digits of $k$. 
+After that, we make use of the obtained information to recover the consecutive bits at the position of every non-zero digits of $k$.
 Finally, we construct a HNP instance by the consecutive bits and transform it to the problem of solving the SVP/CVP in some lattice with the lattice reduction algorithms.
- 
-\subsection{Attacking OpenSSL wNAF Through The Cache Side Channels}
-\label{data_get}
-First recalling the implementation of scalar multiplication, the precomputed points are $\{\pm G, \pm 3G, ..., \pm(2^{w - 1})G\}$. It iterates $k$ from the most significant digit to the least significant digit.
-In each digit it performs a double function and if the digit is not zero, it  index from the precomputed points using the digit and performs an addition operation.
 
-The invert function is used to compute the inverse element of a number. 
-Applying this function to scalar multiplication, the space of precomputed points is saved half, only need to store $\{G, 3G, ..., (2^{w} - 1)G\}$.
-Also the index is more convenient. 
-When traversing $k$, in each non-zero digit, if the sign of the digit is opposite to the prior one, the invert function is called before the add function. 
+\subsection{Attacking wNAF Through The Cache Side Channels}
+\label{data_get}
+First recalling the implementation of scalar multiplication in OpenSSL, it uses the invert function to 
+  compute the inverse element of a number.
+Applying this function, the space of precomputed points is saved by half, only need to store $\{G, 3G, ..., (2^{w} - 1)G\}$.
+As showed in Algorithm~\ref{alg:smopenssl},
+it iterates $k$ from the most significant digit to the least significant digit.
+In each digit it performs a double function.
+While if the digit is not zero, it first determines whether the invert function is executed.
+ If the sign of the digit is opposite to the prior one, the invert function is called.
+Then it indexes from the precomputed points using the absolute value of the digit and performs an addition operation.
 
 Originally, the vulnerability comes from the double and add function.
+The double function is called at every digit, and this reveals the digit sequence.
 The add function is called just when the digit is not zero,
   which makes it possible to distinguish whether the digit is zero or not.
-Also, the double function is called in every digit, and this reveals the digit sequence and the position of the non-zero digit.
+  That reveals the position of all the non-zero digits.
 However,
  the invert function is also vulnerable, because it is called conditionally, either.
-Only in the condition that the sign of the digit is opposite to the previous, the invert function will be performed.
-Therefore, if these conditional branches are monitored, it will reveal some information about the ephemeral key. 
-When the attacker monitors the double and addition operations while computing the scalar multiplication,
-it yields a sequence of double and addition executions.
-According to the sequence, the attacker can determine whether each digit of $k$ is zero or not.
-  That is what the original Flush + Reload attack does. 
-It uses a spy process to monitor one memory line of the code of the double and addition function.
- The time is divided into slots, and in each slot 
-  the spy determines whether the two functions are performed or not by monitoring the cache hits/misses.
- Then it can obtain a "double-and-add" chain.
-  When extracting the digits of $k$, the "double" represents $k_i$ is zero and  
-the "add" represents $k_i$ is not zero.
+Only in the condition that the sign of the non-zero digit is opposite to the previous, the invert function will be performed.
+Because we know the first non-zero digit is positive, 
+   the sign of all the non-zero digit can be deduced based on the execution of the invert function. 
 
-The invert function has the similar vulnerability so that it can be exploited in the same way.
-We use the spy process also to monitor a memory line of the invert function.
-Also an "invert" chain is achieved for the non-zero digits. 
-The appearance of "invert" represents the sign of $k_i$ is opposite to previous non-zero digit. 
-As we know the most significant digit is positive, the sign of all non-zero digits.
 
-Specific to the OpenSSL implementation (especially the OpenSSL1.1.0h used in this paper), the core computing part of the scalar multiplication is shown in Algorithm  \ref{alg:smopenssl}, and the double, add and invert function are implemented using  \verb+EC_POINT_dbl()+, \verb+EC_POINT_add()+ and \verb+EC_POINT_invert()+.
+We use a spy process to monitor one memory line of the code of the double, add and invert functions while computing the scalar multiplication.
+The time is divided into slots, and in each slot
+  the spy determines whether the three functions are performed or not by monitoring the cache hits/misses.
+ Then we can obtain a "double-add-invert" chain.
+According to the "double" and "add" in this chain, we can determine whether each digit of $k$ is zero or not.
+  That is what the original Flush + Reload attack does.
+Also, based on the "invert" in this chain, we can infer the sign of each non-zero digit.
+
+
+Specific to the OpenSSL implementation (especially the OpenSSL1.1.0h used in this paper), 
+  the double, add and invert function are implemented using  \verb+EC_POINT_dbl()+, \verb+EC_POINT_add()+ and \verb+EC_POINT_invert()+.
+ The original cache side channel attack monitors the \verb+EC_POINT_dbl()+ and \verb+EC_POINT_add()+ function.
 So as in our attack, we improve the original cache side channel attack by adding a new monitor to the \verb+EC_POINT_invert()+ function.
 We use a spy process to monitor one memory line of the code of the three functions.
- In each time slot 
+ In each time slot
   the spy determines whether the three functions are performed or not.
 Then we get a new "double-add-invert" chain through the cache side channel attack.
 
@@ -55,19 +55,34 @@ Then we get a new "double-add-invert" chain through the cache side channel attac
 %我们在攻击中怎么做的
 %然后得到了什么
 
-When we use the "double-add-invert" chain to extract the digits of $k$, 
- the "double" and "add" have the same meaning as before, representing $k_i$ is zero or not. 
+%The invert function has the similar vulnerability so that it can be exploited in the same way.
+%We use the spy process also to monitor a memory line of the invert function.
+%Also an "invert" chain is achieved for the non-zero digits.
+%The appearance of "invert" represents the sign of $k_i$ is opposite to previous non-zero digit.
+%As we know the most significant digit is positive, the sign of all non-zero digits.
+%
+%  When extracting the digits of $k$,
+
+When we use the "double-add-invert" chain to extract the digits of $k$,
+the "double" represents the double function is called,  
+and the "add" represents the double and add functions are called both.    
+The "invert" represents the invert function is called. 
+Therefore,
+ the "double" appears meaning that $k_i$ is zero
+and the "add" appears meaning that $k_i$ is not zero.
  Then we use the "invert" to determine the sign of the $k_i$.
 The sign of the $k_i$ is related to the previous non-zero digit.
 First, the "invert" comes out together with "add".
  Then, if the "invert" appears, it represents that the sign of this digit $k_i$ is opposite to the previous non-zero digit.
- While if the "invert" does not appear when "add" comes out, it represents that 
+ While if the "invert" does not appear when "add" comes out, it represents that
 the sign of this digit $k_i$ is the same as the previous non-zero digit.
- For the wNAF representation of $k$, the most significant digit is always positive. 
- Therefore we can determine the sign of all non-zero digits.
- 
- In our work, we implement the Flush+Flush attack to obtain the "double-add-invert" chain because it has a better precision.
-%这里还需要再多说两句，为什么要精度更高，因为reload时间长，多监控一个函数，在一个slot中花费时间更多， 容易造成失误。 flush的时间短，slot可以更短。
+ For the wNAF representation of $k$, the most significant digit is always positive.
+ Thus we can determine the sign of all non-zero digits.
+In this way, we obtain all the positions of the non-zero digits and the sign information of them.
+
+
+% In our work, we implement the Flush+Flush attack to obtain the "double-add-invert" chain because it has a better precision.
+%%这里还需要再多说两句，为什么要精度更高，因为reload时间长，多监控一个函数，在一个slot中花费时间更多， 容易造成失误。 flush的时间短，slot可以更短。
 
 
 %openssl的实现是XXXX，
@@ -93,7 +108,7 @@ From the Algorithm \ref{alg:wnaf} we know that the position of $k_i$ in the wNAF
  When we know the information about whether $k_i$ is zero and the sign of the non-zero $k_i$, we can simply determine some bits of $k$.
  For example if we obtain the sign of the first non-zero $k_j$, we can infer that $b_j$ is one and $b_i$ is zero for $0\leq i<j$.
  But for arbitrary non-zero digits, it can not determine whether the bit is zero or one.
- 
+
  Let $m$ and $m + l$ be the position of two consecutive non-zero digits of the wNAF representation, and $w$ be the window size.
  That is $k_m, k_{m+l} \neq 0$ and $k_{m+i} = 0$ for all $0 < i < l$.
  We analyse the transformation method between the binary and wNAF representation, getting the following result:
@@ -115,7 +130,7 @@ From the Algorithm \ref{alg:wnaf} we know that the position of $k_i$ in the wNAF
 %这里的公式有漏洞，需要加上最低位即m最小时的bm
 
 In this way, at the position of every non-zero digit we can obtain $l - w + 1$ consecutive bits of $k$.
-For the wNAF representation, every non-zero digit is followed by at least $w$ zero values. 
+For the wNAF representation, every non-zero digit is followed by at least $w$ zero values.
  The average number of non-zero digits of $k$ is $\lfloor\log_{2}{q}\rfloor /(w+2)$.
  The average distance between consecutive non-zero digits is $w+2$, i.e. on average $l = w + 2$.
  This means we can obtain $3$ consecutive bits on average at the every non-zero digit.
@@ -123,10 +138,10 @@ Thus, on average we can obtain $3\lfloor\log_{2}{q}\rfloor /(w+2)$ bits of the e
 For the secp256k1 curve implemented in OpenSSL, $\lfloor\log_{2}{q}\rfloor = 256$, $w = 3$.
  Also, as introduced previous, the scalar multiplication uses $k+q$ instead of $k$ in most cases,
   so the total number of bits per signature we obtain is $3(\lfloor\log_{2}{q}\rfloor +1)/(w+2) = 154.2$.
-In theory, two signatures would be enough to recover the 256-bit private key as $2\times 154.2 = 308.4 > 256$. 
+In theory, two signatures would be enough to recover the 256-bit private key as $2\times 154.2 = 308.4 > 256$.
 
 %这里再加一小段，理论上[文献x]说，只要知道连续的2bit信息，就能够用来构造格攻击恢复密钥。
-%因此，对侧信道得到的数据使用我们的方法恢复出来的连续比特位，全部都可以被用到后续的攻击中 
+%因此，对侧信道得到的数据使用我们的方法恢复出来的连续比特位，全部都可以被用到后续的攻击中
 
 %首先，k的二进制表示和k的wnaf表示
 %他们的位是对应的。
@@ -147,24 +162,24 @@ To construct a HNP instance using arbitrary consecutive bits, we need to use the
  \label{theorem1}
 There exists a polynomial-time algorithm which, given $A$ and $B$ in $[1, q]$, finds $\lambda \in Z^{*}_{q}$ such that
 $$
-|\lambda |_q < B  \ \  \text{and} \ \  |\lambda A|_q \leq q/B . 
-$$ 
+|\lambda |_q < B  \ \  \text{and} \ \  |\lambda A|_q \leq q/B .
+$$
 \end{theorem}
 The value of $\lambda$ can be found exploiting the continued fractions.
 
 Recall the ECDSA signature, $s = k^{-1} (h(m) + r\cdot\alpha)$ mod $q$.
-We rewrite it as 
+We rewrite it as
 \begin{equation}
 \label{sig}
 \alpha rs^{-1} = k - s^{-1}h(m)  \ \  \text{mod} \ \ q.
 \end{equation}
 Then assume that we are given the $l_i$ consecutive bits of $k$, starting at some known position $j$.
  So $k$ is represented as $k = 2^{j}a + 2^{l+j}b +c$ for $0 \leq a \leq 2^l -1$, $0\leq b \leq q/2^{l+j}$ and $0 \leq c < 2^j$.
- We apply the theorem with $A = 2^{j+l}$ and $B = q2^{-j-l/2}$, to obtain $\lambda$ such that  
+ We apply the theorem with $A = 2^{j+l}$ and $B = q2^{-j-l/2}$, to obtain $\lambda$ such that
 $$
-|\lambda |_q < q2^{-j-l/2}  \ \  \text{and} \ \  |\lambda 2^{j+l}|_q \leq q/2^{j+l/2} . 
-$$ 
-Multiplying by $\lambda$ and plugging the value of $k$, Equation \ref{sig} transformed to 
+|\lambda |_q < q2^{-j-l/2}  \ \  \text{and} \ \  |\lambda 2^{j+l}|_q \leq q/2^{j+l/2} .
+$$
+Multiplying by $\lambda$ and plugging the value of $k$, Equation \ref{sig} transformed to
 $$
 \alpha r\lambda s^{-1} = (2^{j}a - s^{-1}h(m))\lambda +(c\lambda + 2^{l+j}b\lambda)  \ \  \text{mod} \ \ q.
 $$
@@ -175,11 +190,11 @@ $$
  \left\{
  \begin{aligned}
  	&t_i = \lfloor r\lambda s^{-1} \rfloor_q    \\
- 	&u_i = \lfloor (2^{j}a - s^{-1}h(m))\lambda \rfloor_q 
+ 	&u_i = \lfloor (2^{j}a - s^{-1}h(m))\lambda \rfloor_q
  \end{aligned}
  \right.
- \end{equation} 
-We then have that 
+ \end{equation}
+We then have that
  \begin{equation}
 \label{lattice}
     |\alpha t_i - u_i|_q < q/2^{(l/2-1)}
@@ -194,8 +209,8 @@ In practice, OpenSSL uses $k+q$ as the ephemeral key. So the Equation \ref{tu} r
 %上面这一部分，主要是引用的他人工作，因此需要重新整合语言，并且看看如何引用。
 
 Note that, the Equation \ref{lattice2} represents that the $l/2-\log_{2}{3} -1$ most significant bits of $\lfloor\alpha t_i\rfloor$ is $u_i$, based on the definition of the HNP.
-So it should satisfy that $l/2-\log_{2}{3} -1 \geq 1$, i.e. $l > 7$. 
-That means the length of the consecutive bits used to  construct the HNP instance should be larger than $7$, 
+So it should satisfy that $l/2-\log_{2}{3} -1 \geq 1$, i.e. $l > 7$.
+That means the length of the consecutive bits used to  construct the HNP instance should be larger than $7$,
 although we could use all the partitions of the consecutive bits of the ephemeral key in theory.
 
 Next we turn the HNP instance into the lattice problem.
