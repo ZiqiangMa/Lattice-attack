@@ -1,3 +1,20 @@
 \section{Discussion}
 \label{sec:discussion}
 
+\subsection{Scalar Multiplication In Other Cryptographic Libraries}
+Besides the OpenSSL library, there are many cryptographic libraries that implement the scalar multiplication.
+But not all of them use the wNAF representation.
+We introduce some implementations of the scalar multiplication in some popular cryptographic libraries.
+
+The mbed TLS \cite{polarssl} is an open source SSL library licensed by ARM Limited.
+It does not use the wNAF algorithm to represent the scalar.
+It uses a comb method that generates a sequence of bit-strings to represent the scalar $k$ so that every bit-string represents an odd number based on modifying the method in \cite{Hedabou2004ACM}.
+When computing the scalar multiplication, it traverses the sequence and directly indexes the value in the precomputed points to perform the addition.
+It does not use the invert function, 
+and this representation is hard to attack by the cache side channels because all the elements of the sequence are not zero. 
+
+
+
+
+
+
