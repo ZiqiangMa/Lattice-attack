@@ -201,7 +201,9 @@ Attackers exploit these time variations to deduce the operations of the target p
 %In recent years, access-driven attacks have been favored by researchers,
 % because it has higher attack accuracy which means it has the ability to accurately obtain the cache access of the target process.
 %Also it has a wider application scenarios, such as the attacks in the virtualization environments and cloud environments.
-Next, we introduce two typical access-driven attacks called Flush + Reload \cite{flushreload} and Flush + Flush \cite{gruss2016flush} that are relevant to our work.
+Many attack methods are proposed \cite{Bonneau2006, Bernstein2005Cache, Osvik2006, cachegame2011, flushreload}
+ since it is demonstrated feasible in theory \cite{Page2002}.
+We introduce two typical access-driven attacks called Flush + Reload \cite{flushreload} and Flush + Flush \cite{gruss2016flush} that are relevant to our work.
 %在近些年的研究中，访问驱动的攻击受到研究者们的青睐，因为其具有更高的攻击精度，能够很准确的获取到目标进程对cache的访问情况，以及更广的使用场景，例如对虚拟化云环境进行攻击。接下来，我们对两种典型的访问驱动攻击进行介绍，这两种攻击和本文相关。
 
 The Flush + Reload attack \cite{flushreload} employs a spy process to monitor if the specific memory lines have been accessed or not by the victim process.
