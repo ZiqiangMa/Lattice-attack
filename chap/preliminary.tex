@@ -258,7 +258,7 @@ The Flush + Flush attack does not trigger prefetches when monitoring consecutive
 %f+r的算法伪代码考虑需不需要添加。
 
 
-\subsection{The Hidden Number Problem}
+\subsection{The Hidden Number Problem and Lattice Attack}
 \label{intro_hnp}
 The Hidden Number Problem (HNP) is first presented by Boneh and Venkatesan \cite{boneh1996} in 1996.
 It is used to recover the secret key of Diffie-Hellman algorithm, DSA and ECDSA, given some leaked consecutive bits of the ephemeral key.
@@ -271,17 +271,8 @@ The HNP can be stated as follows:
 If $|\alpha t - u|_{q} \leq q/2^{l+1}$ is satisfied,
 the integer $u$ represents the $l$ most significant bits of $\alpha t$ which is defined as ${MSB}_l(\alpha t)$.
 
-%这一段说，用cache攻击可以获得信息，然后将其转化成hnp问题来求解。
-The HNP problem can be solved by the lattice basis reduction algorithm.
-For the ECDSA algorithm implemented by OpenSSL with the wNAF,
-  the attackers can obtain the double-and-add chain through the cache side channels,
-    and then extract some consecutive bit fragments of the ephemeral key $k$.
-Consequentially, the attackers transform the problem of recovering the secret key to the HNP problem.
- By solving the HNP problem the attackers can recover the secret key.
 
-\subsection{Lattice}
-\label{intro_lattice}
-To solve the HNP problem, we need to use the knowledge of the lattice.
+The HNP problem can be converted to the CVP/SVP in the lattice and solved by the lattice basis reduction algorithm.
 Here we provide a briefly introduce to the lattice.
 For more detailed references on lattice we refer to the literature \cite{latticereduction2000}.
 Consider the Euclidean space $\mathbb{R}^{d}$
@@ -344,10 +335,17 @@ Similarly, the vector $h' = (\alpha t_1 - u_1 \bmod q, ..., \alpha t_d - u_d \bm
 Note that this lattice also contains other vector $(-t_1, ..., -t_d, q, 0)\cdot B = (0, ..., 0, q/2^{l+1}, 0)$,
  which is most likely the shortest vector of the lattice.
 So we expect the second vector in a reduced basis of the lattice is equal to $h'$ with a "good" chance for a suitably strong lattice reduction algorithm.
-Then we can acquire the secret key $\alpha$.
+Then we can acquire the hidden nubmer $\alpha$ by solving the SVP problem.
 
-we can use LLL \cite{Lenstra1982} or BKZ \cite{Schnorr1994} algorithm to solve the SVP problem, while use Babai \cite{Babai1986} algorithm or Enumeration technique to solve the CVP problem.
+%we can use LLL \cite{Lenstra1982} or BKZ \cite{Schnorr1994} algorithm to solve the SVP problem, while use Babai \cite{Babai1986} algorithm or Enumeration technique to solve the CVP problem.
 
+%这一段说，用cache攻击可以获得信息，然后将其转化成hnp问题来求解。
+For the ECDSA algorithm implemented by OpenSSL with the wNAF,
+  the attackers can obtain some consecutive bit fragments of the ephemeral key $k$ through the cache side channels.
+Then, the problem of recovering the secret key can be transformed to the HNP problem.
+ The attackers can recover the secret key by solving the HNP problem using lattice reduction algorithms.
+ 
+ 
 %1 什么是格
 
 %2 什么是格困难问题
