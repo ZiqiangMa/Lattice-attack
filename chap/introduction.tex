@@ -84,23 +84,24 @@ First, we analyse the code of the implementation of ECDSA in OpenSSL,
 in the implementation of the scalar multiplication the invert function plays a very important role.
 It inverts a number so that the subtraction is replaced by addition and the space storing the precomputed points is reduced by half.
 In the calculation, if the sign of current non-zero digit of the ephemeral key is opposite to the previous, the invert function is called  and the absolute value of this digit is used to index the precomputed points. Otherwise the invert function is not called.
-This helps us to determine the sign of the non-zero digits of the ephemeral key.
+It may help us to determine the sign of the non-zero digits of the ephemeral key.
  % by exploiting the \emph{$EC\_POINT\_invert()$} function we can improve the cache side channel attacks.
-  We get the sign of the non-zero digits in the wNAF of the ephemeral key through adding a monitor to the invert function.
+  Based on this fact, we obtain the sign of the non-zero digits in the wNAF of the ephemeral key through adding a monitor to the invert function.
  Thus, we achieve more information about the ephemeral key compared to previous attacks.
 After that, we manage to recover the consecutive bits at the position of every non-zero digits of the ephemeral key based on the information obtained from the cache side channels.
 Finally, we constructed a HNP \cite{boneh1996} instance making the best of the consecutive bits of the ephemeral key.
 This problem is solved by lattice reduction algorithms  through converting to the SVP/CVP in some lattice.
 
-We apply this method to attack the secp256k1 curve in this paper.
-We choose the Flush+Flush\cite{gruss2016flush} method to implement the cache side attack due to its higher precision.
+This method is applied to attack the secp256k1 curve in this paper.
+We choose the Flush+Flush\cite{gruss2016flush} method to implement the cache side attack.
 Through monitoring the double and add function in OpenSSL, also the  invert function, we obtain the "double-add-invert" chain.
 We successfully extract whether each digit of the ephemeral key is zero or not, and determine the sign of the non-zero digits.
 Then We use BKZ \cite{Schnorr1994} algorithm to solve the HNP instance.
 The results show that we effectively retrieve the ECDSA private key.
 If the result of the Flush+Flush attack is perfect, we need $60$ signatures at least to recover the private key with the probability being about $1\%$.
 
-Compared to the previous works, ours obtains more information about the ephemeral key, i.e. the sign of all non-zero digits, from the side channels.
+Through the cache side channel we get the information about the position and the sign of all non-zero digits of the ephemeral key.
+Compared to the previous works, ours obtains more information about the ephemeral key, i.e. the sign of all non-zero digits.
  More precisely, we can extract $154.2$ bits on average per signature for 256-bit ECDSA.
 Also, our method does not rely on some special properties of the curves.
 It  can be applied to all the curves without any restriction.
@@ -129,8 +130,8 @@ The private key is retrieved by solving the HNP instance using lattice reduction
 
   \item
     We apply our method to attack the secp256k1 curve.
-   The experiments show that  154.2 bits are obtained on average per signature through from the cache side channel.
-    Also, $60$ signatures are enough to recover the private key with the probability being about $1\%$.
+     Through the cache side channel, $154.2$ bits of information are obtained on average per signature.
+    The experiments show that $60$ signatures are enough to recover the private key with the probability being about $1\%$.
 \end{itemize}
 
 The remainder of this paper is organized as follows.

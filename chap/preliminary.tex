@@ -192,16 +192,15 @@ Also,  the execution sequence of the invert operation can be used to determine t
 Cache side-channel attacks take advantage of the characteristic of cache activity
  that accessing data from caches is much faster than from memory.
 Attackers exploit these time variations to deduce the operations of the target process and then infer the key information.
-
-Cache side-channel attacks are roughly divided into three categories: trace-driven, time-driven and access-driven attacks.
-The trace-driven attackers probe the variation of electromagnetic fields or power, to capture the profile of cache activities and deduce cache hits and misses \cite{ac2006}.
-In time-driven attacks \cite{Bonneau2006, Bernstein2005Cache}, the adversary passively measures the execution time to disclose the secret keys.
-In these two categories of attacks, the cache states are changed by the victim cryptographic engine (and the system activities),
- while an access-driven attacker \cite{Osvik2006, cachegame2011, flushreload} actively manipulates the cache states by running a malicious process that shares caches with the victim.
-
-In recent years, access-driven attacks have been favored by researchers,
- because it has higher attack accuracy which means it has the ability to accurately obtain the cache access of the target process.
-Also it has a wider application scenarios, such as the attacks in the virtualization environments and cloud environments.
+%Cache side-channel attacks are roughly divided into three categories: trace-driven, time-driven and access-driven attacks.
+%The trace-driven attackers probe the variation of electromagnetic fields or power, to capture the profile of cache activities and deduce cache hits and misses \cite{ac2006}.
+%In time-driven attacks \cite{Bonneau2006, Bernstein2005Cache}, the adversary passively measures the execution time to disclose the secret keys.
+%In these two categories of attacks, the cache states are changed by the victim cryptographic engine (and the system activities),
+% while an access-driven attacker \cite{Osvik2006, cachegame2011, flushreload} actively manipulates the cache states by running a malicious process that shares caches with the victim.
+%
+%In recent years, access-driven attacks have been favored by researchers,
+% because it has higher attack accuracy which means it has the ability to accurately obtain the cache access of the target process.
+%Also it has a wider application scenarios, such as the attacks in the virtualization environments and cloud environments.
 Next, we introduce two typical access-driven attacks called Flush + Reload \cite{flushreload} and Flush + Flush \cite{gruss2016flush} that are relevant to our work.
 %在近些年的研究中，访问驱动的攻击受到研究者们的青睐，因为其具有更高的攻击精度，能够很准确的获取到目标进程对cache的访问情况，以及更广的使用场景，例如对虚拟化云环境进行攻击。接下来，我们对两种典型的访问驱动攻击进行介绍，这两种攻击和本文相关。
 
