@@ -94,7 +94,7 @@ After that, we manage to recover the consecutive bits at the position of every n
 Finally, we constructed a HNP \cite{boneh1996} instance making the best of the consecutive bits of the ephemeral key.
 This problem is solved by lattice reduction algorithms  through converting to the SVP/CVP in some lattice.
 
-This method is applied to attack the secp256k1 curve in this paper.
+This method is applied to attack the secp256k1 curve in OpenSSL1.1.1b in this paper.
 We choose the Flush+Flush\cite{gruss2016flush} method to implement the cache side attack.
 Through monitoring the double and add function in OpenSSL, also the  invert function, we obtain the "double-add-invert" chain.
 We successfully extract whether each digit of the ephemeral key is zero or not, and determine the sign of the non-zero digits.
@@ -131,7 +131,7 @@ In summary, our contributions are as follows:
 The private key is retrieved by solving the HNP instance using lattice reduction algorithm.
 
   \item
-    We apply our method to attack the secp256k1 curve.
+    We apply our method to attack the secp256k1 curve in the latest version of OpenSSL.
      Through the cache side channel, $154.2$ bits of information are obtained on average per signature.
     The experiments show that $60$ signatures are enough to recover the private key with the probability being about $1\%$.
 \end{itemize}

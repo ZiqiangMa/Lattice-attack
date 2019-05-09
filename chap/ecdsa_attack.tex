@@ -8,7 +8,7 @@ Finally, we construct a HNP instance by the consecutive bits and transform it to
 
 \subsection{Attacking wNAF Through The Cache Side Channels}
 \label{data_get}
-First recalling the implementation of scalar multiplication in OpenSSL, it uses the invert function to 
+First recalling the implementation of scalar multiplication in OpenSSL, it uses the invert function to
   compute the inverse element of a number.
 Applying this function, the space of precomputed points is saved by half, only need to store $\{G, 3G, ..., (2^{w} - 1)G\}$.
 As showed in Algorithm~\ref{alg:smopenssl},
@@ -26,8 +26,8 @@ The add function is called just when the digit is not zero,
 However,
  the invert function is also vulnerable, because it is called conditionally, either.
 Only in the condition that the sign of the non-zero digit is opposite to the previous, the invert function will be performed.
-Because we know the first non-zero digit is positive, 
-   the sign of all the non-zero digit can be deduced based on the execution of the invert function. 
+Because we know the first non-zero digit is positive,
+   the sign of all the non-zero digit can be deduced based on the execution of the invert function.
 
 
 We use a spy process to monitor one memory line of the code of the double, add and invert functions while computing the scalar multiplication.
@@ -39,7 +39,7 @@ According to the "double" and "add" in this chain, we can determine whether each
 Also, based on the "invert" in this chain, we can infer the sign of each non-zero digit.
 
 
-Specific to the OpenSSL implementation (especially the OpenSSL1.1.0h used in this paper), 
+Specific to the OpenSSL implementation (especially the OpenSSL1.1.1b used in this paper),
   the double, add and invert function are implemented using  \verb+EC_POINT_dbl()+, \verb+EC_POINT_add()+ and \verb+EC_POINT_invert()+.
  The original cache side channel attack monitors the \verb+EC_POINT_dbl()+ and \verb+EC_POINT_add()+ function.
 So as in our attack, we improve the original cache side channel attack by adding a new monitor to the \verb+EC_POINT_invert()+ function.
@@ -57,9 +57,9 @@ Then we get a new "double-add-invert" chain through the cache side channel attac
 
 
 When we use the "double-add-invert" chain to extract the digits of $k$,
-the "double" represents the double function is called,  
-and the "add" represents the double and add functions are called both.    
-The "invert" represents the invert function is called. 
+the "double" represents the double function is called,
+and the "add" represents the double and add functions are called both.
+The "invert" represents the invert function is called.
 Therefore,
  the "double" appears meaning that $k_i$ is zero
 and the "add" appears meaning that $k_i$ is not zero.

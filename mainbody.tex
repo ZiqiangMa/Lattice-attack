@@ -74,7 +74,7 @@ Thus, we obtain $154.2$ bits of information per signature on average for the sec
 Finally, making use of the consecutive bits,
  we convert the problem of recovering the private key to the Hidden Number Problem,
  which can be solved by lattice reduction algorithm.
-We implemented the Flush+Flush method as the cache side channel attack and applied the attack to the secp256k1 curve.
+We implemented the Flush+Flush method as the cache side channel attack and applied the attack to the secp256k1 curve in the OpenSSL1.1.1b which is the latest version.
 The experiments shows that we successfully recover the private key only using $60$ signatures if the Flush+Flush attack is perfect without any error.
 This is better than some prior methods of only using partial information gained from the cache side channel.
 

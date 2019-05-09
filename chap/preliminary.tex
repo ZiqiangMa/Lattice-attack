@@ -92,7 +92,7 @@ After converting $k$ to the wNAF form, the multiplication $kG$ is executed as th
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
 
- \begin{algorithm}[b]
+ \begin{algorithm}[t]
         \caption{Implementation of $kG$ Using wNAF}
         \label{alg:kg}
         \begin{algorithmic}[1]
@@ -132,7 +132,7 @@ As the use of modified wNAF affects the attack results little,
 %实际中的使用k+q
 \subsection{The Scalar Multiplication in OpenSSL}
 \label{intro_smulinssl}
-In OpenSSL1.1.0h \cite{openssl}, the scalar multiplication with wNAF representation is implemented in the function \verb+ec_wNAF_mul()+.
+In OpenSSL1.1.1b \cite{openssl}, the scalar multiplication with wNAF representation is implemented in the function \verb+ec_wNAF_mul()+.
 The core computing part of the function is shown in Algorithm  \ref{alg:smopenssl}.
 
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
@@ -174,10 +174,14 @@ The core computing part of the function is shown in Algorithm  \ref{alg:smopenss
 
 In this function, it iterates the $k$ from the most significant digit to the least significant digit in its wNAF representation.
  In each digit, it performs a double operation (the \verb+EC_POINT_dbl()+ function).
-  If the digit is not zero, it runs into the if-then block in line 6, and it  performs an addition operation (the \verb+EC_POINT_add()+ function).
-Also, the \verb+EC_POINT_invert()+ is only called under certain circumstances (line 13).
-If the sign of the non-zero digit $k_i$ is opposite to the previous  non-zero digit, the invert operation (\verb+EC_POINT_invert()+) is performed.
-This makes it only need the precomputation and storage of the points $\{G, 3G, ..., (2^{w - 1})G\}$.
+  If the digit is not zero, it runs into the if-then block in line 6, and first determines whether an invert function is needed to execute.
+   The invert function is to compute the inverse element of a number. 
+If the sign of the non-zero digit $k_i$ is opposite to the previous  non-zero digit,
+ the invert operation (\verb+EC_POINT_invert()+) is performed (line 13),
+which makes it only need the precomputation and storage of the points $\{G, 3G, ..., (2^{w - 1})G\}$ and saves a half of storage space.
+Then it performs an addition operation (the \verb+EC_POINT_add()+ function) with  indexing from the precomputed points using the
+absolute value of the digit.
+
 
 From Algorithm \ref{alg:smopenssl}, it is obviously that the two conditional branches are vulnerable.
 In each loop, the double operation is always performed.
