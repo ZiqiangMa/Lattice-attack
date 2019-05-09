@@ -10,11 +10,16 @@ The mbed TLS \cite{polarssl} is an open source SSL library licensed by ARM Limit
 It does not use the wNAF algorithm to represent the scalar.
 It uses a comb method that generates a sequence of bit-strings to represent the scalar $k$ so that every bit-string represents an odd number based on modifying the method in \cite{Hedabou2004ACM}.
 When computing the scalar multiplication, it traverses the sequence and directly indexes the value in the precomputed points to perform the addition.
-It does not use the invert function, 
-and this representation is hard to attack by the cache side channels because all the elements of the sequence are not zero. 
+It does not use the invert function,
+and this representation is hard to attack by the cache side channels because all the elements of the sequence are not zero.
 
-Libgcrypt is a cryptography library developed as a separated module of GnuPG.[3] It can also be used independently of GnuPG, but depends on its error-reporting library Libgpg-error[4].
+Libgcrypt \cite{libgcrypt} is a cryptography library developed as a separated module of GnuPG.
+It directly uses the binary representation of the scalar instead of the wNAF representation to compute the scalar multiplication in the prime field.
+%Although it does not exploit the wNAF algorithm, it is vulnerable to the cache side channel attacks. 
+To resist the side channel attacks, it performs an extra addition operation when the binary bit of the scalar is zero so that in every bit the double and addition are both performed.
+Therefore, lattice attacks to this library are invalid. 
 
 
+ 
 
 
