@@ -148,7 +148,12 @@ In theory, two signatures would be enough to recover the 256-bit private key as 
 
 \subsection{Constructing the Lattice Attack}
 \label{data_proc2}
-In this section we transform problem of recovering the private key to the HNP instance, and further convert to the CVP/SVP instance of a lattice.
+In this section we transform the problem of recovering the private key to the HNP instance, and further convert to the CVP/SVP instance in a lattice.
+Our method is based on the analysis from \cite{Nguyen2002}.
+But we make some improvements on it.
+First the length of the consecutive bits used to construct the lattice is variable while the prior work fixes the length, which may lose some information.
+Second  in our method the position of consecutive bits is arbitrary in the ephemeral key and does not need to be fixed, while the prior work needs all the consecutive bits at the same position.
+Finally from one signature we obtain multiple sequence of consecutive bits and all of them can be used for constructing the lattice as long as the length of the sequence is satisfied, while the prior work only generates one sequence of consecutive bits for one signature.
 
 To construct a HNP instance using arbitrary consecutive bits, we need to use the following theorem\cite{Nguyen2002}:
 \begin{theorem}
@@ -158,23 +163,23 @@ $$
 |\lambda |_q < B  \ \  \text{and} \ \  |\lambda A|_q \leq q/B .
 $$
 \end{theorem}
-The value of $\lambda$ can be found exploiting the continued fractions.
+The value of $\lambda$ can be computed exploiting the continued fractions.
 
-Recall the ECDSA signature, $s = k^{-1} (h(m) + r\cdot\alpha)$ mod $q$.
+Recall the ECDSA signature, $s = k^{-1} (h(m) + r\cdot\alpha) \bmod q$.
 We rewrite it as
 \begin{equation}
 \label{sig}
 \alpha rs^{-1} = k - s^{-1}h(m)  \ \  \text{mod} \ \ q.
 \end{equation}
-Then assume that we are given the $l_i$ consecutive bits of $k$, starting at some known position $j$.
+Then assume that we have the $l$ consecutive bits of $k$ with the value of $a$, starting at some known position $j$.
  So $k$ is represented as $k = 2^{j}a + 2^{l+j}b +c$ for $0 \leq a \leq 2^l -1$, $0\leq b \leq q/2^{l+j}$ and $0 \leq c < 2^j$.
  We apply the theorem with $A = 2^{j+l}$ and $B = q2^{-j-l/2}$, to obtain $\lambda$ such that
 $$
 |\lambda |_q < q2^{-j-l/2}  \ \  \text{and} \ \  |\lambda 2^{j+l}|_q \leq q/2^{j+l/2} .
 $$
-Multiplying by $\lambda$ and plugging the value of $k$, Equation \ref{sig} transformed to
+Plugging the value of $k$ and multiplying by $\lambda$, Equation \ref{sig} is transformed to
 $$
-\alpha r\lambda s^{-1} = (2^{j}a - s^{-1}h(m))\lambda +(c\lambda + 2^{l+j}b\lambda)  \ \  \text{mod} \ \ q.
+\alpha r\lambda s^{-1} = (2^{j}a - s^{-1}h(m))\lambda +(c\lambda + 2^{l+j}b\lambda)  \ \  \bmod \ \ q.
 $$
 
  Let
@@ -182,24 +187,23 @@ $$
  \label{tu}
  \left\{
  \begin{aligned}
- 	&t_i = \lfloor r\lambda s^{-1} \rfloor_q    \\
- 	&u_i = \lfloor (2^{j}a - s^{-1}h(m))\lambda \rfloor_q
+ 	&t = \lfloor r\lambda s^{-1} \rfloor_q    \\
+ 	&u = \lfloor (2^{j}a - s^{-1}h(m))\lambda \rfloor_q
  \end{aligned}
  \right.
  \end{equation}
 We then have that
  \begin{equation}
 \label{lattice}
-    |\alpha t_i - u_i|_q < q/2^{(l/2-1)}
+    |\alpha t - u|_q < q/2^{(l/2-1)}
 \end{equation}
 This way, we transform to the a HNP instance.
 
 In practice, OpenSSL uses $k+q$ as the ephemeral key. So the Equation \ref{tu} remains the same, but the Inequation \ref{lattice} turns into
  \begin{equation}
 \label{lattice2}
-    |\alpha t_i - u_i|_q < q/2^{(l/2-\log_{2}{3})}
+    |\alpha t - u|_q < q/2^{(l/2-\log_{2}{3})}
 \end{equation}
-%上面这一部分，主要是引用的他人工作，因此需要重新整合语言，并且看看如何引用。
 
 Note that, the Equation \ref{lattice2} represents that the $l/2-\log_{2}{3} -1$ most significant bits of $\lfloor\alpha t_i\rfloor$ is $u_i$, based on the definition of the HNP.
 So it should satisfy that $l/2-\log_{2}{3} -1 \geq 1$, i.e. $l > 7$.
@@ -207,48 +211,48 @@ That means the length of the consecutive bits used to  construct the HNP instanc
 although we could use all the partitions of the consecutive bits of the ephemeral key in theory.
 
 Next we turn the HNP instance into the lattice problem.
-we construct a $d+1$ dimensional lattice $L(B)$ spanned by the rows of the following matrix:
+We use $d$ triples $(t_i, u_i, l_i)$ to construct a $d+1$ dimensional lattice $L(B)$ spanned by the rows of the following matrix:
 $$B =
 \left(
   \begin{array}{ccccc}
     2^{l_1+1}q & 0 & \cdots & 0 & 0 \\
-    0 & 2^{l_2+1} & \ddots & \vdots & \vdots \\
+    0 & 2^{l_2+1}q & \ddots & \vdots & \vdots \\
     \vdots & \ddots & \ddots & 0 & \vdots \\
     0 & \cdots & 0 & 2^{l_d+1}q & 0 \\
     2^{l_1+1}t_1 & \cdots & \cdots & 2^{l_d+1}t_d & 1 \\
   \end{array}
 \right).
 $$
-Considering the vector $h = (2^{l_1+1}\alpha t_1 \bmod q, ..., 2^{l_d+1}\alpha t_d \bmod q, \alpha)$,
+Considering the vector $\textbf{x} = (2^{l_1+1}\alpha t_1 \bmod q, ..., 2^{l_d+1}\alpha t_d \bmod q, \alpha)$,
  it can be obtained by multiplying the last row vector of $B$ by $\alpha$ and then subtracting appropriate multiples of the first $d$ row vectors.
-Thus the vector $h$ belongs to $L(B)$.
-Let the vector $u = (2^{l_1+1}u_1, ..., 2^{l_d+1}u_d, 0)$,
- so the distance between $h$ and $u$ is $\|h - u\| \leq q\sqrt{d+1}$.
+Thus the vector $\textbf{x}$ belongs to $L(B)$.
+Let the vector $\textbf{u} = (2^{l_1+1}u_1, ..., 2^{l_d+1}u_d, 0)$,
+ so the distance between $\textbf{x}$ and $\textbf{u}$ is $\|\textbf{x} - \textbf{u}\| \leq q\sqrt{d+1}$.
 While the lattice determinant of $L(B)$ is $2^{d + \sum{l_i}}q^d$,
- thus the vector $h$ is very close to the vector $u$.
-Solving the CVP problem with imput $B$ and $u$ reveals the vector $h$,
- hence the private key $\alpha$ is retrieved.
+ thus the vector $\textbf{x}$ is very close to the vector $\textbf{u}$.
+By solving the CVP problem with the input $B$ and $\textbf{u}$, the vector $\textbf{x}$ is revealed,
+ hence the private key $\alpha$ is retrieved as it is the last element of the vector $\textbf{x}$.
 
-To transform it to a SVP instance we construct a $d+2$ dimensional lattice $L(B')$ spanned by the rows of the matrix
-$$
+To transform it to a SVP instance we use $d$ triples $(t_i, u_i, l_i)$ to construct a $d+2$ dimensional lattice $L(B')$ spanned by the rows of the matrix
+$$B' =
 \left(
   \begin{array}{cc}
-    B & 0 \\
-    u & q \\
+     B\ \  &\  0\ \  \\
+    \textbf{u}\ \ &\ q \ \  \\
   \end{array}
 \right).
 $$
-Similarly, the vector $h' = (2^{l_1+1}(\alpha t_1 - u_1) \bmod q, ..., 2^{l_d+1}(\alpha t_d - u_d) \bmod q, \alpha, -q)$ belongs to the lattice $L(B')$.
- Its norm satisfies that $\|h'\| \leq q\sqrt{d+2}$,
+Similarly, the vector $\textbf{x}' = (2^{l_1+1}(\alpha t_1 - u_1) \bmod q, ..., 2^{l_d+1}(\alpha t_d - u_d) \bmod q, \alpha, -q)$ belongs to the lattice $L(B')$.
+ Its norm satisfies that $\|\textbf{x}'\| \leq q\sqrt{d+2}$,
   while the lattice determinant of $L(B')$ is $2^{d + \sum{l_i}}q^{d+1}$.
-   This indicates that the vector $h'$ is a very short vector.
-Note that this lattice also contains other vector $(-t_1, ..., -t_d, q, 0)\cdot B = (0, ..., 0, q, 0)$,
+   This indicates that the vector $\textbf{x}'$ is a very short vector.
+Note that this lattice also contains another vector $(-t_1, ..., -t_d, q, 0)\cdot B = (0, ..., 0, q, 0)$,
  which is most likely the shortest vector of the lattice.
-So we expect the second vector in a reduced basis of the lattice is equal to $h'$ with a "good" chance for a suitably strong lattice reduction algorithm.
-Then we can acquire the secret key $\alpha$.
+Therefore we expect the second vector in a reduced basis of the lattice is equal to $\textbf{x}'$ with a ``good" chance for a suitably lattice reduction algorithm.
+Then we acquire the secret key $\alpha$.
 
-we can use LLL or BKZ algorithm to solve the SVP problem, while use Babai algorithm or Enumeration technique to solve the CVP problem.
-%latticeCVP这一部分和第二章背景知识里重合很多，需要重新组织语言，同时和他人工作类似，需要区分开。
+we can use LLL~\cite{Lenstra1982} or BKZ~\cite{Schnorr1994} algorithm to solve the SVP problem, while use Babai~\cite{Babai1986} algorithm or Enumeration technique to solve the CVP problem.
+
 
 %转化为hnp问题，%引理
 %构造格

@@ -84,7 +84,7 @@ So we continuously obtain 10 valid records.
 
 
 \noindent\textbf{Time slot.}
-For the attack, the spy process divides time into time slots of approximately 1000 cycles.
+For the attack, the spy process divides time into time slots of approximately $800$ cycles.
 In each slot, the spy flushes the memory lines in the add, double and invert functions (\verb+EC_POINT_dbl()+,  \verb+EC_POINT_add()+ and \verb+EC_POINT_invert()+) out of the caches.
 Then time slot length is chosen to ensure that the three functions only execute once.
 This allows the spy to correctly distinguish consecutive doubles.
@@ -206,7 +206,7 @@ It is because that more information is being added to the lattice making it easi
   \hline
   90 & 14.4 & 22.8 & 23.7 \\
   \hline
-  100 & 21.0 & 33.6 &  \\
+  100 & 21.0 & 33.6 & 39.9 \\
   \hline
   110 & 16.3 & 36.7 &  \\
   \hline
