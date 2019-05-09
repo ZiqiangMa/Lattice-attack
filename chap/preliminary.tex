@@ -109,6 +109,8 @@ After converting $k$ to the wNAF form, the multiplication $kG$ is executed as th
         \end{algorithmic}
     \end{algorithm}
 
+\zf{I think alg1 and alg2 can be merged into one figure}
+
 From the algorithm we can find that the \textbf{if-then} block is vulnerable.
 An attacker can use a spy process to monitor the conditional branches through side channels.
 Then he can get an "double-and-add" chain, and through it whether the value of $k_i$ is zero can be inferred.
