@@ -15,11 +15,12 @@ and this representation is hard to attack by the cache side channels because all
 
 Libgcrypt \cite{libgcrypt} is a cryptography library developed as a separated module of GnuPG.
 It directly uses the binary representation of the scalar instead of the wNAF representation to compute the scalar multiplication in the prime field.
-%Although it does not exploit the wNAF algorithm, it is vulnerable to the cache side channel attacks. 
+%Although it does not exploit the wNAF algorithm, it is vulnerable to the cache side channel attacks.
 To resist the side channel attacks, it performs an extra addition operation when the binary bit of the scalar is zero so that in every bit the double and addition are both performed.
-Therefore, lattice attacks to this library are invalid. 
+Therefore, lattice attacks to this library are invalid.
+
+%Crypto++ Library \cite{cryptopp} is a free C++ class library of cryptographic algorithms and schemes.
 
 
- 
 
 
