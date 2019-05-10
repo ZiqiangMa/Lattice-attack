@@ -5,34 +5,48 @@
 %前面讲过的这里还需要再说吗？
 \subsection{Partial Nonce Disclosure Attacks on DSA/ECDSA}
 Several works have proposed different attacks that exploit partial nonce disclosure to recover long-term private keys of the signature algorithms.
+Some of them focus on how to exploit the partial information efficiently to recover the private key.
+ Some pay more attention to how to efficiently obtain the information about the ephemeral key.
+Others want to  analyse the information obtained through some new methods and construct some appropriate lattice attacks to recover the private key.
 
-
-Boneh and Venkatesan \cite{boneh1996} initially investigated the HNP problem and recovered the private key of Diffie-Hellman by solving it using the lattice reduction algorithm.
+% first
+Boneh and Venkatesan \cite{boneh1996} initially investigated to use the partial information of the ephemeral key to construct an HNP problem and recovered the private key of Diffie-Hellman by solving it using the lattice reduction algorithm.
 Howgrave-Graham and Smart \cite{HG2001} extended the work of Boneh and Venkatesan \cite{boneh1996} and  showed how to retrieve the DSA private key by  constructing an HNP instance from leaked LSBs and MSBs of the ephemeral key.
 Nguyen and Shparlinski \cite{Nguyen2002} improved their method  and gave a provable polynomial-time attack that
       knowing the $l \geq 3$ LSBs , the $l+1$ MSBs  or any $2l$ consecutive bits of a certain number of ephemeral keys was enough for recovering the DSA private key.
  They recovered  a $160$-bit DSA key only using the $3$ LSBs of a certain number of ephemeral keys.
- Further they extended this results to ECDSA~\cite{Nguyen2003}.
+ Further they extended these results to ECDSA~\cite{Nguyen2003}.
 Liu and Nguyen \cite{Liu2013} improved the results that only 2 LSBs were required for breaking a 160-bit DSA key.
-In 2014, Benger et al. \cite{Benger2014} used the Flush+Reload technique to acquire some LSBs of the ephemeral key
-  and extended the technique in \cite{Nguyen2002} to use a different length of leaked LSBs for each signature.
- They recovered the secret key of OpenSSL's ECDSA implementation for the curve secp256k1 using about $200$ signatures.
-
-Brumley and Hakala \cite{Brumley2009} used an L1 data cache-timing attack to recover the LSBs of ECDSA nonces from the \verb+dgst+ command line tool in OpenSSL 0.9.8k.
- They collect $2,600$ signatures ($8K$ with noise) and use the Howgrave-Graham and Smart \cite{HG2001} attack to recover a 160-bit ECDSA private key.
-In a similar vein, Ac{\i}i{\c{c}}mez et al. \cite{Brumley2010} use an L1 instruction cache-timing attack to recover the LSBs of DSA nonces from the same tool in OpenSSL 0.9.8l, requiring $2,400$ signatures ($17K$ with noise) to recover a 160-bit DSA private key.
- Both attacks require HyperThreading architectures.
-
-Brumley and Tuveri \cite{Brumley2011} mount a remote timing attack on the implementation of ECDSA with binary curves in OpenSSL 0.9.8o.
- They show that the timing leaks information on the MSBs of the nonce used and that after collecting that information over 8,000 TLS handshakes the private key can be recovered.
-Mulder et al. \cite{Mulder2013} take advantage of the bits in the ephemeral key using the Fast Fourier Transform.
-Van de Pol et al. \cite{Van2015} exploit the structure of the modulus in some elliptic curves to use all of the information leaked in consecutive sequences of bits anywhere in the top half of the nonces, allowing them to recover the secret key after observing only a handful of signatures.
-Allan et al. \cite{Allan2016} improve on these results by using a performance-degradation attack to amplify the side-channel. The amplification allows them
-to observe the sign bit in the wNAF representation used in OpenSSL 1.0.2a and to recover a 256 bit key after observing only 6 signatures.
+In 2014, Benger et al. \cite{Benger2014} extended the technique in \cite{Nguyen2002} to use a different length of leaked LSBs for each signature,
+ which reduced the number of signatures needed.
+Van de Pol et al. \cite{Van2015} exploited the property of the modulus in some elliptic curves so that they could use all of the information leaked in the top half of the ephemeral keys to construct the HNP instance, allowing them to recover the secret key after observing only $14$ signatures.
 Fan et al. \cite{Fan2016} proposed a new way of extracting and utilizing information from the Flush+Reload attack. The problem of recovering the
 secret key is then transformed to the extended hidden number problem (EHNP) which is solved by lattice reduction algorithm. The number of signatures needed is reduced to $4$.
+
+%second
+Brumley and Hakala \cite{Brumley2009} used an L1 data cache-timing attack to recover the LSBs of ECDSA ephemeral keys in OpenSSL 0.9.8k.
+ They recovered a 160-bit ECDSA private key using the attack in \cite{HG2001} with collecting $2,600$ signatures ($8K$ with noise).
+Analogously, Ac{\i}i{\c{c}}mez et al. \cite{Brumley2010} used an L1 instruction cache-timing attack to recover the LSBs of DSA ephemeral keys in OpenSSL 0.9.8l.
+ It required $2,400$ signatures ($17K$ with noise) to recover a 160-bit DSA private key.
+ Besides, both attacks required HyperThreading architectures.
+In 2011, Brumley and Tuveri \cite{Brumley2011} mounted a remote timing attack on the implementation of ECDSA with binary curves in OpenSSL 0.9.8o.
+ They obtained the MSBs of the ephemeral keys through the timing attack and recovered the private key after collecting information over 8,000 TLS handshakes.
+In 2014, Benger et al. \cite{Benger2014} used the Flush+Reload technique to acquire some LSBs of the ephemeral key.
+ They recovered the secret key of OpenSSL's ECDSA implementation for the curve secp256k1 using about $200$ signatures.
 Genkin et al. \cite{Genkin2016} perform electromagnetic and power analysis attacks on mobile phones. They show how to construct HNP triples when the signature uses the low $s$-value.
+Allan et al. \cite{Allan2016} improve the  results in \cite{Van2015} by using a performance-degradation attack to amplify the side-channel. The amplification allows them to observe the sign bit in the wNAF representation used in OpenSSL 1.0.2a and to recover a 256 bit key after observing only 6 signatures.
 Pereida et al. \cite{Pereida2016} show that the DSA implementation in OpenSSL is vulnerable to cache-timing attacks due to a programming error, and exploit the vulnerability to attack against SSH (via OpenSSH) and TLS (via stunnel).
+
+%third
+In 2013, Mulder et al. \cite{Mulder2013} took advantage of a template attack to recover some LSBs of the ephemeral key.
+They improved the Bleichenbacher’s FFT-based (Fast Fourier Transform) attack by using BKZ for range reduction to solve the HNP problem.
+Their attack could extract the entire private key using a 5-bit leak of the ephemeral key from 4 000 signatures.
+
+
+
+
+
+
 
 
 %\cite{Zhang2017}
