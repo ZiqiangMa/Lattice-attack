@@ -5,9 +5,8 @@
 %前面讲过的这里还需要再说吗？
 \subsection{Partial Nonce Disclosure Attacks on DSA/ECDSA}
 Several works have proposed different attacks that exploit partial nonce disclosure to recover long-term private keys of the signature algorithms.
-Some of them focus on how to exploit the partial information efficiently to recover the private key.
- Some pay more attention to how to efficiently obtain the information about the ephemeral key.
-Others want to  analyse the information obtained through some new methods and construct some appropriate lattice attacks to recover the private key.
+Some of them focus on how to exploit the partial information efficiently to construct some appropriate lattice attacks to recover the private key.
+ And others pay more attention to how to efficiently obtain the information about the ephemeral key.
 
 % first
 Boneh and Venkatesan \cite{boneh1996} initially investigated to use the partial information of the ephemeral key to construct an HNP problem and recovered the private key of Diffie-Hellman by solving it using the lattice reduction algorithm.
@@ -32,23 +31,20 @@ Analogously, Ac{\i}i{\c{c}}mez et al. \cite{Brumley2010} used an L1 instruction 
  Besides, both attacks required HyperThreading architectures.
 In 2011, Brumley and Tuveri \cite{Brumley2011} mounted a remote timing attack on the implementation of ECDSA with binary curves in OpenSSL 0.9.8o.
  They obtained the MSBs of the ephemeral keys through the timing attack and recovered the private key after collecting information over 8,000 TLS handshakes.
+In 2013, Mulder et al. \cite{Mulder2013} took advantage of a template attack to recover some LSBs of the ephemeral key.
+They improved the Bleichenbacher’s FFT-based (Fast Fourier Transform) attack by using BKZ for range reduction to solve the HNP problem.
+Their attack could extract the entire private key using a 5-bit leak of the ephemeral key from 4 000 signatures.
 Benger et al. \cite{Benger2014} and Van de Pol et al. \cite{Van2015} used the Flush+Reload technique to acquire the information of the ephemeral key.
 Allan et al. \cite{Allan2016} improved the  results in \cite{Van2015} by using a performance-degradation attack to amplify the side-channel. The amplification allowed them to recover a 256-bit private key in OpenSSL 1.0.2a after observing only 6 signatures.
 Genkin et al. \cite{Genkin2016} performed electromagnetic and power analysis attacks on mobile phones.
  They showed how to construct HNP triples when the signature uses the low $s$-value.
 Pereida et al. \cite{Pereida2016} showed that the DSA implementation in OpenSSL is vulnerable to cache-timing attacks due to a programming error,
  and exploited the vulnerability to attack against SSH (via OpenSSH) and TLS (via stunnel).
-
-%third
-In 2013, Mulder et al. \cite{Mulder2013} took advantage of a template attack to recover some LSBs of the ephemeral key.
-They improved the Bleichenbacher’s FFT-based (Fast Fourier Transform) attack by using BKZ for range reduction to solve the HNP problem.
-Their attack could extract the entire private key using a 5-bit leak of the ephemeral key from 4 000 signatures.
+In 2017 Zhang et al. \cite{Zhang2017} extended  the attack in ~\cite{Nguyen2003} to SM2 Digital Signature Algorithm (SM2-DSA), which is a Chinese version of ECDSA.
 
 
-
-%\cite{Zhang2017}
 %Faug{\`e}re et al. \cite{jean2012}
-%\cite{Gomez2019}
+%\cite{Gomez2019} 
 %\cite{}
 %\cite{}
 %\cite{}
