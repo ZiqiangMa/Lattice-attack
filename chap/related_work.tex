@@ -4,20 +4,21 @@
 %林老师您看下这块是否需要调整，增加哪些，删去哪些，或者结构调整？
 %前面讲过的这里还需要再说吗？
 \subsection{Partial Nonce Disclosure Attacks on DSA/ECDSA}
-Several works propose different attacks that exploit partial nonce disclosure to recover long-term private keys on the signature algorithms.
+Several works have proposed different attacks that exploit partial nonce disclosure to recover long-term private keys of the signature algorithms.
 
 
-Boneh and Venkatesan \cite{boneh1996} initially investigate HNP and recover the private key of Diffie-Hellman by using the lattice reduction algorithm to solving the HNP problem.
-Howgrave-Graham and Smart \cite{HG2001} extend the work of Boneh and Venkatesan \cite{boneh1996} and  show how to construct an HNP instance from leaked LSBs and MSBs of the DSA nonces.
-Nguyen and Shparlinski \cite{Nguyen2002} prove that for a good enough hash function and for a linear number of randomly chosen nonces, knowing the $l$ LSBs of a certain number of nonces, the $l+1$ MSBs or $2l$ consecutive bits anywhere in the nonces is enough for recovering the DSA private key.
- They further demonstrate that a DSA-160 key can be broken if only the $3$ LSBs of a certain number of nonces are known.
-Nguyen and Shparlinski \cite{Nguyen2003} extend this results to ECDSA,
-and Liu and Nguyen \cite{Liu2013} demonstrate that only 2 LSBs are required for breaking a DSA-160 key.
- Benger et al. \cite{Benger2014} use the Flush+Reload technique to find some LSBs of the nonces
-  and extend the technique to use a different number of leaked LSBs for each signature.
- They recover the secret key of OpenSSL's ECDSA implementation for the curve secp256k1 using less than 256 signatures.
+Boneh and Venkatesan \cite{boneh1996} initially investigated the HNP problem and recovered the private key of Diffie-Hellman by solving it using the lattice reduction algorithm.
+Howgrave-Graham and Smart \cite{HG2001} extended the work of Boneh and Venkatesan \cite{boneh1996} and  showed how to retrieve the DSA private key by  constructing an HNP instance from leaked LSBs and MSBs of the ephemeral key.
+Nguyen and Shparlinski \cite{Nguyen2002} improved their method  and gave a provable polynomial-time attack that
+      knowing the $l \geq 3$ LSBs , the $l+1$ MSBs  or any $2l$ consecutive bits of a certain number of ephemeral keys was enough for recovering the DSA private key.
+ They recovered  a $160$-bit DSA key only using the $3$ LSBs of a certain number of ephemeral keys.
+ Further they extended this results to ECDSA~\cite{Nguyen2003}.
+Liu and Nguyen \cite{Liu2013} improved the results that only 2 LSBs were required for breaking a 160-bit DSA key.
+In 2014, Benger et al. \cite{Benger2014} used the Flush+Reload technique to acquire some LSBs of the ephemeral key
+  and extended the technique in \cite{Nguyen2002} to use a different length of leaked LSBs for each signature.
+ They recovered the secret key of OpenSSL's ECDSA implementation for the curve secp256k1 using about $200$ signatures.
 
-Brumley and Hakala \cite{Brumley2009} use an L1 data cache-timing attack to recover the LSBs of ECDSA nonces from the \verb+dgst+ command line tool in OpenSSL 0.9.8k.
+Brumley and Hakala \cite{Brumley2009} used an L1 data cache-timing attack to recover the LSBs of ECDSA nonces from the \verb+dgst+ command line tool in OpenSSL 0.9.8k.
  They collect $2,600$ signatures ($8K$ with noise) and use the Howgrave-Graham and Smart \cite{HG2001} attack to recover a 160-bit ECDSA private key.
 In a similar vein, Ac{\i}i{\c{c}}mez et al. \cite{Brumley2010} use an L1 instruction cache-timing attack to recover the LSBs of DSA nonces from the same tool in OpenSSL 0.9.8l, requiring $2,400$ signatures ($17K$ with noise) to recover a 160-bit DSA private key.
  Both attacks require HyperThreading architectures.
@@ -74,7 +75,10 @@ Flush+Flush \cite{gruss2016flush} and Prime+Abort \cite{disselkoen2017prime+abor
 They exploit different methods to observe the cache access patterns to recover the private key.
 
 
-
+Brumley and Hakala \cite{Brumley2009} used an L1 data cache-timing attack to recover the LSBs of ECDSA nonces from the \verb+dgst+ command line tool in OpenSSL 0.9.8k.
+ They collect $2,600$ signatures ($8K$ with noise) and use the Howgrave-Graham and Smart \cite{HG2001} attack to recover a 160-bit ECDSA private key.
+In a similar vein, Ac{\i}i{\c{c}}mez et al. \cite{Brumley2010} use an L1 instruction cache-timing attack to recover the LSBs of DSA nonces from the same tool in OpenSSL 0.9.8l, requiring $2,400$ signatures ($17K$ with noise) to recover a 160-bit DSA private key.
+ Both attacks require HyperThreading architectures.
 
 
 %Several works have been presented to attack the ECDSA implementation with the wNAF representation.
