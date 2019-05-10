@@ -33,10 +33,10 @@ Because we know the first non-zero digit is positive,
 We use a spy process to monitor one memory line of the code of the double, add and invert functions while computing the scalar multiplication.
 The time is divided into slots, and in each slot
   the spy determines whether the three functions are performed or not by monitoring the cache hits/misses.
- Then we can obtain a "double-add-invert" chain.
-According to the "double" and "add" in this chain, we can determine whether each digit of $k$ is zero or not.
+ Then we can obtain a ``double-add-invert" chain.
+According to the ``double" and ``add" in this chain, we can determine whether each digit of $k$ is zero or not.
   That is what the original Flush + Reload attack does.
-Also, based on the "invert" in this chain, we can infer the sign of each non-zero digit.
+Also, based on the ``invert" in this chain, we can infer the sign of each non-zero digit.
 
 
 Specific to the OpenSSL implementation (especially the OpenSSL1.1.1b used in this paper),
@@ -46,7 +46,7 @@ So as in our attack, we improve the original cache side channel attack by adding
 We use a spy process to monitor one memory line of the code of the three functions.
  In each time slot
   the spy determines whether the three functions are performed or not.
-Then we get a new "double-add-invert" chain through the cache side channel attack.
+Then we get a new ``double-add-invert" chain through the cache side channel attack.
 
 %首先回顾标量乘法的实现，原始实现。
 %然后invert函数在里面是如何使用的，起到了什么作用。
@@ -56,18 +56,18 @@ Then we get a new "double-add-invert" chain through the cache side channel attac
 %然后得到了什么
 
 
-When we use the "double-add-invert" chain to extract the digits of $k$,
-the "double" represents the double function is called,
-and the "add" represents the double and add functions are called both.
-The "invert" represents the invert function is called.
+When we use the ``double-add-invert" chain to extract the digits of $k$,
+the ``double" represents the double function is called,
+and the ``add" represents the double and add functions are called both.
+The ``invert" represents the invert function is called.
 Therefore,
- the "double" appears meaning that $k_i$ is zero
-and the "add" appears meaning that $k_i$ is not zero.
- Then we use the "invert" to determine the sign of the $k_i$.
+ the ``double" appears meaning that $k_i$ is zero
+and the ``add" appears meaning that $k_i$ is not zero.
+ Then we use the ``invert" to determine the sign of the $k_i$.
 The sign of the $k_i$ is related to the previous non-zero digit.
-First, the "invert" comes out together with "add".
- Then, if the "invert" appears, it represents that the sign of this digit $k_i$ is opposite to the previous non-zero digit.
- While if the "invert" does not appear when "add" comes out, it represents that
+First, the ``invert" comes out together with ``add".
+ Then, if the ``invert" appears, it represents that the sign of this digit $k_i$ is opposite to the previous non-zero digit.
+ While if the ``invert" does not appear when ``add" comes out, it represents that
 the sign of this digit $k_i$ is the same as the previous non-zero digit.
  For the wNAF representation of $k$, the most significant digit is always positive.
  Thus we can determine the sign of all non-zero digits.

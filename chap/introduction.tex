@@ -96,7 +96,7 @@ This problem is solved by lattice reduction algorithms  through converting to th
 
 This method is applied to attack the secp256k1 curve in OpenSSL1.1.1b in this paper.
 We choose the Flush+Flush\cite{gruss2016flush} method to implement the cache side attack.
-Through monitoring the double and add function in OpenSSL, also the  invert function, we obtain the "double-add-invert" chain.
+Through monitoring the double and add function in OpenSSL, also the  invert function, we obtain the ``double-add-invert" chain.
 We successfully extract whether each digit of the ephemeral key is zero or not, and determine the sign of the non-zero digits.
 Then We use BKZ \cite{Schnorr1994} algorithm to solve the HNP instance.
 The results show that we effectively retrieve the ECDSA private key.

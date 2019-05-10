@@ -113,7 +113,7 @@ After converting $k$ to the wNAF form, the multiplication $kG$ is executed as th
 
 From the algorithm we can find that the \textbf{if-then} block is vulnerable.
 An attacker can use a spy process to monitor the conditional branches through side channels.
-Then he can get an "double-and-add" chain, and through it whether the value of $k_i$ is zero can be inferred.
+Then he can get an ``double-and-add" chain, and through it whether the value of $k_i$ is zero can be inferred.
 The attacker can use these information to retrieve the private key.
 
 In the actual OpenSSL execution, the bit length of $k$ is set to a fixed value$\lfloor\log_{2}{q}\rfloor + 1$ of by adding itself $q$
@@ -175,7 +175,7 @@ The core computing part of the function is shown in Algorithm  \ref{alg:smopenss
 In this function, it iterates the $k$ from the most significant digit to the least significant digit in its wNAF representation.
  In each digit, it performs a double operation (the \verb+EC_POINT_dbl()+ function).
   If the digit is not zero, it runs into the if-then block in line 6, and first determines whether an invert function is needed to execute.
-   The invert function is to compute the inverse element of a number. 
+   The invert function is to compute the inverse element of a number.
 If the sign of the non-zero digit $k_i$ is opposite to the previous  non-zero digit,
  the invert operation (\verb+EC_POINT_invert()+) is performed (line 13),
 which makes it only need the precomputation and storage of the points $\{G, 3G, ..., (2^{w - 1})G\}$ and saves a half of storage space.
@@ -340,7 +340,7 @@ Similarly, the vector $h' = (\alpha t_1 - u_1 \bmod q, ..., \alpha t_d - u_d \bm
    This indicates that the vector $h'$ is a very short vector.
 Note that this lattice also contains other vector $(-t_1, ..., -t_d, q, 0)\cdot B = (0, ..., 0, q/2^{l+1}, 0)$,
  which is most likely the shortest vector of the lattice.
-So we expect the second vector in a reduced basis of the lattice is equal to $h'$ with a "good" chance for a suitably strong lattice reduction algorithm.
+So we expect the second vector in a reduced basis of the lattice is equal to $h'$ with a ``good" chance for a suitably strong lattice reduction algorithm.
 Then we can acquire the hidden nubmer $\alpha$ by solving the SVP problem.
 
 %we can use LLL \cite{Lenstra1982} or BKZ \cite{Schnorr1994} algorithm to solve the SVP problem, while use Babai \cite{Babai1986} algorithm or Enumeration technique to solve the CVP problem.
