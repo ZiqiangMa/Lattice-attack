@@ -99,7 +99,7 @@ First, we denote the wNAF representation of $k$ as $k = \sum{k_{i}2^{i}}$,
  and the binary representation as $k = \sum{b_{i}2^{i}}$.
 From the Algorithm \ref{alg:wnaf} we know that the position of $k_i$ in the wNAF representation is the same as $b_i$ in the binary representation.
  When we know the information about whether $k_i$ is zero and the sign of the non-zero $k_i$, we can simply determine some bits of $k$.
- For example if we obtain the sign of the first non-zero $k_j$, we can infer that $b_j$ is one and $b_i$ is zero for $0\leq i<j$.
+ For example if we obtain the sign of the least non-zero $k_j$, we can infer that $b_j$ is one and $b_i$ is zero for $0\leq i<j$.
  But for arbitrary non-zero digits, it can not determine whether the bit is zero or one.
 
  Let $m$ and $m + l$ be the position of two consecutive non-zero digits of the wNAF representation, and $w$ be the window size.
