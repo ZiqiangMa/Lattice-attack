@@ -102,16 +102,17 @@ From the Algorithm \ref{alg:wnaf} we know that the position of $k_i$ in the wNAF
  For example if we obtain the sign of the least non-zero $k_j$, we can infer that $b_j$ is one and $b_i$ is zero for $0\leq i<j$.
  But for arbitrary non-zero digits, it can not determine whether the bit is zero or one.
 
- Let $m$ and $m + l$ be the position of two consecutive non-zero digits of the wNAF representation, and $w$ be the window size.
- That is $k_m, k_{m+l} \neq 0$ and $k_{m+i} = 0$ for all $0 < i < l$.
+ Let $m$ and $m + l$ be the positions of two consecutive non-zero digits of the wNAF representation, and $w$ be the window size.
+ That is, $k_m, k_{m+l} \neq 0$ and $k_{m+i} = 0$ for all $0 < i < l$.
  We analyse the transformation method between the binary and wNAF representation, getting the following result:
+ 
  \begin{align}
  &b_{m+l} = \left\{
  \begin{aligned}
  	&0,\,\;\ \   k_m < 0 \\
  	&1,\,\;\ \   k_m > 0
  \end{aligned}
- \right.   \\
+ \right.  , \\
  &b_{m+i} = \left\{
  \begin{aligned}
  	&0,\,\;\ \   k_m > 0 \\
@@ -121,6 +122,16 @@ From the Algorithm \ref{alg:wnaf} we know that the position of $k_i$ in the wNAF
  ,\ \ \ \ \  w \leq i \leq l-1
  \end{align}
 %这里的公式有漏洞，需要加上最低位即m最小时的bm
+
+And if $m$ is the position of the least non-zero digit of $k$, 
+ \begin{align}
+ &b_{i} = \left\{
+ \begin{aligned}
+ 	&1,\,\;\ \   i = m \\
+ 	&0,\,\;\ \   0 \leq i < m
+ \end{aligned}
+ \right.  .
+ \end{align}
 
 In this way, at the position of every non-zero digit we can obtain $l - w + 1$ consecutive bits of $k$.
 For the wNAF representation, every non-zero digit is followed by at least $w$ zero values.
