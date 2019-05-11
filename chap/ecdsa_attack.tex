@@ -128,6 +128,8 @@ For the wNAF representation, every non-zero digit is followed by at least $w$ ze
  The average distance between consecutive non-zero digits is $w+2$, i.e. on average $l = w + 2$.
  This means we can obtain $3$ consecutive bits on average at the every non-zero digit.
 Thus, on average we can obtain $3\lfloor\log_{2}{q}\rfloor /(w+2)$ bits of the ephemeral key $k$ in total.
+Meanwhile, because $\min(l) = w + 1$, the minimal length of the consecutive bits is $2$.
+This illustrates that all the sequences of consecutive bits obtained satisfy $l \geq 2$. 
 For the secp256k1 curve implemented in OpenSSL, $\lfloor\log_{2}{q}\rfloor = 256$, $w = 3$.
  Also, as introduced previous, the scalar multiplication uses $k+q$ instead of $k$ in most cases,
   so the total number of bits per signature we obtain is $3(\lfloor\log_{2}{q}\rfloor +1)/(w+2) = 154.2$.

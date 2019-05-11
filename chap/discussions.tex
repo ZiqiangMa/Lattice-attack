@@ -35,7 +35,7 @@ Therefore due to the restriction on $l$, we can not make full use of the informa
 
 However, based on the work in~\cite{Nguyen2002} and \cite{Liu2013}, 
  in theory when the length of the consecutive bits is $2$, this sequence of  the consecutive bits can be used to construct the lattice attack.
-In our work, all the consecutive bits obtained from the cache side channel satisfies $l \geq 2$. 
+In our work, all the sequences of consecutive bits obtained from the cache side channel satisfy $l \geq 2$. 
  That means all the $154.2$ bits information we obtained is valid and exploitable and  no data needs to be discarded.
 Therefore, if we find a efficient way to construct the lattice attack, making full use of all the information of the consecutive bits, 
    the number of signatures required to recover the private key can be greatly reduced, even the best case only $2$ signatures is enough for a 256-bit private key.
@@ -53,6 +53,11 @@ This is what we are going to do next, finding a suitable and powerful method to 
 %只需要找到合适的方法来构造格攻击，就可以充分利用数据，从而大大降低所需要的签名数量，
 %理论上，我们只需要两个签名，结果会好于fan。
 %这也是我们接下来要去做的工作，找到一个合适的构造格的方法。
+
+
+%\subsection{The Precision Of The Cache Side Channel Attacks}
+
+
 
 
 

@@ -1,12 +1,12 @@
 \section{Implementation and Experiments}
 \label{sec:impl&exper}
-In this section, we apply our method introduced in Section \ref{sec:attack} to attack the secp256k1 curve.
+In this section, we apply our method introduced in Section \ref{sec:attack} to attack the secp256k1 curve in OpenSSL 1.1.1b.
   We implement the Flush+Flush attack  to obtain
 the cache side channel information.
-the details of the implementation and the result of attacking the elliptic curves are provided.
-Then we implement the lattice attack using the BKZ algorithm,
- and demonstrate the experiments with different parameters.
-Finally, we compare our method with the previous attacks.
+The details of the implementation and the result of attacking the elliptic curves are provided.
+Then we implement the lattice attacks and solve them by the BKZ lattice reduction algorithm.
+ The experiments demonstrate the results of our attacks with different parameters.
+Finally, we compare our method with some previous attacks.
 
 %这一章我们展示攻击的具体实现过程，
 %对secp256k1进行攻击，曲线的window是3
@@ -15,14 +15,14 @@ Finally, we compare our method with the previous attacks.
 \subsection{The Flush+Flush Attack}
 \label{ffattack}
 We test the Flush+Flush attack on an HP Elite 8300 running Ubuntu 16.04.
-The machine features an Intel Core i7-3300 processor with four execution cores and a 8 MB LLC.
-The attack target is the ECDSA implemented in OpenSSL1.1.1b, which uses wNAF representation in the scalar multiplication.
-For the experiment, we use the curve secp256k1 for ECDSA.
+The machine features an Intel Core i7-3300 processor with four execution cores and an 8 MB LLC.
+The attacking target is the ECDSA implemented in OpenSSL1.1.1b, which uses wNAF representation in the scalar multiplication.
+For the experiments, we use the curve secp256k1 for ECDSA.
 Followings are the implementation details for the Flush+Flush attack.
 
 %平台
 
-\noindent\textbf{Get virtual address. }
+\noindent\textbf{Get the virtual address. }
 In this attack, we use a spy process to monitor the  \verb+EC_POINT_dbl()+,  \verb+EC_POINT_add()+ and \verb+EC_POINT_invert()+ functions in OpenSSL.
 So we need to know the virtual addresses of the three functions.
 First we get the offset of the code required to monitor in the dynamic library.
