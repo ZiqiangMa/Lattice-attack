@@ -139,12 +139,11 @@ Thus, from these experiments the average accurate rate of the data obtained from
 %我们的结果是：
 %进行分析
 %分析为什么我们没有利用全部的信息，理论上怎样，实际怎样
-We apply our attack to the curve secp256k1 in our experiments, and we assume that the Flush + Flush attack is perfect, that is we can correctly obtain the double-add-and-invert chain and recover all the information about the digits of the ephemeral key it contains.
+We apply our lattice attack to the curve secp256k1 in our experiments, and we assume that the Flush + Flush attack is perfect, that is we can correctly obtain the ``double-add-invert" chain and recover all the information about the digits of the ephemeral key it contains.
 
  To solve the SVP problem we use the BKZ algorithm implemented in \verb+fplll+ \cite{fplll}.
 This implementation is only efficient for the block size less than 35.
 So for the larger block size, we use the BKZ-2.0 \cite{bkz2} algorithm.
-%In tuning BKZ2.0, we use the following strategy, at the end of every round we determined whether we had already solved for the private key, if not we continue, and then gave up after ten rounds.
 To solve the CVP problem, we apply a pre-processing of either fplll or BKZ-2.0.
 When applying pre-processing of BKZ-2.0 we limit to only one round of execution.
 Then we apply an enumeration technique to search the closest vector.
