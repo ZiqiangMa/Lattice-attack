@@ -129,7 +129,7 @@ For the wNAF representation, every non-zero digit is followed by at least $w$ ze
  This means we can obtain $3$ consecutive bits on average at the every non-zero digit.
 Thus, on average we can obtain $3\lfloor\log_{2}{q}\rfloor /(w+2)$ bits of the ephemeral key $k$ in total.
 Meanwhile, because $\min(l) = w + 1$, the minimal length of the consecutive bits is $2$.
-This illustrates that all the sequences of consecutive bits obtained satisfy $l \geq 2$. 
+This illustrates that all the sequences of consecutive bits obtained satisfy $l \geq 2$.
 For the secp256k1 curve implemented in OpenSSL, $\lfloor\log_{2}{q}\rfloor = 256$, $w = 3$.
  Also, as introduced previous, the scalar multiplication uses $k+q$ instead of $k$ in most cases,
   so the total number of bits per signature we obtain is $3(\lfloor\log_{2}{q}\rfloor +1)/(w+2) = 154.2$.
@@ -194,6 +194,8 @@ $$
  \end{aligned}
  \right.
  \end{equation}
+ where $\lfloor \cdot\rfloor_q$ denotes the reduction modulo $q$ into range $[0, ..., q)$.
+ 
 We then have that
  \begin{equation}
 \label{lattice}
@@ -207,7 +209,7 @@ In practice, OpenSSL uses $k+q$ as the ephemeral key. So the Equation \ref{tu} r
     |\alpha t - u|_q < q/2^{(l/2-\log_{2}{3})}
 \end{equation}
 
-Note that, the Equation \ref{lattice2} represents that the $l/2-\log_{2}{3} -1$ most significant bits of $\lfloor\alpha t_i\rfloor$ is $u_i$, based on the definition of the HNP.
+Note that, the Equation \ref{lattice2} represents that the $l/2-\log_{2}{3} -1$ most significant bits of $\lfloor\alpha t\rfloor_q$ is $u$, based on the definition of the HNP.
 So it should satisfy that $l/2-\log_{2}{3} -1 \geq 1$, i.e. $l > 7$.
 That means the length of the consecutive bits used to  construct the HNP instance should be larger than $7$,
 although we could use all the partitions of the consecutive bits of the ephemeral key in theory.

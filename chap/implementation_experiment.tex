@@ -14,26 +14,26 @@ Finally, we compare our method with some previous attacks.
 
 \subsection{The Flush+Flush Attack}
 \label{ffattack}
-We test the Flush+Flush attack on an HP Elite 8300 running Ubuntu 16.04.
+We test the cache side channel attack on an HP Elite 8300 running Ubuntu 16.04.
 The machine features an Intel Core i7-3300 processor with four execution cores and an 8 MB LLC.
 The attacking target is the ECDSA implemented in OpenSSL1.1.1b, which uses wNAF representation in the scalar multiplication.
-For the experiments, we use the curve secp256k1 for ECDSA.
+For the experiments, we use the Flush+Flush to attack the 256-bit curve secp256k1.
 Followings are the implementation details for the Flush+Flush attack.
 
 %平台
 
 \noindent\textbf{Get the virtual address. }
-In this attack, we use a spy process to monitor the  \verb+EC_POINT_dbl()+,  \verb+EC_POINT_add()+ and \verb+EC_POINT_invert()+ functions in OpenSSL.
+We use a spy process to monitor the  \verb+EC_POINT_dbl()+,  \verb+EC_POINT_add()+ and \verb+EC_POINT_invert()+ functions in OpenSSL.
 So we need to know the virtual addresses of the three functions.
-First we get the offset of the code required to monitor in the dynamic library.
-Then we use the \verb+mmap()+ function to load the page where the monitored function code resides into the virtual address space of the spy process.
-The \verb+mmap()+ function will return the initial address of this page so that we can get the virtual address of the monitored function based on the offset and the address of this page.
+First we get the offsets of the three functions required to monitor in the code of the dynamic library.
+Then we use the \verb+mmap()+ function to load each page locating the monitored function codes into the virtual address space of the spy process.
+The \verb+mmap()+ function will return the initial address of the page so that we can get the virtual address of the monitored function based on the offset and the address of this page.
 Alternative way is to use the \verb+dl_iterate_phdr()+ function to get the initial address of the dynamic library when loaded into the address space.
 
-To determine offset of the memory lines in the  dynamic library  we built OpenSSL with debugging symbols.
+To determine offsets of the memory lines in the  dynamic library,  we build OpenSSL with debugging symbols.
  These symbols are not loaded at run time and do not affect the performance of the code.
-The debugging symbols are, typically, not available for attackers,
- however their absence would not present a major obstacle to a determined attacker who could use reverse engineering [16].
+Typically the debugging symbols are not available for attackers,
+ however they could use reverse engineering [16] to determine the offsets.
 
 
 
@@ -51,9 +51,9 @@ The debugging symbols are, typically, not available for attackers,
 
 
 
-\noindent\textbf{Threshold.}
+\noindent\textbf{Thresholds.}
 We monitor the execution time of the \verb+clflush+ instruction to flush the monitored functions.
-If the time is larger than the threshold, it means the memory line is accessed by the victim.
+If the time is larger than the threshold, meaning the memory line is accessed by the victim.
 Otherwise, the memory line is not accessed.
 The thresholds are calculated for every monitored functions.
 For each address of the monitored functions, we record the time of flushing the cache 1000 times, and take the time larger than 99 percent samples plus 6 as the threshold of this address.
@@ -66,11 +66,11 @@ The thresholds are recalculated every time before the attack is triggered.
 %对每个地址，监控1000次flush花费的时间，取99%以上样本所花的最大时间加上6作为该地址的阈值
 
 
-\noindent\textbf{Trigger the attack.}
+\noindent\textbf{Trigger the monitoring.}
 We monitor the execution time of the address of the three functions.
-When any one of the time is larger than the corresponding threshold,
- we start to record execution time, which means the attack starts.
-The record stops when the number of consecutive execution time of all the monitored addresses less than the threshold  is larger than 200.
+When the time of any one is larger than the corresponding threshold,
+ we start to record execution times, meaning that the attack starts.
+The record stops when the number of consecutive execution time of all the monitored addresses less than the threshold  is larger than 300.
 If the number of record is less than 1000, we re-record the execution time.
 Then we have a valid record.
  Due to the  disturbance of noise,
@@ -86,11 +86,11 @@ So we continuously obtain 10 valid records.
 \noindent\textbf{Time slot.}
 For the attack, the spy process divides time into time slots of approximately $800$ cycles.
 In each slot, the spy flushes the memory lines in the add, double and invert functions (\verb+EC_POINT_dbl()+,  \verb+EC_POINT_add()+ and \verb+EC_POINT_invert()+) out of the caches.
-Then time slot length is chosen to ensure that the three functions only execute once.
+Also, the length of the time slot is chosen to ensure that the three functions only execute once.
 This allows the spy to correctly distinguish consecutive doubles.
 
-\noindent\textbf{Initial Point Judgement.}
-In order to precisely recover the sign of the ephemeral key, we need to determine which sample means the start of the scalar multiplication.
+\noindent\textbf{Determine the initial point.}
+In order to precisely recover the sign of the ephemeral key, we need to determine which sample represents the start of the scalar multiplication.
 We can determine the
 start of the scalar multiplication
 by combining the double-and-add chain and the profiles of the double and add functions with wNAF representation.
@@ -102,7 +102,7 @@ Also we can determine the start position by monitor the code of copy function in
 %对标量乘法代码分析，在对k的最高位处理时，并不是使用的点加，而是copy，因此，可以对copy函数进行监控，当一个时间槽内进行了倍点和copy操作，可以认定标量乘法的开始。
 %如果不监控copy，也可以根据点加倍点的发生，去排除错误的触发；也可以根据NAF编码时点加倍点的特征来判断起始。
 
-\subsubsection{Experiment Results}
+\noindent\textbf{Experimental results}
 Figure \ref{} shows a fragment of the output of the spy when OpenSSL performs ECDSA with the secp256k1 curve.
 
 Then explain the figure.
