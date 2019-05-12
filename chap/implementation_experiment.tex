@@ -139,20 +139,13 @@ Thus, from these experiments the average accurate rate of the data obtained from
 %我们的结果是：
 %进行分析
 %分析为什么我们没有利用全部的信息，理论上怎样，实际怎样
-We apply our lattice attack to the curve secp256k1 in our experiments, and we assume that the Flush + Flush attack is perfect, that is we can correctly obtain the ``double-add-invert" chain and recover all the information about the digits of the ephemeral key it contains.
+We apply our lattice attack to the curve secp256k1 in our experiments, and we assume that the Flush+Flush attack is perfect, that is we can correctly obtain the ``double-add-invert" chain and recover all the information about the digits of the ephemeral key it contains.
 
- To solve the SVP problem we use the BKZ algorithm implemented in \verb+fplll+ \cite{fplll}.
-This implementation is only efficient for the block size less than 35.
-So for the larger block size, we use the BKZ-2.0 \cite{bkz2} algorithm.
-To solve the CVP problem, we apply a pre-processing of either fplll or BKZ-2.0.
-When applying pre-processing of BKZ-2.0 we limit to only one round of execution.
-Then we apply an enumeration technique to search the closest vector.
-We restrict the number of nodes in the enumeration tree to $2^{29}$,
-   so as to ensure the enumeration did not go on for an excessive amount of time in the cases where the solution vector is hard to find (this mainly affected the experiments in dimension greater than 150).
 
+
+ To solve the SVP problem we use the BKZ algorithm implemented in \verb+fplll+~\cite{fplll}.
 We want to find the optimal strategy for our attack in terms of the following parameters:
 \begin{itemize}
- \item  SVP or CVP
  \item  lattice dimension
  \item  block size of BKZ
  \item  the minimal value of $l$ (length of the consecutive bits of $k$)
@@ -266,12 +259,12 @@ It is because that more information is being added to the lattice making it easi
 %  \caption{the SVP result}\label{svp9}
 %\end{table}
 
-Table \ref{svp8, svp9, svp10} show the probability of success when solving the CVP instance.
-As shown from the table,
-  the number of fragments of consecutive bits that we need to retrieve the private key of a 256-bit ECDSA is only $60$, less than the result of the SVP instance with the low block size.
- The probability of success also increases as the the dimension or the block size increase.
-Moreover, while the minimal length of consecutive bits increases, the probability of success becomes higher.
-%再加一段或几句CVP结果和SVP结果进行比较。
+%Table \ref{svp8, svp9, svp10} show the probability of success when solving the CVP instance.
+%As shown from the table,
+%  the number of fragments of consecutive bits that we need to retrieve the private key of a 256-bit ECDSA is only $60$, less than the result of the SVP instance with the low block size.
+% The probability of success also increases as the the dimension or the block size increase.
+%Moreover, while the minimal length of consecutive bits increases, the probability of success becomes higher.
+%%再加一段或几句CVP结果和SVP结果进行比较。
 
 
 %The results of the SVP and CVP experiments (Appendix A) show that for fixed  minimal length of consecutive bits,
