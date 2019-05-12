@@ -141,20 +141,29 @@ Thus, from these experiments the average accurate rate of the data obtained from
 %分析为什么我们没有利用全部的信息，理论上怎样，实际怎样
 We apply our lattice attack to the curve secp256k1 in our experiments, and we assume that the Flush+Flush attack is perfect, that is we can correctly obtain the ``double-add-invert" chain and recover all the information about the digits of the ephemeral key it contains.
 
+The HNP problem can be solved by exploiting both the CVP and SVP instances. 
+However, the CVP problem does not have a polynomial time solution while the SVP problem has. 
+So, with growth of the dimension of the lattice, the time cost of finding the closest vector grows very fast.
+ Actually, the CVP problem can be converted to the SVP problem,
+  so it is often solved through embedding the CVP into an SVP problem and using the polynomial time solution in practice. 
+Therefore, 
+ in our experiments, we only demonstrate the result of using the SVP problem to solve the HNP instance. 
 
-
- To solve the SVP problem we use the BKZ algorithm implemented in \verb+fplll+~\cite{fplll}.
+ We use the BKZ algorithm implemented in \verb+fplll+~\cite{fplll} to solve the SVP problem.
+When solving a SVP instance, there are two outcomes that either we obtain the private key or a wrong answer.
+ So we denote the success probability as the amount of successfully recovering the private key divided by the total number of the lattice attacks.
 We want to find the optimal strategy for our attack in terms of the following parameters:
 \begin{itemize}
- \item  lattice dimension
- \item  block size of BKZ
+%\item CVP or SVP
+ \item  lattice dimensions
+ \item  the block size of BKZ
  \item  the minimal value of $l$ (length of the consecutive bits of $k$)
  %\item  pruning strategy (optional)
  %\item  total signature number
 \end{itemize}
 
 Thus we perform a number of experiments with different values of the parameters,
-and compute the probability of success in each case.
+and compute the success probability in each case.
 The minimal length of the consecutive bits of $k$ is ranged from $9$ to $11$.
 Because in Section \ref{sec:attack} the HNP problem introduced requires $l/2 - \log_{2}{3} > 1$, the value of $l$ should be larger than $8$.
 The block size in BKZ is ranged from $10$ to $40$ by step being $10$.
