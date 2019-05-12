@@ -209,10 +209,10 @@ Attackers exploit these time variations to deduce the operations of the target p
 %Also it has a wider application scenarios, such as the attacks in the virtualization environments and cloud environments.
 Many attack methods are proposed \cite{Bonneau2006, Bernstein2005Cache, Osvik2006, cachegame2011, flushreload}
  since it is demonstrated feasible in theory \cite{Page2002}.
-We introduce two typical access-driven attacks called Flush + Reload \cite{flushreload} and Flush + Flush \cite{gruss2016flush} that are relevant to our work.
+We introduce two typical access-driven attacks called Flush+Reload \cite{flushreload} and Flush+Flush \cite{gruss2016flush} that are relevant to our work.
 %在近些年的研究中，访问驱动的攻击受到研究者们的青睐，因为其具有更高的攻击精度，能够很准确的获取到目标进程对cache的访问情况，以及更广的使用场景，例如对虚拟化云环境进行攻击。接下来，我们对两种典型的访问驱动攻击进行介绍，这两种攻击和本文相关。
 
-The Flush + Reload attack \cite{flushreload} employs a spy process to monitor if the specific memory lines have been accessed or not by the victim process.
+The Flush+Reload attack \cite{flushreload} employs a spy process to monitor if the specific memory lines have been accessed or not by the victim process.
 So this attack relies on sharing pages between the spy and the victim processes.
 For attacks in the same machine, the spy can map the victim program file, the victim data file or shared libraries to its own address space to shared these pages with the victim.
 While in the virtualizition environments, the page de-duplication technique of the VMM ensures the page sharing between the spy and the victim.
@@ -238,7 +238,7 @@ One round of the attack consists of three phases:
     So these memory lines are accessed by the victim during the waiting time.%需要精简
 \end{itemize}
 
-The Flush + Flush attack \cite{gruss2016flush} also needs the shared pages.
+The Flush+Flush attack \cite{gruss2016flush} also needs the shared pages.
 Unlike measuring the reload time directly affected by the cache access,
  this attack relies on the execution time of the \verb+clflush+ instruction,
   which is affected by whether the data is cached or not.
@@ -246,18 +246,18 @@ The execution time of the \verb+clflush+ instruction is shorter if the data is n
  and higher if the data is cached.
 So depending on this time, the attackers can determine the victim's cache activities.
 
-The Flush + Flush attack also has three phases.
-The first two phases are the same as in the Flush + Reload attack.
+The Flush+Flush attack also has three phases.
+The first two phases are the same as in the Flush+Reload attack.
 But in the third phase it flushes the cache again and measures the flush time instead of the reload time.
 As the third phase flushes the caches, it doubles as the first phase for subsequent observations.
 
 %再一段F+F 和 F+R进行对比：更加高效，精度更高，F阶段可以当成是下一循环的F，
 The execution time of the \verb+clflush+ instruction is less than the reload time on average.
-    Also the first and third phases are merged together in Flush + Flush attack.
-  Therefore the Flush + Flush attack is faster and can obtain more information than the Flush + Reload attack over the same time scale.
-Thus, the Flush + Flush attack has a better accuracy.
-Furthermore, compared with the Flush + Reload attack,
-The Flush + Flush attack does not trigger prefetches when monitoring consecutive memory lines, otherwise it may affect the validity of the attack.
+    Also the first and third phases are merged together in Flush+Flush attack.
+  Therefore the Flush+Flush attack is faster and can obtain more information than the Flush+Reload attack over the same time scale.
+Thus, the Flush+Flush attack has a better accuracy.
+Furthermore, compared with the Flush+Reload attack,
+The Flush+Flush attack does not trigger prefetches when monitoring consecutive memory lines, otherwise it may affect the validity of the attack.
 
 
 %这一节要和多篇文章进行对比改进，f+r攻击需要精简。
@@ -326,7 +326,7 @@ Solving the CVP problem with imput $B$ and $\mathbf{u}$ reveals the vector $\mat
 Because solving the CVP instance requires exponential time in the lattice rank,
  we can use the embedding technique \cite{Nguyen1999} to transform it to a SVP instance which just requires the polynomial time to solve.
 We construct a $d+2$ dimensional lattice $L(B')$ spanned by the rows of the matrix
-$$B' = 
+$$B' =
 \left(
   \begin{array}{cc}
     B & 0 \\

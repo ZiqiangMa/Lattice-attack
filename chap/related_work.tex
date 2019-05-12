@@ -58,7 +58,7 @@ Bonneau and Mironov \cite{Bonneau2006} showed how to exploit cache collisions wh
 In 2006, Osvik et al. \cite{Osvik2006} presented two access-driven attacks: Evict+Prime and Prime+Probe.
 Although the latter one proved to be significantly more efficient, both of them recovered the AES encryption key used by an OpenSSL server.
  Ac{\i}i{\c{c}}mez and Ko¸c \cite{ac2006} presented a trace-driven attack targeting AES that exploited internal table lookup collisions in the cache during the first round.
-In 2011, Gullasch et al. \cite{cachegame2011} first presented a new attack which was later called the flush+reload is used to attack AES encryption by blocking the execution of AES after each memory access using the process scheduling algorithm.
+In 2011, Gullasch et al. \cite{cachegame2011} first presented a new attack which was later called the Flush+Reload is used to attack AES encryption by blocking the execution of AES after each memory access using the process scheduling algorithm.
 In 2014, Irazoqui \cite{Irazoqui2014} exploit the Flush+Reload technique to attack the AES.
 
 Percival~\cite{Percival2005CACHEMF} presented the first cache attack on RSA using the data cache collision.
@@ -71,7 +71,7 @@ Brumley and Hakala \cite{Brumley2009} mounted an L1 data cache-timing attack to 
 Cloud computing systems also can be attacked using the cache side channel attacks.
 In 2009, Ristenpart et al. \cite{get-off-my-cloud} presented the methods to co-locate an attacker’s virtual machine (VM) with a potential victim’s VM with a success probability of 40\% in the Amazon EC2 cloud.
  Also the authors  showed that the cache side-channel attacks are both practical and applicable to real world scenarios by successfully recovering keystrokes from the co-resident victim’s VM.
-This work provided a practical method to find the co-resident VMs, which was the basis of the cache attacks cross VMs because the caches were only shared with co-resident VMs. 
+This work provided a practical method to find the co-resident VMs, which was the basis of the cache attacks cross VMs because the caches were only shared with co-resident VMs.
 For instance, Flush+Reload was used to attack AES \cite{Irazoqui2014} and RSA\cite{flushreload} in the cross-VM scenario.
 Also the Prime+Probe method was also
 adapted to work in virtualized environments by Zhang et al. \cite{YinqianZhang2012-cross-vm} and Liu \cite{liu2015last} to recover ElGamal encryption keys.

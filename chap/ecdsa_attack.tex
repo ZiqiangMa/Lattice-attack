@@ -35,7 +35,7 @@ The time is divided into slots, and in each slot
   the spy determines whether the three functions are performed or not by monitoring the cache hits/misses.
  Then we can obtain a ``double-add-invert" chain.
 According to the ``double" and ``add" in this chain, we can determine whether each digit of $k$ is zero or not.
-  That is what the original Flush + Reload attack does.
+  That is what the original Flush+Reload attack does.
 Also, based on the ``invert" in this chain, we can infer the sign of each non-zero digit.
 
 
@@ -105,7 +105,7 @@ From the Algorithm \ref{alg:wnaf} we know that the position of $k_i$ in the wNAF
  Let $m$ and $m + l$ be the positions of two consecutive non-zero digits of the wNAF representation, and $w$ be the window size.
  That is, $k_m, k_{m+l} \neq 0$ and $k_{m+i} = 0$ for all $0 < i < l$.
  We analyse the transformation method between the binary and wNAF representation, getting the following result:
- 
+
  \begin{align}
  &b_{m+l} = \left\{
  \begin{aligned}
@@ -123,7 +123,7 @@ From the Algorithm \ref{alg:wnaf} we know that the position of $k_i$ in the wNAF
  \end{align}
 %这里的公式有漏洞，需要加上最低位即m最小时的bm
 
-And if $m$ is the position of the least non-zero digit of $k$, 
+And if $m$ is the position of the least non-zero digit of $k$,
  \begin{align}
  &b_{i} = \left\{
  \begin{aligned}
@@ -206,7 +206,7 @@ $$
  \right.
  \end{equation}
  where $\lfloor \cdot\rfloor_q$ denotes the reduction modulo $q$ into range $[0, ..., q)$.
- 
+
 We then have that
  \begin{equation}
 \label{lattice}
