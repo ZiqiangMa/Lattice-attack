@@ -164,25 +164,24 @@ We want to find the optimal strategy for our attack in terms of the following pa
 
 Thus we perform a number of experiments with different values of the parameters,
 and compute the success probability in each case.
-The minimal length of the consecutive bits of $k$ is ranged from $9$ to $11$.
-Because in Section \ref{sec:attack} the HNP problem introduced requires $l/2 - \log_{2}{3} > 1$, the value of $l$ should be larger than $8$.
-The block size in BKZ is ranged from $10$ to $40$ by step being $10$.
-The number of consecutive bits for constructing the lattice denoted as $d$ is ranged from $50$ to $230$,
-i.e. the dimension of the lattice for the SVP or CVP is $d + 1$ or $d + 2$.
+Because in Section \ref{sec:attack} the HNP problem introduced requires $l/2 - \log_{2}{3} -1 \geq 1$ to contain more than one bit information, the value of $l$ should be larger than $7$.
+ But in our experiments, when $l = 8$, the private key can not be successfully recovered. 
+  The reason is that the HNP instance contains not enough information.
+So the minimal length of the consecutive bits of $k$ is set ranging from $9$ to $11$ in the experiments.
+The block size in BKZ is set $10$  and $20$.
+The number of sequences of the consecutive bits for constructing the lattice denoted as $d$ is ranged from $50$ to $230$,
+i.e. the dimension of the lattice for the SVP is $d + 2$.
 
-Table \ref{svp9} shows the probability of success for different dimensions and block sizes of solving the SVP instance in the
-             case that the length of the consecutive bits is larger than 9 and no pruning strategy is used.
-As shown from the table, only need $60$ fragments of consecutive bits we successfully retrieve the private key of a 256-bit ECDSA.
-  For fixed  minimal length of consecutive bits,
+Table \ref{svp9} shows the success probability for different dimensions and block sizes of solving the SVP instance in the
+             cases that the minimal length of the consecutive bits ranges from $9$ to $11$.
+As shown in the table, we successfully retrieve the private key of a 256-bit ECDSA only need $60$ sequences of consecutive bits .
+  For the fixed  minimal length of consecutive bits,
  increasing the dimension generally increases the probability of success.
 In some sense, as the dimension increases
      more information is being added to the lattice and this makes the desired solution vector stand out more.
 Also, the higher block sizes perform with a higher probability of success,
  as the stronger reduction allows them to isolate the solution vector better.
-
-Table \ref{svp8} and Table \ref{svp10} show the probability of success in the case that the length of the consecutive bits is larger than 8 and 10, respectively.
-The probability of success also increases as the the dimension or the block size increase.
-Moreover, while the minimal length of consecutive bits increases, the probability of success becomes higher.
+The success probability also increases as the minimal length of consecutive bits increases.
 It is because that more information is being added to the lattice making it easier to search for the desired solution vector.
 
 \begin{table}
