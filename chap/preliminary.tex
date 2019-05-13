@@ -232,33 +232,33 @@ The execution of such an attack consists of three phases:
   \item
     \textbf{Reload:}
     This phase detects whether the victim accesses the memory lines flushed in the first phase during the waiting time.
-    The attacker accesses the desired memory lines to reload them into caches, and measures the time it takes.
-    Depending on the reloading time, the attacker determines whether the memory lines are accessed by the victim.
-    If the time is longer, it means that the attacker reloads the data from the memory.
-    Otherwise, it means that these memory lines are already in the caches.
+    The attacker accesses the desired memory lines to reload them into caches, and measures the time.
+From the reload time, the attacker determines whether the memory lines are accessed by the victim.
+    If it is longer, it means that the attacker reloads the data from the memory and the victim does not access the data.
+    Otherwise, it means that the victim accesses the data.
 %    So these memory lines are accessed by the victim during the waiting time.%需要精简
 \end{itemize}
 
-The Flush+Flush attack \cite{gruss2016flush} also needs the shared memory.
-Unlike measuring the reload time directly affected by the cache access,
- this attack relies on the execution time of the \verb+clflush+ instruction,
-  which is affected by whether the data is cached or not.
-The execution time of the \verb+clflush+ instruction is shorter if the data is not cached
- and higher if the data is cached.
-So depending on this time, the attackers can determine the victim's cache activities.
+The Flush+Flush attack \cite{gruss2016flush} also assumes shared memory.
+%Unlike measuring the reload time directly affected by the cache access,
+It relies on the execution time of the \verb+clflush+ instruction,
+  which is affected by whether the to-be-flushed data are cached or not.
+The execution time of \verb+clflush+ is shorter if the data are not cached
+ and longer if the data are cached.
+So according to this time, the attackers determine the victim's cache activities.
 
-The Flush+Flush attack also has three phases.
+In general, the Flush+Flush attack also consists of three phases.
 The first two phases are the same as in the Flush+Reload attack.
 But in the third phase, it flushes the cache again and measures the flush time instead of the reload time.
 As the third phase flushes the caches, it doubles as the first phase for subsequent observations.
 
 %再一段F+F 和 F+R进行对比：更加高效，精度更高，F阶段可以当成是下一循环的F，
-The execution time of \verb+clflush+ is less than the reload time on average.
-    Also, the first and third phases are merged together in Flush+Flush attack.
-  Therefore the Flush+Flush attack is faster and can obtain more information than the Flush+Reload attack over the same time scale.
+The execution time of \verb+clflush+ is less than the reload time on average,
+    and the first phase and the third phase of the next round are merged together in the Flush+Flush attack.
+  Therefore the Flush+Flush attack is more efficient than the Flush+Reload attack.
 Thus, the Flush+Flush attack has a better accuracy.
-Furthermore, compared with the Flush+Reload attack,
-the Flush+Flush attack does not trigger prefetches when monitoring consecutive memory lines, otherwise, it may affect the validity of the attack.
+%Furthermore, compared with the Flush+Reload attack,
+%the Flush+Flush attack does not trigger prefetches when monitoring consecutive memory lines, otherwise, it may affect the validity of the attack.
 
 
 %这一节要和多篇文章进行对比改进，f+r攻击需要精简。
