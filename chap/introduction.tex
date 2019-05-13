@@ -106,7 +106,7 @@ By monitoring the  invert function
 	we obtain the ``double-add-invert'' chain.
 We successfully extract whether each digit of the ephemeral key is zero or not, and determine the sign of the non-zero digits from this chain.
 Then We use BKZ \cite{Schnorr1994} algorithm to solve the HNP instance.
-The results show that we effectively retrieve the ECDSA private key.
+The results show that we effectively recover the ECDSA private key.
 If the result of the Flush+Flush attack is perfect, we need $60$ signatures at least to recover the private key with the probability being about $3\%$.
 
 Through the cache side channel we get the information about the position and the sign of all non-zero digits of the ephemeral key.

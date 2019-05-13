@@ -31,7 +31,7 @@ The pair $(r, s)$ is the ECDSA signature of the message $m$.
 For ECDSA signature, the ephemeral key $k$ must be kept random and secret.
 The equation in the third step shows the private key can be computed if $k$ is leaked.
 If some signatures use the same $k$, or the random number generator in use has the predictability, attackers can obtain the private key directly.
-Even if a portion of $k$ is known, the private key can be retrieved by lattice attacks.
+Even if a portion of $k$ is known, the private key can be recovered by lattice attacks.
 Therefore, the target of most attackers is the scalar multiplication $kG$ expecting to get some effective bits information about $k$.
 
 %Given the knowledge of the ephemeral key k and all the
@@ -114,7 +114,7 @@ After converting $k$ to the wNAF form, the multiplication $kG$ is executed as Al
 From the algorithm we can find that the \textbf{if-then} block is vulnerable.
 An attacker can use a spy process to monitor the conditional branches through side channels.
 Then he can get an ``double-add'' chain, and through it whether the value of $k_i$ is zero can be inferred.
-The attacker can use these information to retrieve the private key.
+The attacker can use these information to recover the private key.
 
 In the actual OpenSSL execution, the bit length of $k$ is set to a fixed value$\lfloor\log_{2}{q}\rfloor + 1$ of by adding itself $q$
 or $2q$, which can resist the Brumley and Tuveri remote timing attack \cite{Brumley2011}.
@@ -321,7 +321,7 @@ Let the vector $\mathbf{u} = (u_1, ..., u_d, 0)$,
 While the lattice determinant of $L(B)$ is $q^d/2^{l+1}$,
  thus the vector $\mathbf{h}$ is very close to the vector $\mathbf{u}$.
 Solving the CVP problem with imput $B$ and $\mathbf{u}$ reveals the vector $\mathbf{h}$,
- hence the private key $\alpha$ is retrieved.
+ hence the private key $\alpha$ is recovered.
 
 Because solving the CVP instance requires exponential time in the lattice rank,
  we can use the embedding technique \cite{Nguyen1999} to transform it to a SVP instance which just requires the polynomial time to solve.
