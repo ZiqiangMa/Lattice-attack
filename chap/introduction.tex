@@ -76,13 +76,14 @@ They exploited the positions of two non-zero digits together with the length of 
 Previous works exploited the side channel attacks to extract the digit information in the wNAF representation of the ephemeral key.
 They used the least non-zero digit \cite{Benger2014}, half non-zero digits \cite{Van2015}, all non-zero digits \cite{Fan2016} or two non-zero digits with the total length~\cite{Wang2017}.
 To some degree,
-They just attempted to make more use of the data achieved through the side channels and construct more effective lattice attacks to retrieve the private key.
+They just attempted to make more use of the data achieved through the side channels and construct more effective lattice attacks
+ to recover the private key.
 All they exploited are the information about the positions of the non-zero digits,
  and no more information about the ephemeral key is extracted from the side channels.
 In this respect, though the methods are different in these works, no improvement has been made to achieve more information.
 
 In our paper, we also focus on the ECDSA algorithm with wNAF representation of the ephemeral key, especially the implementation in the OpenSSL library.
- We propose a new method to retrieve the ECDSA private key.
+ We propose a new method to recover the ECDSA private key from the information leaked through side channels.
 We expect not only to make better use of the information,
   but also to achieve more information from the side channels.
 First, we analyse the code of the implementation of ECDSA in OpenSSL,
