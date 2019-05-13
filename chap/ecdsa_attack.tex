@@ -1,19 +1,19 @@
 \section{Attacking ECDSA}
 \label{sec:attack}
-In this section, we propose a new method to recover the private key of ECDSA.
+This section proposes a new method to recover the private key of ECDSA.
 First, we analyse the invert function in the scalar multiplication with wNAF representation in the ECDSA algorithm.
  Then we use the invert function for improving the cache side channel attacks, from which the sign of the non-zero digits of $k$ is determined.
 After that, we make use of the obtained information to recover the consecutive bits at the position of every non-zero digits of $k$.
 Finally, we construct an HNP instance by the consecutive bits and transform it to the problem of solving the SVP/CVP in some lattice with the lattice reduction algorithms.
 
-\subsection{Attacking wNAF through the Cache Side Channels}
+\subsection{Attacking wNAF Through the Cache Side Channels}
 \label{data_get}
 First recalling the implementation of scalar multiplication in OpenSSL, it uses the invert function to
   compute the inverse element of a number.
 Applying this function, the space of precomputed points is saved by half, only need to store $\{G, 3G, ..., (2^{w} - 1)G\}$.
-As shown in Algorithm~\ref{alg:smopenssl},
+As showed in Algorithm~\ref{alg:smopenssl},
 it iterates $k$ from the most significant digit to the least significant digit.
-In each digit, it performs a double function.
+In each digit it performs a double function.
 While if the digit is not zero, it first determines whether the invert function is executed.
  If the sign of the digit is opposite to the prior one, the invert function is called.
 Then it indexes from the precomputed points using the absolute value of the digit and performs an addition operation.
@@ -31,7 +31,7 @@ Because we know the first non-zero digit is positive,
 
 
 We use a spy process to monitor one memory line of the code of the double, add and invert functions while computing the scalar multiplication.
-The time is divided into slots, and in each slot,
+The time is divided into slots, and in each slot
   the spy determines whether the three functions are performed or not by monitoring the cache hits/misses.
  Then we can obtain a ``double-add-invert" chain.
 According to the ``double" and ``add" in this chain, we can determine whether each digit of $k$ is zero or not.
@@ -99,7 +99,7 @@ First, we denote the wNAF representation of $k$ as $k = \sum{k_{i}2^{i}}$,
  and the binary representation as $k = \sum{b_{i}2^{i}}$.
 From the Algorithm \ref{alg:wnaf} we know that the position of $k_i$ in the wNAF representation is the same as $b_i$ in the binary representation.
  When we know the information about whether $k_i$ is zero and the sign of the non-zero $k_i$, we can simply determine some bits of $k$.
- For example, if we obtain the sign of the least non-zero $k_j$, we can infer that $b_j$ is one and $b_i$ is zero for $0\leq i<j$.
+ For example if we obtain the sign of the least non-zero $k_j$, we can infer that $b_j$ is one and $b_i$ is zero for $0\leq i<j$.
  But for arbitrary non-zero digits, it can not determine whether the bit is zero or one.
 
  Let $m$ and $m + n$ be the positions of two consecutive non-zero digits of the wNAF representation, and $w$ be the window size.
@@ -163,7 +163,7 @@ In theory, two signatures would be enough to recover the 256-bit private key as 
 
 \subsection{Constructing the Lattice Attack}
 \label{data_proc2}
-In this section, we transform the problem of recovering the private key to the HNP instance, and further convert to the CVP/SVP instance in a lattice.
+In this section we transform the problem of recovering the private key to the HNP instance, and further convert to the CVP/SVP instance in a lattice.
 Our method is based on the analysis from \cite{Nguyen2002}.
 But we make some improvements on it.
 First the length of the consecutive bits used to construct the lattice is variable while the prior work fixes the length, which may lose some information.
