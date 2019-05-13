@@ -3,12 +3,12 @@
 In this section, we present the background knowledge about the attack.
 First we describe the ECDSA and its implementation using the wNAF representation in OpenSSL.
 Then we explain the attack method of the cache side channels.
-Also, the hidden number problem and its corresponding lattice attack are introduced
- for disposing of the data obtained from cache side channels.
+Also, the hidden number problem and its  lattice attack are introduced
+ to dispose the data obtained from cache side channels.
 
 \subsection{The Elliptic Curve Digital Signature Algorithm}
 \label{intro_ecdsa}
-The Elliptic Curve Digital Signature Algorithm (ECDSA) \cite{Johnson2001, ansi2005} is the adaption of one step of the Digital Signature Algorithm (DSA) \cite{DSS186} from the multiplicative group of a finite field to the group of points on an elliptic curve.
+ECDSA \cite{Johnson2001, ansi2005} is the adaption of one step of the Digital Signature Algorithm (DSA) \cite{DSS186} from the multiplicative group of a finite field to the group of points on an elliptic curve.
 
 Let $E$ be an elliptic curve defined over a finite field $\mathbb{F}_{p}$ where $p$ is prime.
 $G \in E$ is a fixed point of a large prime order $q$, that is $G$ is the generator of the group of points of order $q$.
@@ -30,7 +30,7 @@ Given a hash function $h$, the ECDSA signature of a message $m$ is computed as f
 The pair $(r, s)$ is the ECDSA signature of the message $m$.
 For ECDSA signature, the ephemeral key $k$ must be kept random and secret.
 The equation in the third step shows the private key can be computed if $k$ is leaked.
-If some signatures use the same $k$, or the random number generator in use is predictable, attackers can obtain the private key directly.
+%If some signatures use the same $k$, or the random number generator in use is predictable, attackers can obtain the private key directly. 这个事情，与我们无关；相同k
 Even if a portion of $k$ is known, the private key can be recovered by lattice attacks.
 Therefore, the target of most attackers is the scalar multiplication $kG$ expecting to get some effective bits information about $k$.
 
@@ -44,14 +44,14 @@ Therefore, the target of most attackers is the scalar multiplication $kG$ expect
 \label{intro_wnaf}
 %wnaf 是什么
 %K 是有限域， P 是定义在域 K上的椭圆曲线 E(K)上的点，k是一个大整数,根据椭圆曲线上点的加法公式将点P与自身相加 k次, k 称为标量， kP称为椭圆曲线点乘，或标量乘法
-$G$ is a point defined on the elliptic curve over the finite field,
+%$G$ is a point defined on the elliptic curve over the finite field,
  and the scalar $k$ is a big integer.
 Scalar multiplication $kG$ on the elliptic curve means that the point $G$ is added to itself $k$ times.
 There are several algorithms to implement the scalar multiplication.
-In OpenSSL, scalar multiplication in the prime field is implemented using the windowed Non-adjacent Form (wNAF) representation \cite{GORDON1998129,Miyaji1997,Koyama1002,Solinas2000} of the scalar $k$.
+In OpenSSL, scalar multiplication in the prime field is implemented using the wNAF representation \cite{GORDON1998129,Miyaji1997,Koyama1002,Solinas2000} of the scalar $k$.
 In wNAF, a number $k$ is represented by a sequence of digits which value is either zero or an odd number satisfied $-2^{w} < k_{i} < 2^{w}$,
  where $w$ is the window size. In this representation, any continuous non-zero digit interval is with at least $w$ zero digits.
-The value of $k$ can be expressed as $k = \sum{2^{i}\cdot k_{i}}$.
+The value of $k$ can be expressed as $k = \sum{2^{i} k_{i}}$.
 Algorithm \ref{alg:wnaf} introduces the concrete method for converting a scalar into its wNAF representation.
 
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
@@ -111,13 +111,13 @@ After converting $k$ to the wNAF form, the multiplication $kG$ is executed as de
 
 \zf{I think alg1 and alg2 can be merged into one figure}
 
-From the algorithm, we can find that the \textbf{if-then} block is vulnerable.
+From the algorithm, we can find that the \textbf{if-then} block (Line 4) is vulnerable to side channel attacks.
 An attacker can use a spy process to monitor the conditional branches through side channels.
 Then he can get a ``double-add'' chain, and through it, whether the value of $k_i$ is zero can be inferred.
 The attacker can use this information to recover the private key.
 
-In the actual OpenSSL execution, the bit length of $k$ is set to a fixed value$\lfloor\log_{2}{q}\rfloor + 1$ of by adding itself $q$
-or $2q$, which can resist the Brumley and Tuveri remote timing attack \cite{Brumley2011}.
+In OpenSSL, the bit length of $k$ is set to a fixed value$\lfloor\log_{2}{q}\rfloor + 1$ of by adding itself $q$
+or $2q$, which can resist the remote timing side channel attack \cite{Brumley2011}.
 In most cases, the multiplication is done as $(k + q)G$.
 Also, OpenSSL uses the modified wNAF representation instead of the generalized one as stated in Algorithm~\ref{alg:wnaf} to avoid length expansion in some cases and to make more efficient exponentiation.
 The representation of modified wNAF is very similar to the wNAF.

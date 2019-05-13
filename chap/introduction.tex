@@ -125,7 +125,11 @@ In theory, the number of signatures that required is $2$ if a suitable lattice i
 %It  can be applied to all the curves without any restriction.
 %The sign information of non-zero digits cannot be directly applied to previous works.
 %Also, our method does not rely on some special properties of the elliptic curves.
-To make better use of the sign information of the non-zero digits, we exploit the information obtained about the wNAF representation to extract sequences of consecutive bits of $k$ to construct the lattice attack.
+To make better use of the sign information of the non-zero digits,
+ we exploit the information obtained about the wNAF representation to extract sequences of consecutive bits of $k$ to construct the lattice attack,
+because the steps in existing works do not work for this information.
+We have to obtain multiple consecutive bits of the ephemeral key by converting the wNAF representation to the binary representation.
+And then, we use these consecutive bits to construct the HNP instance.
 To the best of our knowledge, this is the first time to obtain and exploit the
 signs of the wNAF representations in the side channel attacks against ECDSA,
     and previous works cannot be straightforwardly applied to this information.
@@ -139,7 +143,8 @@ Our contributions are summarized as follows:
     improve the cache side channel attacks by monitoring
       the invert function.
       It is the first work to exploit the sign of the non-zero digits of the ephemeral key in side channel attacks.
-   Second, for the data from the cache side channel, we do not use them to construct the HNP instance directly.
+   Second, for the data from the cache side channel, we do not use them to construct the HNP instance directly,
+   as in previous works.
     We obtain multiple consecutive bits of the ephemeral key by converting the wNAF representation to the binary representation.
 Finally, we use these consecutive bits to construct the HNP instance.
 The private key is recovered by solving the HNP instance using lattice reduction algorithm.
