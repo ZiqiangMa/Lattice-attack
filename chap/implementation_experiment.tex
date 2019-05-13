@@ -355,7 +355,7 @@ In our work, we exploit information from the cache side channel to extract the c
 All the consecutive bits can be used to construct the lattice attack.
 Therefore, we can get much more bits per signature and the number of signatures is decreased for retrieve the private key.
 
-van de Pol et al. \cite{Van2015} improved Benger's attack  relying on the property of some specific elliptic curves, that is the order $q$ of the base point is a pseudo-Mersenne prime which can be expressed as $2^n - \epsilon$, where $|\epsilon| < 2^p $, $p \approx n/2$.
+van de Pol et al. \cite{Van2015} improved Benger's attack  relying on the property of some specific elliptic curves, that is the order $q$ of the base point is a pseudo-Mersenne prime which can be expressed as $2^{(\lfloor\log_{2}{q}\rfloor +1)} - \epsilon$, where $|\epsilon| < 2^p $, $p \approx (\lfloor\log_{2}{q}\rfloor +1)/2$.
 With this property, this attack uses the information from the consecutive non-zero digits whose positions are between $p+1$ and $n$ extracted from the Flush+Reload attack, not only the LSBs.
 It is able to extract $47.6$ bits per signature on average for the secp256k1 curve and recover the private key with 13 signatures.
 Then they constructed a new HNP instance using this information and
