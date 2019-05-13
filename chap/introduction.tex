@@ -16,26 +16,28 @@ But the scalar multiplication is vulnerable to side channel attacks.
 As long as parts of the nonce is revealed through the side channels,
  some efficient attacks can be launched to recover the private key \cite{Nguyen2001,HG2001,Nguyen2002,Nguyen2003}.
 
-Howgrave-Graham and Smart \cite{HG2001} first showed that DSA is vulnerable to such partial ephemeral key exposure in 2001.
-Then Nguyen and Shparlinski \cite{Nguyen2002} improved their method in further details and gave a provable polynomial-time attack.
-They also extended the similar results to ECDSA \cite{Nguyen2003}.
-The basic idea is to reduce the key recovery problem to an instance of the hidden number problem
-(HNP), which can be further reduced to the closest vector problem (CVP) in a suitable lattice, with the
-knowledge of consecutive leaked ephemeral key bits.
-Brumley and co-workers employ this lattice attack to recover ECDSA keys using leaked LSBs (in \cite{Brumley2009}) and leaked MSBs (in \cite{Brumley2011}).
+Howgrave-Graham and Smart \cite{HG2001} theoretically showed that DSA is vulnerable to such partial ephemeral key exposure in 2001.
+Then Nguyen and Shparlinski \cite{Nguyen2002} improved their method with further details and gave a provable polynomial-time attack.
+They also extended the attacks to ECDSA \cite{Nguyen2003}.
+The basic idea is to reduce the problem of private key recovery to an instance of the hidden number problem
+(HNP), which is further reduced to the closest vector problem (CVP) in a lattice, with the knowledge of consecutive bits of the ephemeral keys.
+Then, Brumley and co-workers employ this lattice attack to recover ECDSA keys from leaked LSBs (in \cite{Brumley2009}) and leaked MSBs (in \cite{Brumley2011}).
 
 %In 2003, Nguyen \cite{Nguyen2003} presented a polynomial-time algorithm that recovers the ECDSA private key when a few consecutive bits of the random nonce $k$ are known for a number of signatures, which used the similar results for the DSA \cite{Nguyen2002}.
 
 
-OpenSSL\cite{openssl} is the most popular open source toolkit for the ECDSA implementation.
-When using elliptic curves over a prime field $\mathbb{F}_{p}$,
- OpenSSL uses the windowed non-adjacent form (wNAF) algorithm \cite{GORDON1998129,Miyaji1997,Koyama1002,Solinas2000} to implement the scalar multiplication of a known point $G$ by the secret nonce $k$
-  in the latest version.
-
-Using a cache based side-channel called the Flush+Reload \cite{flushreload}, Benger et al. \cite{Benger2014} obtained the
-LSBs of the ephemeral key. By transforming to a HNP instance solved by the lattice reduction algorithm, they are able to use about 200 signatures to recover the ECDSA private key.
+With the Flush+Reload cache side channels \cite{flushreload}, 
+	Benger et al. \cite{Benger2014} obtained the LSBs of the ephemeral key.
+This side channel exploits 
+	the windowed non-adjacent form (wNAF) implementation \cite{GORDON1998129,Miyaji1997,Koyama1002,Solinas2000}
+	for the scalar multiplication	
+		of a known point $G$ by the secret nonce $k$.
+This exploitation works for the elliptic curves over a prime field $\mathbb{F}_{p}$
+			in ECDSA, which is implemented in OpenSSL\cite{openssl}.
+Then,
+	by constructing a HNP instance solved by the lattice reduction algorithm, they recover the ECDSA private key from about 200 signatures.
 In 2015, van de Pol et al. improved this method by deriving a more effective way of exacting information from the cache side channel \cite{Van2015}.
-In the same year, paper \cite{Cao2015} presents two lattice-based differential fault attacks against ECDSA with wNAF algorithm.
+In the same year, paper \cite{Cao2015} presents two lattice-based differential fault attacks against ECDSA with wNAF implementations.
 In 2016, \cite{Dahmun2016}  extended the basic lattice attack by when the ephemeral keys are blinded by the addition of a random multiple of the elliptic-curve group order or by a random Euclidean splitting.
 While in paper \cite{Fan2016}, Fan et al. proposed a new way of extracting and utilizing information from the Flush+Reload attack. The problem of recovering the
 secret key is then transformed to the extended hidden number problem (EHNP) which is solved by lattice reduction algorithm. The number of signatures needed is reduced to $4$.
