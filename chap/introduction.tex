@@ -45,7 +45,7 @@ secret key is then transformed to the extended hidden number problem (EHNP) whic
 In 2017, paper \cite{Wang2017} give a lattice attack on the ECDSA using
  a small fraction of information of the ephemeral key.
 They exploited the positions of two non-zero digits together with the length of the wNAF representation of the ephemeral key to construct a HNP instance. They need 85 signatures to recover the private key.
-%è¿™ä¸€éƒ¨åˆ†ä»éœ€è¦ä¿®æ”¹
+%ÕâÒ»²¿·ÖÈÔĞèÒªĞŞ¸Ä
 
 
 %Benger et al. [22] proposed a method to extract the LSBs of the ephemeral key with the knowledge
@@ -65,13 +65,13 @@ They exploited the positions of two non-zero digits together with the length of 
 %reduction algorithms up to now. A 160-bit signature with 2-bit leakage of LSBs can be recovered with
 %100 signatures.
 
-%ä¹‹å‰çš„å·¥ä½œå­˜åœ¨å“ªäº›é—®é¢˜ï¼š1.2.3
-%æˆ‘ä»¬çš„å·¥ä½œï¼Œæˆ‘ä»¬åšäº†ä»€ä¹ˆäº‹æƒ…ï¼Œè¯¦ç»†è¯´æ˜ï¼Œåšäº†ä»€ä¹ˆï¼Œå¾—åˆ°äº†ä»€ä¹ˆç»“æœï¼Œ
-%å…ˆè¯´æ–¹æ¡ˆï¼Œå†è¯´å®ç°
-%å’Œä¹‹å‰ç›¸æ¯”ï¼Œæˆ‘ä»¬çš„æ•ˆæœå¥½åœ¨äº†ä»€ä¹ˆåœ°æ–¹ã€‚
-%ç„¶åsummaryè´¡çŒ®ï¼š
+%Ö®Ç°µÄ¹¤×÷´æÔÚÄÄĞ©ÎÊÌâ£º1.2.3
+%ÎÒÃÇµÄ¹¤×÷£¬ÎÒÃÇ×öÁËÊ²Ã´ÊÂÇé£¬ÏêÏ¸ËµÃ÷£¬×öÁËÊ²Ã´£¬µÃµ½ÁËÊ²Ã´½á¹û£¬
+%ÏÈËµ·½°¸£¬ÔÙËµÊµÏÖ
+%ºÍÖ®Ç°Ïà±È£¬ÎÒÃÇµÄĞ§¹ûºÃÔÚÁËÊ²Ã´µØ·½¡£
+%È»ºósummary¹±Ï×£º
 
-%åªæ˜¯å¯¹æ•°æ®åˆ†æè¿›è¡Œäº†æ”¹è¿›ï¼Œå¹¶æ²¡æœ‰è·å¾—æ›´å¤šçš„æ•°æ®
+%Ö»ÊÇ¶ÔÊı¾İ·ÖÎö½øĞĞÁË¸Ä½ø£¬²¢Ã»ÓĞ»ñµÃ¸ü¶àµÄÊı¾İ
 
 Previous works exploited the side channel attacks to extract the digit information in the wNAF representation of the ephemeral key.
 They used the least non-zero digit \cite{Benger2014}, half non-zero digits \cite{Van2015}, all non-zero digits \cite{Fan2016} or two non-zero digits with the total length~\cite{Wang2017}.
@@ -114,15 +114,15 @@ Compared to the previous works, ours obtains more information about the ephemera
 Also, our method does not rely on some special properties of the elliptic curves.
 It  can be applied to all the curves without any restriction.
 The sign information of non-zero digits can not be directly applied to previous works.
-To make better use of the sign information of the non-zero digits, we exploit the information obtained about the wNAF representation to extract sequences of consecutive bits of $k$ to construct the lattice attack. 
+To make better use of the sign information of the non-zero digits, we exploit the information obtained about the wNAF representation to extract sequences of consecutive bits of $k$ to construct the lattice attack.
 In theory the number of signatures needed is $2$ if a suitable lattice is constructed.
 
 
 
 
-%æˆ‘ä»¬ä¸»è¦éƒ½åšäº†ä»€ä¹ˆå·¥ä½œï¼Œè¯¦ç»†çš„æè¿°åšäº†ä»€ä¹ˆäº‹ï¼Œå®éªŒåšäº†ä»€ä¹ˆï¼Œç„¶åå¾—åˆ°äº†ä»€ä¹ˆç»“æœ
+%ÎÒÃÇÖ÷Òª¶¼×öÁËÊ²Ã´¹¤×÷£¬ÏêÏ¸µÄÃèÊö×öÁËÊ²Ã´ÊÂ£¬ÊµÑé×öÁËÊ²Ã´£¬È»ºóµÃµ½ÁËÊ²Ã´½á¹û
 
-%å’Œä¹‹å‰çš„å·¥ä½œç›¸æ¯”ï¼Œæˆ‘ä»¬æœ‰å“ªäº›åˆ›æ–°å’Œæ”¹è¿›ï¼Œç„¶åå†æ€»ç»“æœ¬æ–‡çš„è´¡çŒ®
+%ºÍÖ®Ç°µÄ¹¤×÷Ïà±È£¬ÎÒÃÇÓĞÄÄĞ©´´ĞÂºÍ¸Ä½ø£¬È»ºóÔÙ×Ü½á±¾ÎÄµÄ¹±Ï×
 
 In summary, our contributions are as follows:
 \begin{itemize}
@@ -151,23 +151,23 @@ Section \ref{sec:discussion} contains some extended discussions.
 Section \ref{sec:relatedwork} introduces some related works.
 Section \ref{sec:conclusion} draws the conclusions.
 
-%ECDSAè¢«å¹¿æ³›åº”ç”¨
-%åŸºäºæ¤­åœ†æ›²çº¿ç¦»æ•£å¯¹æ•°é—®é¢˜
-%ç®—æ³•åˆ†æä¸Šéš¾ä»¥è¢«æ”»å‡»
-%ä½†æ˜¯åœ¨å®ç°ä¸Šå´ç›¸å¯¹å®¹æ˜“å‘ç°æ¼æ´
-%å› æ­¤å¾ˆå¤šäººé€šè¿‡ä¾§ä¿¡é“æ”»å‡»æ¥è·å–è½¯ä»¶å®ç°ä¸Šçš„æ³„éœ²çš„ä¿¡æ¯ï¼Œè¿›è¡Œå¯†é’¥æ¢å¤ã€‚
-%Cacheä¾§ä¿¡é“æ”»å‡»åœ¨è¿‘å¹´æ¥å¾—åˆ°å¹¿æ³›åº”ç”¨
+%ECDSA±»¹ã·ºÓ¦ÓÃ
+%»ùÓÚÍÖÔ²ÇúÏßÀëÉ¢¶ÔÊıÎÊÌâ
+%Ëã·¨·ÖÎöÉÏÄÑÒÔ±»¹¥»÷
+%µ«ÊÇÔÚÊµÏÖÉÏÈ´Ïà¶ÔÈİÒ×·¢ÏÖÂ©¶´
+%Òò´ËºÜ¶àÈËÍ¨¹ı²àĞÅµÀ¹¥»÷À´»ñÈ¡Èí¼şÊµÏÖÉÏµÄĞ¹Â¶µÄĞÅÏ¢£¬½øĞĞÃÜÔ¿»Ö¸´¡£
+%Cache²àĞÅµÀ¹¥»÷ÔÚ½üÄêÀ´µÃµ½¹ã·ºÓ¦ÓÃ
 %
-%OpenSSLçš„å®ç°æ˜¯åº”ç”¨æœ€å¹¿æ³›çš„å®ç°ã€‚
-%å…¶ä¸­ï¼Œå¯¹äºç´ åŸŸä¸Šçš„æ¤­åœ†æ›²çº¿ï¼Œä½¿ç”¨çš„æ˜¯wNAFç®—æ³•å®ç°çš„æ ‡é‡ä¹˜æ³•ã€‚
-%XXå¹´ï¼Œæå‡ºäº†å¯¹è¿™ç§æ–¹å¼çš„çš„æ”»å‡»
-%XXæ”»å‡»ï¼Œä½¿ç”¨Flush+Reloadæ”»å‡»è·å–äº†å¤šå°‘æ•°æ®ï¼Œæ„é€ äº†æ ¼æ”»å‡»
-%ã€‚ã€‚ã€‚
-%åœ¨æˆ‘ä»¬çš„æ–‡ç« ä¸­ï¼Œæˆ‘ä»¬ä½¿ç”¨äº†ã€‚ã€‚ã€‚åšäº†ã€‚ã€‚ã€‚
-%è¾¾åˆ°äº†ã€‚ã€‚ã€‚
-%æ€»çš„æ¥è¯´ï¼Œæœ¬æ–‡çš„è´¡çŒ®å¦‚ä¸‹ï¼š
-%1ã€
-%2ã€
+%OpenSSLµÄÊµÏÖÊÇÓ¦ÓÃ×î¹ã·ºµÄÊµÏÖ¡£
+%ÆäÖĞ£¬¶ÔÓÚËØÓòÉÏµÄÍÖÔ²ÇúÏß£¬Ê¹ÓÃµÄÊÇwNAFËã·¨ÊµÏÖµÄ±êÁ¿³Ë·¨¡£
+%XXÄê£¬Ìá³öÁË¶ÔÕâÖÖ·½Ê½µÄµÄ¹¥»÷
+%XX¹¥»÷£¬Ê¹ÓÃFlush+Reload¹¥»÷»ñÈ¡ÁË¶àÉÙÊı¾İ£¬¹¹ÔìÁË¸ñ¹¥»÷
+%¡£¡£¡£
+%ÔÚÎÒÃÇµÄÎÄÕÂÖĞ£¬ÎÒÃÇÊ¹ÓÃÁË¡£¡£¡£×öÁË¡£¡£¡£
+%´ïµ½ÁË¡£¡£¡£
+%×ÜµÄÀ´Ëµ£¬±¾ÎÄµÄ¹±Ï×ÈçÏÂ£º
+%1¡¢
+%2¡¢
 %
-%æ–‡ç« çš„å‰©ä½™éƒ¨åˆ†è¿™æ ·ç»„ç»‡ï¼šç¬¬äºŒç« ã€‚ã€‚ã€‚ã€‚
+%ÎÄÕÂµÄÊ£Óà²¿·ÖÕâÑù×éÖ¯£ºµÚ¶şÕÂ¡£¡£¡£¡£
 
