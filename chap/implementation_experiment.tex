@@ -93,7 +93,7 @@ This allows the spy to correctly distinguish consecutive doubles.
 In order to precisely recover the sign of the ephemeral key, we need to determine which sample represents the start of the scalar multiplication.
 We can determine the
 start of the scalar multiplication
-by combining the double-and-add chain and the profiles of the double and add functions with wNAF representation.
+by combining the double-add chain and the profiles of the double and add functions with wNAF representation.
 Also we can determine the start position by monitor the code of copy function in OpenSSL.
  We note that when the computation of scalar multiplication starts, OpenSSL performs the copy function instead of the add function.
  Thus we can monitor the copy function, and when the copy function is called in the time slot and the add function is called in the next slot, it means that the scalar multiplication starts.
@@ -334,9 +334,9 @@ But the increase of the minimal length would lead to require more signatures to 
  Generally,  to attack the ECDSA implementation with the wNAF representation,
    the attackers target the implementation of scalar multiplication
       and use cache side channel attacks to achieve the information about the ephemeral key $k$.
-Through side channels attackers can get a ``double-and-add" chain for the scalar multiplication.
+Through side channels attackers can get a ``double-add'' chain for the scalar multiplication.
 However,
- it is hard to directly recover the whole ephemeral key just depending on the ``double-and-add" chain.
+ it is hard to directly recover the whole ephemeral key just depending on the ``double-add'' chain.
 From the obtained information it can recover partial bits of the ephemeral key.
 Hence attackers exploit the incomplete information of $k$ to transform the problem of private key recovery into one that can be solved by lattice, such as HNP or EHNP problem.
  Then the attackers retrieve the private key by solving the HNP or EHNP problem through being converted to the CVP/SVP problem in the lattice.
