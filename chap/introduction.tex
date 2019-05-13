@@ -8,9 +8,9 @@ Due to the small key size and high security, it is widely used in many popular a
 The security of ECDSA relies on the computational intractability of the elliptic curve discrete logarithm problem (ECDLP).
 Theoretically it is hard to extract the private key by breaking the algorithm directly.
 However, the implementation vulnerabilities are much easier to be exploited.
-The scalar multiplication of a point over elliptic curves by a random nonce is the core operation of ECDSA.
-The private key can be extracted if the nonce (or implementations) is revealed,
-so this nonce must be kept secret.
+The scalar multiplication of a point over elliptic curves by a random ephemeral key is the core operation of ECDSA.
+The private key can be extracted if the ephemeral key (or implementations) is revealed,
+so this ephemeral key must be kept secret.
 %The confidentiality of this nonce is very important
 But the scalar multiplication is vulnerable to side channel attacks.
 As long as parts of the nonce is revealed through the side channels,
@@ -31,11 +31,11 @@ With the Flush+Reload cache side channels \cite{flushreload},
 This side channel exploits
 	the windowed non-adjacent form (wNAF) implementation \cite{GORDON1998129,Miyaji1997,Koyama1002,Solinas2000}
 	for the scalar multiplication	
-		of a known point $G$ by the secret nonce $k$.
+		of a known point $G$ by the the random ephemeral key $k$.
 This exploitation works for the elliptic curves over a prime field $\mathbb{F}_{p}$
 			in ECDSA, which is implemented in OpenSSL\cite{openssl}.
 Then,
-	by constructing a HNP instance solved by the lattice reduction algorithm, they recover the ECDSA private key from about 200 signatures.
+	by constructing a HNP instance solved by the lattice reduction algorithm, they recovered the ECDSA private key from about 200 signatures.
 In 2015, van de Pol et al. improved this method by deriving a more effective way of exacting information from the cache side channel \cite{Van2015},
  which used the information about the position of top half non-zero digits of the wNAF representation of the ephemeral key.
 In the same year, paper \cite{Cao2015} presents two lattice-based differential fault attacks against ECDSA with wNAF implementations.
