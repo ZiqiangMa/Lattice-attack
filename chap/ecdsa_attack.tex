@@ -4,7 +4,7 @@ In this section, we propose a new method to recover the private key of ECDSA.
 First, we analyse the invert function in the scalar multiplication with wNAF representation in the ECDSA algorithm.
  Then we use the invert function for improving the cache side channel attacks, from which the sign of the non-zero digits of $k$ is determined.
 After that, we make use of the obtained information to recover the consecutive bits at the position of every non-zero digits of $k$.
-Finally, we construct a HNP instance by the consecutive bits and transform it to the problem of solving the SVP/CVP in some lattice with the lattice reduction algorithms.
+Finally, we construct an HNP instance by the consecutive bits and transform it to the problem of solving the SVP/CVP in some lattice with the lattice reduction algorithms.
 
 \subsection{Attacking wNAF Through the Cache Side Channels}
 \label{data_get}
@@ -39,7 +39,7 @@ According to the ``double" and ``add" in this chain, we can determine whether ea
 Also, based on the ``invert" in this chain, we can infer the sign of each non-zero digit.
 
 
-Specific to the OpenSSL implementation (especially the OpenSSL1.1.1b used here),
+Specific to the OpenSSL implementation (especially OpenSSL 1.1.1b used here),
   the double, add and invert function are implemented using  \verb+EC_POINT_dbl()+, \verb+EC_POINT_add()+ and \verb+EC_POINT_invert()+.
  The original cache side channel attack monitors the \verb+EC_POINT_dbl()+ and \verb+EC_POINT_add()+ function.
 So as in our attack, we improve the original cache side channel attack by adding a new monitor to the \verb+EC_POINT_invert()+ function.
@@ -170,7 +170,7 @@ First the length of the consecutive bits used to construct the lattice is variab
 Second  in our method the position of consecutive bits is arbitrary in the ephemeral key and does not need to be fixed, while the prior work needs all the consecutive bits at the same position.
 Finally from one signature we obtain multiple sequence of consecutive bits and all of them can be used for constructing the lattice as long as the length of the sequence is satisfied, while the prior work only generates one sequence of consecutive bits for one signature.
 
-To construct a HNP instance using arbitrary consecutive bits, we need to use the following theorem\cite{Nguyen2002}:
+To construct an HNP instance using arbitrary consecutive bits, we need to use the following theorem\cite{Nguyen2002}:
 \begin{theorem}
  \label{theorem1}
 There exists a polynomial-time algorithm which, given $A$ and $B$ in $[1, q]$, finds $\lambda \in Z^{*}_{q}$ such that
@@ -214,7 +214,7 @@ We then have that
 \label{lattice}
     |\alpha t - u|_q < q/2^{(l/2-1)}
 \end{equation}
-This way, we transform to the a HNP instance.
+This way, we transform to the an HNP instance.
 
 In practice, OpenSSL uses $k+q$ as the ephemeral key. So the Equation \ref{tu} remains the same, but the Inequation \ref{lattice} turns into
  \begin{equation}

@@ -16,7 +16,7 @@ Finally, we compare our method with some previous attacks.
 \label{ffattack}
 We test the cache side channel attack on an Acer Veriton T830 running Ubuntu 16.04.
 The machine features an Intel Core i7-6700 processor with four execution cores and an $8$ MB LLC.
-The attacking target is the ECDSA implemented in OpenSSL1.1.1b, which uses wNAF representation in the scalar multiplication.
+The attacking target is the ECDSA implemented in OpenSSL 1.1.1b, which uses wNAF representation in the scalar multiplication.
 For the experiments, we use the Flush+Flush to attack the 256-bit curve secp256k1.
 Followings are the implementation details for the Flush+Flush attack.
 
@@ -347,7 +347,7 @@ We compare the previous attack methods with ours in several aspects and the resu
 
 Benger et al. \cite{Benger2014} got the least significant bits (LSBs) of the ephemeral key through the Flush+Reload attack
 although this is not all the information obtained from the side channel.
-Then they used the LSBs of many signatures to construct a HNP problem and
+Then they used the LSBs of many signatures to construct an HNP problem and
 successfully retrieved the private key by solving the CVP/SVP instance of a specific lattice converted from the HNP problem.
 The number of bits extracted from each signature is very small, only an average of 2 bits information can be obtained.
 Thus made it require more than $200$ signatures to recover a 256-bit private key with the probability being $3.5\%$.
