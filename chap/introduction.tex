@@ -3,17 +3,17 @@
 \section{Introduction}
 \label{sec:intro}
 The Elliptic Curve Digital Signature Algorithm (ECDSA) \cite{Johnson2001, ansi2005} is a standard digital signature algorithm over elliptic curves.
-Due to the small key size and high security, it is widely used in many popular applications, such as TLS protocol \cite{rfc5246} and OpenPGP \cite{openpgp2007}, smart card \cite{smartcard2007}, and Bitcoin \cite{bitcoin2008}.
+Due to the small key size and high security, it is widely used in many popular applications, such as TLS protocol \cite{rfc5246}, OpenPGP \cite{openpgp2007}, smart card \cite{smartcard2007}, and Bitcoin \cite{bitcoin2008}.
 
 The security of ECDSA relies on the computational intractability of the elliptic curve discrete logarithm problem (ECDLP).
-Theoretically it is hard to extract the private key by breaking the algorithm directly.
+Theoretically, it is hard to extract the private key by breaking the algorithm directly.
 However, the implementation vulnerabilities are much easier to be exploited.
 The scalar multiplication of a point over elliptic curves by a random ephemeral key is the core operation of ECDSA.
 The private key can be extracted if the ephemeral key (or implementations) is revealed,
 so this ephemeral key must be kept secret.
 %The confidentiality of this nonce is very important
 But the scalar multiplication is vulnerable to side channel attacks.
-As long as parts of the nonce is revealed through the side channels,
+As long as parts of the nonce are revealed through the side channels,
  some efficient attacks can be launched to recover the private key \cite{Nguyen2001,HG2001,Nguyen2002,Nguyen2003}.
 
 Howgrave-Graham and Smart \cite{HG2001} theoretically showed that DSA is vulnerable to such partial ephemeral key exposure in 2001.
@@ -21,7 +21,7 @@ Then Nguyen and Shparlinski \cite{Nguyen2002} improved their method with further
 They also extended the attacks to ECDSA \cite{Nguyen2003}.
 The basic idea is to reduce the problem of private key recovery to an instance of the hidden number problem
 (HNP), which is further reduced to the closest vector problem (CVP) in a lattice, with the knowledge of consecutive bits of the ephemeral keys.
-Then, Brumley and co-workers employ this lattice attack to recover ECDSA keys from leaked LSBs (in \cite{Brumley2009}) and leaked MSBs (in \cite{Brumley2011}).
+Then, Brumley and his colleagues employ this lattice attack to recover ECDSA keys from leaked LSBs (in \cite{Brumley2009}) and leaked MSBs (in \cite{Brumley2011}).
 
 %In 2003, Nguyen \cite{Nguyen2003} presented a polynomial-time algorithm that recovers the ECDSA private key when a few consecutive bits of the random nonce $k$ are known for a number of signatures, which used the similar results for the DSA \cite{Nguyen2002}.
 
@@ -35,16 +35,16 @@ This side channel exploits
 This exploitation works for the elliptic curves over a prime field $\mathbb{F}_{p}$
 			in ECDSA, which is implemented in OpenSSL\cite{openssl}.
 Then,
-	by constructing a HNP instance solved by the lattice reduction algorithm, they recovered the ECDSA private key from about 200 signatures.
-In 2015, van de Pol et al. improved this method by deriving a more effective way of exacting information from the cache side channel \cite{Van2015},
- which used the information about the position of top half non-zero digits of the wNAF representation of the ephemeral key.
-In the same year, paper \cite{Cao2015} presents two lattice-based differential fault attacks against ECDSA with wNAF implementations.
-In 2016, \cite{Dahmun2016}  extended the basic lattice attack to the ephemeral keys,  which are blinded by the addition of a random multiple of the elliptic-curve group order or by a random Euclidean splitting.
-While in paper \cite{Fan2016}, Fan et al. proposed a new way of extracting and utilizing information from the Flush+Reload attack. The problem of recovering the
+	by constructing an HNP instance solved by the lattice reduction algorithm, they recovered the ECDSA private key from about 200 signatures.
+In 2015, Van de Pol et al. improved this method by deriving a more effective way of exacting information from the cache side channel \cite{Van2015},
+ which used the information about the position of higher half non-zero digits of the wNAF representation of the ephemeral key.
+In the same year, Cao et al.~\cite{Cao2015} presented two lattice-based differential fault attacks against ECDSA with wNAF implementations.
+In 2016, Goudarzi et al.~\cite{Dahmun2016}  extended the basic lattice attack to the ephemeral keys,  which are blinded by the addition of a random multiple of the elliptic-curve group order or by a random Euclidean splitting.
+While in \cite{Fan2016}, Fan et al. proposed a new way of extracting and utilizing information from the Flush+Reload attack. The problem of recovering the
 secret key is then transformed to the extended hidden number problem (EHNP) which is solved by lattice reduction algorithm. The number of signatures needed is reduced to $4$.
-In 2017, paper \cite{Wang2017} give a lattice attack on the ECDSA using
- a small fraction of information of the ephemeral key.
-They exploited the positions of two non-zero digits together with the length of the wNAF representation of the ephemeral key to construct a HNP instance. They need 85 signatures to recover the private key.
+In 2017, Wang et al.~\cite{Wang2017} gave a lattice attack on ECDSA using
+ a small fraction of information from the ephemeral key.
+They exploited the positions of two non-zero digits together with the length of the wNAF representation of the ephemeral key to construct an HNP instance. They need 85 signatures to recover the private key.
 %这一部分仍需要修改
 
 
@@ -75,28 +75,28 @@ They exploited the positions of two non-zero digits together with the length of 
 
 Previous works exploited the side channel attacks to extract the digit information in the wNAF representation of the ephemeral key.
 They used the least non-zero digit \cite{Benger2014}, half non-zero digits \cite{Van2015}, all non-zero digits \cite{Fan2016} or two non-zero digits with the total length~\cite{Wang2017}.
-To some degree,
-They just attempted to make more use of the data achieved through the side channels and construct more effective lattice attacks
+To some extent,
+they just attempted to make better use of the data achieved through the side channels and construct more effective lattice attacks
  to recover the private key.
 All they exploited are the information about the positions of the non-zero digits,
- and no more information about the ephemeral key is extracted from the side channels.
-In this respect, though the methods are different in these works, no improvement has been made to achieve more information.
+ and no more extra information about the ephemeral key is extracted from the side channels.
+In terms of this respect, though the methods are different in these works, no effort and improvement have been made to achieve more information.
 
-In our paper, we also focus on the ECDSA algorithm with wNAF representation of the ephemeral key, especially the implementation in the OpenSSL library.
+In our paper, we also focus on the ECDSA algorithm with the wNAF representation of the ephemeral key, especially the implementation in the OpenSSL library.
  We propose a new method to recover the ECDSA private key from the information leaked through side channels.
 We expect not only to make better use of the information,
   but also to extract more information from the side channels.
-First, we analyse the code of the implementation of ECDSA in OpenSSL,
+First, we analyse the implementation code of ECDSA in OpenSSL
  and find that
 in the implementation of the scalar multiplication the invert function plays a very important role.
 It inverts a number so that the subtraction is replaced by addition and the space storing the precomputed points is reduced by half.
-In the calculation, if the sign of current non-zero digit of the ephemeral key is opposite to the previous, the invert function is called  and the absolute value of this digit is used to index the precomputed points. Otherwise the invert function is not called.
+In the calculation, if the sign of current non-zero digit of the ephemeral key is opposite to the previous one, the invert function is called, and the absolute value of this digit is used to index the precomputed points. Otherwise, the invert function is not called.
 It may help us to determine the sign of the non-zero digits of the ephemeral key.
  % by exploiting the \emph{$EC\_POINT\_invert()$} function we can improve the cache side channel attacks.
-  Based on this fact, we obtain the sign of the non-zero digits in the wNAF of the ephemeral key through adding a monitor to the invert function.
+  Based on this fact, we obtain the sign of the non-zero digits in the wNAF of the ephemeral key by adding a monitor to the invert function.
  Thus, we achieve more information about the ephemeral key compared to previous attacks.
 After that, we manage to recover the consecutive bits at the position of every non-zero digits of the ephemeral key based on the information obtained from the cache side channels.
-Finally, we constructed a HNP \cite{boneh1996} instance making the best of the consecutive bits of the ephemeral key.
+Finally, we construct an HNP \cite{boneh1996} instance making the best of the consecutive bits of the ephemeral key.
 This problem is solved by lattice reduction algorithms  through converting to the SVP/CVP in some lattice.
 
 This method is applied to attack the \textbf{secp256k1} curve in OpenSSL1.1.1b in this paper.
@@ -105,18 +105,18 @@ By monitoring the  invert function
 	in addition to the double and add functions in OpenSSL,
 	we obtain the ``double-add-invert'' chain.
 We successfully extract whether each digit of the ephemeral key is zero or not, and determine the sign of the non-zero digits from this chain.
-Then We use BKZ \cite{Schnorr1994} algorithm to solve the HNP instance.
+Then we use the BKZ \cite{Schnorr1994} algorithm to solve the HNP instance.
 The results show that we effectively recover the ECDSA private key.
-If the result of the Flush+Flush attack is perfect, we need $60$ signatures at least to recover the private key with the probability being about $3\%$.
+If the result of the Flush+Flush attack is perfect, we need $60$ signatures at least to recover the private key with a probability of $3\%$.
 
-Through the cache side channel we get the information about the position and the sign of all non-zero digits of the ephemeral key.
-Compared to the previous works, ours obtains more information about the ephemeral key, i.e. the sign of all non-zero digits.
+Through the cache side channel, we get the information about the position and the sign of all non-zero digits of the ephemeral key.
+Compared to previous works, our proposal can obtain more information about the ephemeral key, i.e. the sign of all non-zero digits.
  More precisely, we extract $153.2$ bits on average per signature for 256-bit ECDSA.
 Also, our method does not rely on some special properties of the elliptic curves.
-It  can be applied to all the curves without any restriction.
-The sign information of non-zero digits can not be directly applied to previous works.
+%It  can be applied to all the curves without any restriction.
+The sign information of non-zero digits cannot be directly applied to previous works.
 To make better use of the sign information of the non-zero digits, we exploit the information obtained about the wNAF representation to extract sequences of consecutive bits of $k$ to construct the lattice attack.
-In theory the number of signatures needed is $2$ if a suitable lattice is constructed.
+In theory, the number of signatures that required is $2$ if a suitable lattice is constructed.
 
 
 
@@ -129,22 +129,22 @@ In summary, our contributions are as follows:
 \begin{itemize}
   \item
   We present a new lattice attack to recover the private key of ECDSA with wNAF representation.
-  First we
+  First, we
     improve the cache side channel attacks by monitoring
       the invert function in OpenSSL.
       It is the first work to exploit the sign of the non-zero digits of the ephemeral key in side channel attacks.
    Second, for the data from the cache side channel, we do not use them to construct the HNP instance directly.
     We obtain multiple consecutive bits of the ephemeral key by converting the wNAF representation to the binary representation.
-Finally we use the multiple consecutive bits to construct the HNP instance.
+Finally, we use these consecutive bits to construct the HNP instance.
 The private key is recovered by solving the HNP instance using lattice reduction algorithm.
 
   \item
     We apply our method to attack the \textbf{secp256k1} curve in the latest version of OpenSSL.
-     Through the cache side channel, $153.2$ bits of information are obtained on average per signature.
-    The experiments show that $60$ signatures are enough to recover the private key with the probability being about $3\%$.
+     Through the cache side channel, $153.2$ bits of information per signature is obtained on average.
+    The experiments show that $60$ signatures are enough to recover the private key with a probability of $3\%$.
 \end{itemize}
 
-The remainder of this paper is organized as follows.
+The rest of this paper is organized as follows.
 Section \ref{sec:background} presents some preliminaries.
 Section \ref{sec:attack} provides the details about our attack,
 and Section \ref{sec:impl&exper} shows the implementation details and the experimental results.
