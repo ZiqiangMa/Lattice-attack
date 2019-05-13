@@ -64,8 +64,8 @@
 \begin{abstract}
 This paper presents a practical lattice attack on the ECDSA algorithm which is implemented %in the OpenSSL,
  with the windowed Non-Adjacent-Form (wNAF) representation to compute the scalar multiplications over elliptic curves.
-Our method recovers the private key 
-            by extracting more information from side channels,
+Our method recovers the private key
+            by exploiting  more information extracted from side channels,
             than existing lattice attacks in the literature.
 In particular, in the scalar multiplications,
  we monitor the invert function through the cache side channels,
@@ -74,9 +74,9 @@ By monitoring the invert function,
     we obtain the signs of the wNAF representations of an ephemeral key.
 % Through this improvement, we obtain the extra information about the sign of the wNAF representations the ephemeral key.
 The ``double-add-invert'' chain obtained from the cache side channels,
-    is disposed to extract more bits of the ephemeral key at the position of the non-zero digits.
+    is disposed to extract more bits of the ephemeral key at the positions of the non-zero digits.
 In theory $153.2$ bits of the ephemeral key will be extracted per signature
-    for 256-bit ECDSA over elliptic curves on a prime field.
+    for 256-bit ECDSA on a prime field.
 Then,
     we convert the problem of recovering the private key based on the extracted bits to the Hidden Number Problem (HNP),
  which is solved by lattice reduction algorithms.
