@@ -31,7 +31,7 @@ The pair $(r, s)$ is the ECDSA signature of the message $m$.
 For ECDSA signature, the ephemeral key $k$ must be kept random and secret.
 The equation in the third step shows the private key can be computed if $k$ is leaked.
 If some signatures use the same $k$, or the random number generator in use has the predictability, attackers can obtain the private key directly.
-Even if a portion of $k$ is known, the private key can be retrieved by lattice attacks.
+Even if a portion of $k$ is known, the private key can be recovered by lattice attacks.
 Therefore, the target of most attackers is the scalar multiplication $kG$ expecting to get some effective bits information about $k$.
 
 %Given the knowledge of the ephemeral key k and all the
@@ -86,7 +86,7 @@ Algorithm \ref{alg:wnaf} introduces the concrete method for converting a scalar 
 When computing the scalar multiplication $kG$,
 first, a window size $w$ is chosen.
 Then precomputation and storage of the points $\{\pm G, \pm 3G, ..., \pm(2^{w - 1})G\}$ are executed.
-After converting $k$ to the wNAF form, the multiplication $kG$ is executed as the Algorithm \ref{alg:kg} describes.
+After converting $k$ to the wNAF form, the multiplication $kG$ is executed as Algorithm \ref{alg:kg} describes.
 
 
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
@@ -114,7 +114,7 @@ After converting $k$ to the wNAF form, the multiplication $kG$ is executed as th
 From the algorithm we can find that the \textbf{if-then} block is vulnerable.
 An attacker can use a spy process to monitor the conditional branches through side channels.
 Then he can get an ``double-add'' chain, and through it whether the value of $k_i$ is zero can be inferred.
-The attacker can use these information to retrieve the private key.
+The attacker can use these information to recover the private key.
 
 In the actual OpenSSL execution, the bit length of $k$ is set to a fixed value$\lfloor\log_{2}{q}\rfloor + 1$ of by adding itself $q$
 or $2q$, which can resist the Brumley and Tuveri remote timing attack \cite{Brumley2011}.
@@ -142,7 +142,7 @@ The core computing part of the function is shown in Algorithm  \ref{alg:smopenss
         \caption{The Implementation of The Scalar Multiplication in OpenSSL}
         \label{alg:smopenssl}
         \begin{algorithmic}[1]
-            \Require Scalar $k$ in wNAF: $k_0$, $k_1$, ..., $k_{l-1}$ and precomputed points $\{G, 3G, ..., (2^{w} - 1)G\}$
+            \Require Scalar $k$ in wNAF $\{k_0$, $k_1$, ..., $k_{l-1}\}$ and precomputed points $\{G, 3G, ..., (2^{w} - 1)G\}$
             \Ensure $kG$
 			
 			\State $r \gets 0$, $is\_neg \gets 0$, $r\_is\_inverted \gets 0$
@@ -183,7 +183,7 @@ Then it performs an addition operation (the \verb+EC_POINT_add()+ function) with
 absolute value of the digit.
 
 
-From Algorithm \ref{alg:smopenssl}, it is obviously that the two conditional branches are vulnerable.
+From Algorithm \ref{alg:smopenssl}, it can be found that two conditional branches are vulnerable.
 In each loop, the double operation is always performed.
 But the add operation is only performed if the digit is not zero and the invert operation is only performed if the sign of the digit is opposite to previous one.
 Therefore, if a spy process can obtain the execution sequence of
@@ -252,7 +252,7 @@ But in the third phase it flushes the cache again and measures the flush time in
 As the third phase flushes the caches, it doubles as the first phase for subsequent observations.
 
 %再一段F+F 和 F+R进行对比：更加高效，精度更高，F阶段可以当成是下一循环的F，
-The execution time of the \verb+clflush+ instruction is less than the reload time on average.
+The execution time of \verb+clflush+ is less than the reload time on average.
     Also the first and third phases are merged together in Flush+Flush attack.
   Therefore the Flush+Flush attack is faster and can obtain more information than the Flush+Reload attack over the same time scale.
 Thus, the Flush+Flush attack has a better accuracy.
@@ -267,7 +267,7 @@ The Flush+Flush attack does not trigger prefetches when monitoring consecutive m
 \subsection{The Hidden Number Problem and Lattice Attack}
 \label{intro_hnp}
 The Hidden Number Problem (HNP) is first presented by Boneh and Venkatesan \cite{boneh1996} in 1996.
-It is used to recover the secret key of Diffie-Hellman algorithm, DSA and ECDSA, given some leaked consecutive bits of the ephemeral key.
+It is used to recover the secret key of Diffie-Hellman key exchange, DSA and ECDSA, given some leaked consecutive bits of the ephemeral key.
 
 Given a prime number $q$ and a positive $l$,
  and let $t_1, t_2, ..., t_d$ be randomly chosen, which are uniformly and independently in $\mathbb{F}_q$.
@@ -282,15 +282,15 @@ The HNP problem can be converted to the CVP/SVP in the lattice and solved by the
 Here we provide a briefly introduce to the lattice.
 For more detailed references on lattice we refer to the literature \cite{latticereduction2000}.
 Consider the Euclidean space $\mathbb{R}^{d}$
- and let $B = \{\mathbf{b_1}, \mathbf{b_2}, ..., \mathbf{b_z}\}$ be a set of linearly independent vectors in $\mathbb{R}^d$.
+ and let $B = \{\mathbf{b_1}, \mathbf{b_2}, ..., \mathbf{b_r}\}$ be a set of linearly independent vectors in $\mathbb{R}^d$.
 The set of vectors
 $$
-L = L(B) = \{\sum_{i=1}^{z}{\beta_i\mathbf{b_i}} \  |\ \beta_i \in \mathbb{Z} \}
+L = L(B) = \{\sum_{i=1}^{r}{n_i\mathbf{b_i}} \  |\ n_i \in \mathbb{Z} \}
 $$
 is the \textbf{lattice} generated by $B$.
 The set $B$ is called a basis of $L$, and $L$ is spanned by $B$.
-The number $z$ representing the number of vectors in $B$ is the dimension or rank of $L(B)$.
-If $z = d$, the lattice $L(B)$ is a full-dimension lattice.
+The number $r$ representing the number of vectors in $B$ is the dimension or rank of $L(B)$.
+If $r = d$, the lattice $L(B)$ is a full-dimension lattice.
 
 \noindent\textbf{Hard Lattice Problems} Since the lattice is a set of vectors,
  it has a shortest non-zero vector, and the norm this vector is known as the first minima and denoted by $\mathbf{\lambda_1}(L)$.
@@ -321,7 +321,7 @@ Let the vector $\mathbf{u} = (u_1, ..., u_d, 0)$,
 While the lattice determinant of $L(B)$ is $q^d/2^{l+1}$,
  thus the vector $\mathbf{h}$ is very close to the vector $\mathbf{u}$.
 Solving the CVP problem with imput $B$ and $\mathbf{u}$ reveals the vector $\mathbf{h}$,
- hence the private key $\alpha$ is retrieved.
+ hence the private key $\alpha$ is recovered.
 
 Because solving the CVP instance requires exponential time in the lattice rank,
  we can use the embedding technique \cite{Nguyen1999} to transform it to a SVP instance which just requires the polynomial time to solve.
