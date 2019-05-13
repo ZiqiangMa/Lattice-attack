@@ -1,6 +1,6 @@
 \section{Implementation and Experiments}
 \label{sec:impl&exper}
-In this section, we apply our method introduced in Section \ref{sec:attack} to attack the secp256k1 curve in OpenSSL 1.1.1b.
+In this section, we apply our method introduced in Section \ref{sec:attack} to attack the \textbf{secp256k1} curve in OpenSSL 1.1.1b.
   We implement the Flush+Flush attack  to obtain
 the cache side channel information.
 The details of the implementation and the result of attacking the elliptic curves are provided.
@@ -17,7 +17,7 @@ Finally, we compare our method with some previous attacks.
 We test the cache side channel attack on an Acer Veriton T830 running Ubuntu 16.04.
 The machine features an Intel Core i7-6700 processor with four execution cores and an $8$ MB LLC.
 The attacking target is the ECDSA implemented in OpenSSL1.1.1b, which uses wNAF representation in the scalar multiplication.
-For the experiments, we use the Flush+Flush to attack the 256-bit curve secp256k1.
+For the experiments, we use the Flush+Flush to attack the 256-bit curve \textbf{secp256k1}.
 Followings are the implementation details for the Flush+Flush attack.
 
 %平台
@@ -103,7 +103,7 @@ Also we can determine the start position by monitor the code of copy function in
 %如果不监控copy，也可以根据点加倍点的发生，去排除错误的触发；也可以根据NAF编码时点加倍点的特征来判断起始。
 
 \noindent\textbf{Experimental results.}
-Fig.~\ref{fig1} shows a fragment of the output of the spy when OpenSSL performs ECDSA with the secp256k1 curve.
+Fig.~\ref{fig1} shows a fragment of the output of the spy when OpenSSL performs ECDSA with the \textbf{secp256k1} curve.
 In this figure, $\square$, $\lozenge$ and $\vartriangle$ represent ``double", ``add" and ``invert" respectively.
 From this fragment, three operations can be clearly distinguished,
  so we success to obtain the ``double-add-invert" chain easily.
@@ -147,7 +147,7 @@ From this fragment, three operations can be clearly distinguished,
 %我们的结果是：
 %进行分析
 %分析为什么我们没有利用全部的信息，理论上怎样，实际怎样
-We apply our lattice attack to the curve secp256k1 in our experiments, and we assume that the Flush+Flush attack is perfect, that is we can correctly obtain the ``double-add-invert" chain and recover all the information about the digits of the ephemeral key it contains.
+We apply our lattice attack to the curve \textbf{secp256k1} in our experiments, and we assume that the Flush+Flush attack is perfect, that is we can correctly obtain the ``double-add-invert" chain and recover all the information about the digits of the ephemeral key it contains.
 
 The HNP problem can be solved by exploiting both the CVP and SVP instances.
 However, the CVP problem does not have a polynomial time solution while the SVP problem has.
@@ -180,7 +180,7 @@ The block size in BKZ is set $10$  and $20$.
 The number of sequences of the consecutive bits for constructing the lattice denoted as $d$ is ranged from $50$ to $230$,
 i.e. the dimension of the lattice for the SVP is $d + 2$.
 
-\begin{table}[t]
+\begin{table}[!t]
   \centering
   \caption{The success probability of solving SVP with different parameters.}
   \label{svp9}
@@ -307,13 +307,16 @@ But the increase of the minimal length would lead to require more signatures to 
 %Also we see that extensive pre-processing of the basis with more complex lattice reduction techniques provides no real benefit.
 
 
+\subsection{Comparison with Other Attack Methods}
+\label{compare}
+
 \begin{table}[!t]
   \centering
    \caption{Comparison with previous attack methods}\label{compare1}
 \begin{tabular}{|c|m{90pt}|c|c|c|}
   \hline
   % after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
-  Methods & The exploited information & HNP or EHNP & \# of bits & \# of signatures \\
+  Methods & Exploited information & HNP or EHNP & \# of bits & \# of signatures \\
   \hline
   Benger et al. \cite{Benger2014} & LSB & HNP & 2 & 200 \\
   \hline
@@ -329,9 +332,6 @@ But the increase of the minimal length would lead to require more signatures to 
   \hline
 \end{tabular}
 \end{table}
-
-\subsection{Comparison with Other Attack Methods}
-\label{compare}
 
  Generally,  to attack the ECDSA implementation with the wNAF representation,
    the attackers target the implementation of scalar multiplication
@@ -357,7 +357,7 @@ Therefore, we can get much more bits per signature and the number of signatures 
 
 van de Pol et al. \cite{Van2015} improved Benger's attack  relying on the property of some specific elliptic curves, that is the order $q$ of the base point is a pseudo-Mersenne prime which can be expressed as $2^{(\lfloor\log_{2}{q}\rfloor +1)} - \epsilon$, where $|\epsilon| < 2^p $, $p \approx (\lfloor\log_{2}{q}\rfloor +1)/2$.
 With this property, this attack uses the information from the consecutive non-zero digits whose positions are between $p+1$ and $n$ extracted from the Flush+Reload attack, not only the LSBs.
-It is able to extract $47.6$ bits per signature on average for the secp256k1 curve and recover the private key with 13 signatures.
+It is able to extract $47.6$ bits per signature on average for the \textbf{secp256k1} curve and recover the private key with 13 signatures.
 Then they constructed a new HNP instance using this information and
 successfully recovered the private key.
 Although this work greatly reduced the number of signatures needed to recover the private key,
@@ -369,7 +369,7 @@ Moreover, their work is only effective to some special curves,
 
 
 Fan et al.\cite{Fan2016} extracted all positions of digits from the Flush+Reload attack and take advantage of them to construct an EHNP instance.
-They managed to obtain on average 105.8 bits per signature for the secp256k1 curve
+They managed to obtain on average 105.8 bits per signature for the \textbf{secp256k1} curve
  and only need 4 signatures to recover the private key with the probability being $8\%$.
  Compared with their work, ours obtains more information about the ephemeral key, i.e. the sign of all non-zero digits, from the side channel by analysing the OpenSSL implementation.
 We can extract 153.2 bits information per signature.

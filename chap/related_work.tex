@@ -17,7 +17,7 @@ Nguyen and Shparlinski \cite{Nguyen2002} improved their method  and gave a prova
  Further they extended these results to ECDSA~\cite{Nguyen2003}.
 Liu and Nguyen \cite{Liu2013} improved the results that only 2 LSBs were required for breaking a 160-bit DSA key.
 In 2014, Benger et al. \cite{Benger2014} extended the technique in \cite{Nguyen2002} to use a different length of leaked LSBs for each signature.
- They recovered the secret key of OpenSSL's ECDSA implementation for the curve secp256k1 using about $200$ signatures.
+ They recovered the secret key of OpenSSL's ECDSA implementation for the curve \textbf{secp256k1} using about $200$ signatures.
 Van de Pol et al. \cite{Van2015} exploited the property of the modulus in some elliptic curves so that they could use all of the information leaked in the top half of the ephemeral keys to construct the HNP instance, allowing them to recover the secret key after observing only $14$ signatures.
 Fan et al. \cite{Fan2016} transformed the problem of recovering the secret key to the extended hidden number problem (EHNP)
   which was solved by the lattice reduction algorithm.

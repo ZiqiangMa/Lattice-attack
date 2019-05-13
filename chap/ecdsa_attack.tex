@@ -39,7 +39,7 @@ According to the ``double" and ``add" in this chain, we can determine whether ea
 Also, based on the ``invert" in this chain, we can infer the sign of each non-zero digit.
 
 
-Specific to the OpenSSL implementation (especially the OpenSSL1.1.1b used in this paper),
+Specific to the OpenSSL implementation (especially the OpenSSL1.1.1b used here),
   the double, add and invert function are implemented using  \verb+EC_POINT_dbl()+, \verb+EC_POINT_add()+ and \verb+EC_POINT_invert()+.
  The original cache side channel attack monitors the \verb+EC_POINT_dbl()+ and \verb+EC_POINT_add()+ function.
 So as in our attack, we improve the original cache side channel attack by adding a new monitor to the \verb+EC_POINT_invert()+ function.
@@ -143,7 +143,7 @@ Based on \cite{Benger2014} on average we can get $2$ least significant bits of t
 Thus, on average we can obtain $3(\lfloor\log_{2}{q}\rfloor+1) /(w+2) - 1$ bits of the ephemeral key $k$ in total.
 Meanwhile, because the minimal value of $n$ is $w + 1$, the minimal length of the consecutive bits is $2$.
 This illustrates that all the sequences of consecutive bits obtained (except the least) are no less than $2$ bits.
-For the secp256k1 curve implemented in OpenSSL, $\lfloor\log_{2}{q}\rfloor  + 1= 256$, $w = 3$.
+For the \textbf{secp256k1} curve implemented in OpenSSL, $\lfloor\log_{2}{q}\rfloor  + 1= 256$, $w = 3$.
  Also, as introduced previous, the scalar multiplication uses $k+q$ instead of $k$ in most cases,
   so the total number of bits per signature we obtain is $3(\lfloor\log_{2}{q}\rfloor +2)/(w+2)-1 = 153.2$.
 In theory, two signatures would be enough to recover the 256-bit private key as $2\times 153.2 = 306.4 > 256$.

@@ -40,7 +40,7 @@
 %
 \title{Another Lattice Attack against the wNAF Implementation of ECDSA to Recover More Bits per Signature}
 %
-\titlerunning{Lattice Attack against the wNAF Implementation of ECDSA}
+\titlerunning{Lattice Attack against  ECDSA to Recover More Bits per Signature}
 % If the paper title is too long for the running head, you can set
 % an abbreviated paper title here
 %
@@ -80,7 +80,7 @@ In theory $153.2$ bits of the ephemeral key will be extracted per signature
 Then,
     we convert the problem of recovering the private key based on the extracted bits to the Hidden Number Problem (HNP),
  which is solved by lattice reduction algorithms.
-We implemented the Flush+Flush method as the cache side channel attack and applied it to ECDSA with the secp256k1 curve in OpenSSL 1.1.1b.
+We implemented the Flush+Flush method as the cache side channel attack and applied it to ECDSA with the \textbf{secp256k1} curve in OpenSSL 1.1.1b.
 The experimental results show that the private key is successfully recovered from $60$ signatures,
     if the Flush+Flush attack is finished without any error.
 To the best of our knowledge, this is the first time to obtain and exploit the signs of the wNAF representations
