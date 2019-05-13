@@ -374,8 +374,8 @@ They managed to obtain on average 105.8 bits per signature for the secp256k1 cur
  and only need 4 signatures to recover the private key with the probability being $8\%$.
  Compared with their work, ours obtains more information about the ephemeral key, i.e. the sign of all non-zero digits, from the side channel by analysing the OpenSSL implementation.
 We can extract 153.2 bits information per signature.
-Although it uses more signatures to recover the private key through our lattice attack,
-theoretically the number of signatures needed is less than Fan's if a suitable lattice is constructed.
+Although it uses more signatures to recover the private key in our lattice attack,
+theoretically the number of signatures needed is less than Fan's if a more suitable lattice is constructed.
 
 Wang et al. \cite{Wang2017} obtain the positions of two non-zero digits and the length of the wNAF representation of $k$ from the Flush+Reload attack.
 They can obtain no less than 2.99 bits information per signature and exploit the HNP to recover the private key for the 256-bit curve using $85$ signatures.
