@@ -6,7 +6,7 @@ First, we analyse the invert function in the scalar multiplication with wNAF rep
 After that, we make use of the obtained information to recover the consecutive bits at the position of every non-zero digits of $k$.
 Finally, we construct an HNP instance by the consecutive bits and transform it to the problem of solving the SVP/CVP in some lattice with the lattice reduction algorithms.
 
-\subsection{Attacking wNAF Through the Cache Side Channels}
+\subsection{Attacking wNAF through the Cache Side Channels}
 \label{data_get}
 First recalling the implementation of scalar multiplication in OpenSSL, it uses the invert function to
   compute the inverse element of a number.
@@ -91,7 +91,7 @@ In this way, we obtain all the positions of the non-zero digits and the sign inf
 %这一节用不用一个图来说明add-double链
 
 
-\subsection{Consecutive Bits Recovery}
+\subsection{Recovering Consecutive Bits}
 \label{data_proc1}
 In this section, we introduce how to recover the consecutive bits at the position of every non-zero bits for the ephemeral key $k$, exploiting the information obtained from the side channel.
 
