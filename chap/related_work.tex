@@ -10,7 +10,7 @@ Some of them focus on how to exploit the partial information efficiently to cons
 
 % first
 Boneh and Venkatesan \cite{boneh1996} initially investigated to use the partial information of the ephemeral key to construct an HNP problem and recovered the private key of Diffie-Hellman by solving it using the lattice reduction algorithm.
-Howgrave-Graham and Smart \cite{HG2001} extended the work of Boneh and Venkatesan \cite{boneh1996} and  showed how to retrieve the DSA private key by  constructing an HNP instance from leaked LSBs and MSBs of the ephemeral key.
+Howgrave-Graham and Smart \cite{HG2001} extended the work of Boneh and Venkatesan \cite{boneh1996} and  showed how to recover the DSA private key by  constructing an HNP instance from leaked LSBs and MSBs of the ephemeral key.
 Nguyen and Shparlinski \cite{Nguyen2002} improved their method  and gave a provable polynomial-time attack that
       knowing the $l \geq 3$ LSBs , the $l+1$ MSBs  or any $2l$ consecutive bits of a certain number of ephemeral keys was enough for recovering the DSA private key.
  They recovered  a $160$-bit DSA key only using the $3$ LSBs of a certain number of ephemeral keys.
@@ -32,7 +32,7 @@ Analogously, Ac{\i}i{\c{c}}mez et al. \cite{Brumley2010} used an L1 instruction 
 In 2011, Brumley and Tuveri \cite{Brumley2011} mounted a remote timing attack on the implementation of ECDSA with binary curves in OpenSSL 0.9.8o.
  They obtained the MSBs of the ephemeral keys through the timing attack and recovered the private key after collecting information over 8,000 TLS handshakes.
 In 2013, Mulder et al. \cite{Mulder2013} took advantage of a template attack to recover some LSBs of the ephemeral key.
-They improved the Bleichenbacher¡¯s FFT-based (Fast Fourier Transform) attack by using BKZ for range reduction to solve the HNP problem.
+They improved the Bleichenbacher's FFT-based (Fast Fourier Transform) attack by using BKZ for range reduction to solve the HNP problem.
 Their attack could extract the entire private key using a 5-bit leak of the ephemeral key from 4 000 signatures.
 Benger et al. \cite{Benger2014} and Van de Pol et al. \cite{Van2015} used the Flush+Reload technique to acquire the information of the ephemeral key.
 Allan et al. \cite{Allan2016} improved the  results in \cite{Van2015} by using a performance-degradation attack to amplify the side-channel. The amplification allowed them to recover a 256-bit private key in OpenSSL 1.0.2a after observing only 6 signatures.
@@ -57,7 +57,7 @@ The first practical cache side-channel attack on AES was appeared in 2005 by Ber
 Bonneau and Mironov \cite{Bonneau2006} showed how to exploit cache collisions when indexing the AES lookup tables to recover the  AES secret key.
 In 2006, Osvik et al. \cite{Osvik2006} presented two access-driven attacks: Evict+Prime and Prime+Probe.
 Although the latter one proved to be significantly more efficient, both of them recovered the AES encryption key used by an OpenSSL server.
- Ac{\i}i{\c{c}}mez and Ko?c \cite{ac2006} presented a trace-driven attack targeting AES that exploited internal table lookup collisions in the cache during the first round.
+ Ac{\i}i{\c{c}}mez and Ko{\c{c}} \cite{ac2006} presented a trace-driven attack targeting AES that exploited internal table lookup collisions in the cache during the first round.
 In 2011, Gullasch et al. \cite{cachegame2011} first presented a new attack which was later called the Flush+Reload is used to attack AES encryption by blocking the execution of AES after each memory access using the process scheduling algorithm.
 In 2014, Irazoqui \cite{Irazoqui2014} exploit the Flush+Reload technique to attack the AES.
 
