@@ -43,17 +43,17 @@ Therefore, if we find a efficient way to construct the lattice attack, making fu
 In theory this result is better than the prior work in \cite{Fan2016} which theoretically needs 3 signatures for a 256-bit private key.
 This is what we are going to do next, finding a suitable and powerful method to construct the lattice attack.
 
-%æˆ‘ä»¬çš„å·¥ä½œä¸­ï¼Œæˆ‘ä»¬ä½¿ç”¨äº†XXæ–¹æ³•
-%æˆ‘ä»¬çš„æ–¹æ³•æœ‰ä»€ä¹ˆé™åˆ¶ï¼šléœ€è¦å¾ˆå¤§
-%é€ æˆä»€ä¹ˆç»“æžœï¼šæ— æ³•åˆ©ç”¨æ‰€æœ‰çš„æœ‰æ•ˆæ•°æ®ï¼Œéœ€è¦ä½¿ç”¨å¾ˆå¤šçš„ç­¾å
-%æ‰€ä»¥å°½ç®¡æˆ‘ä»¬èŽ·å–åˆ°äº†è®¸å¤šæ•°æ®ï¼Œä½†å¹¶ä¸èƒ½å¤Ÿå……åˆ†åˆ©ç”¨ã€‚
+%ÎÒÃÇµÄ¹¤×÷ÖÐ£¬ÎÒÃÇÊ¹ÓÃÁËXX·½·¨
+%ÎÒÃÇµÄ·½·¨ÓÐÊ²Ã´ÏÞÖÆ£ºlÐèÒªºÜ´ó
+%Ôì³ÉÊ²Ã´½á¹û£ºÎÞ·¨ÀûÓÃËùÓÐµÄÓÐÐ§Êý¾Ý£¬ÐèÒªÊ¹ÓÃºÜ¶àµÄÇ©Ãû
+%ËùÒÔ¾¡¹ÜÎÒÃÇ»ñÈ¡µ½ÁËÐí¶àÊý¾Ý£¬µ«²¢²»ÄÜ¹»³ä·ÖÀûÓÃ¡£
 
-%è€Œç†è®ºä¸Šè®²ï¼Œæˆ‘ä»¬èŽ·å–åˆ°çš„æ•°æ®æ»¡è¶³l>=3çš„æ¡ä»¶ï¼Œ
-%æ ¹æ®å‚è€ƒæ–‡çŒ®ï¼Œåªè¦l=2å°±å¯ä»¥è¢«ç”¨æ¥è¿›è¡Œæ ¼æ”»å‡»
-%å› æ­¤ï¼Œæˆ‘ä»¬èŽ·å–åˆ°çš„æ•°æ®å…¨éƒ¨éƒ½æ˜¯æœ‰æ•ˆæ•°æ®ï¼Œå¯ä»¥è¢«åˆ©ç”¨çš„ï¼Œå¹¶ä¸å­˜åœ¨éœ€è¦æŠ›å¼ƒçš„æ•°æ®
-%åªéœ€è¦æ‰¾åˆ°åˆé€‚çš„æ–¹æ³•æ¥æž„é€ æ ¼æ”»å‡»ï¼Œå°±å¯ä»¥å……åˆ†åˆ©ç”¨æ•°æ®ï¼Œä»Žè€Œå¤§å¤§é™ä½Žæ‰€éœ€è¦çš„ç­¾åæ•°é‡ï¼Œ
-%ç†è®ºä¸Šï¼Œæˆ‘ä»¬åªéœ€è¦ä¸¤ä¸ªç­¾åï¼Œç»“æžœä¼šå¥½äºŽfanã€‚
-%è¿™ä¹Ÿæ˜¯æˆ‘ä»¬æŽ¥ä¸‹æ¥è¦åŽ»åšçš„å·¥ä½œï¼Œæ‰¾åˆ°ä¸€ä¸ªåˆé€‚çš„æž„é€ æ ¼çš„æ–¹æ³•ã€‚
+%¶øÀíÂÛÉÏ½²£¬ÎÒÃÇ»ñÈ¡µ½µÄÊý¾ÝÂú×ãl>=3µÄÌõ¼þ£¬
+%¸ù¾Ý²Î¿¼ÎÄÏ×£¬Ö»Òªl=2¾Í¿ÉÒÔ±»ÓÃÀ´½øÐÐ¸ñ¹¥»÷
+%Òò´Ë£¬ÎÒÃÇ»ñÈ¡µ½µÄÊý¾ÝÈ«²¿¶¼ÊÇÓÐÐ§Êý¾Ý£¬¿ÉÒÔ±»ÀûÓÃµÄ£¬²¢²»´æÔÚÐèÒªÅ×ÆúµÄÊý¾Ý
+%Ö»ÐèÒªÕÒµ½ºÏÊÊµÄ·½·¨À´¹¹Ôì¸ñ¹¥»÷£¬¾Í¿ÉÒÔ³ä·ÖÀûÓÃÊý¾Ý£¬´Ó¶ø´ó´ó½µµÍËùÐèÒªµÄÇ©ÃûÊýÁ¿£¬
+%ÀíÂÛÉÏ£¬ÎÒÃÇÖ»ÐèÒªÁ½¸öÇ©Ãû£¬½á¹û»áºÃÓÚfan¡£
+%ÕâÒ²ÊÇÎÒÃÇ½ÓÏÂÀ´ÒªÈ¥×öµÄ¹¤×÷£¬ÕÒµ½Ò»¸öºÏÊÊµÄ¹¹Ôì¸ñµÄ·½·¨¡£
 
 
 %\subsection{The Precision Of The Cache Side Channel Attacks}

@@ -37,13 +37,13 @@ Therefore, the target of most attackers is the scalar multiplication $kG$ expect
 %Given the knowledge of the ephemeral key k and all the
 %known information of (s, r,m), the secret key can be easily
 %recovered by
-%Î± = râˆ’1(s Â· k âˆ’ H(m)) mod q .
+%¦Á = r?1(s ¡¤ k ? H(m)) mod q .
 
 
 \subsection{The Scalar Multiplication using wNAF Representation}
 \label{intro_wnaf}
-%wnaf æ˜¯ä»€ä¹ˆ
-%K æ˜¯æœ‰é™åŸŸï¼Œ P æ˜¯å®šä¹‰åœ¨åŸŸ Kä¸Šçš„æ¤­åœ†æ›²çº¿ E(K)ä¸Šçš„ç‚¹ï¼Œkæ˜¯ä¸€ä¸ªå¤§æ•´æ•°,æ ¹æ®æ¤­åœ†æ›²çº¿ä¸Šç‚¹çš„åŠ æ³•å…¬å¼å°†ç‚¹Pä¸è‡ªèº«ç›¸åŠ  kæ¬¡, k ç§°ä¸ºæ ‡é‡ï¼Œ kPç§°ä¸ºæ¤­åœ†æ›²çº¿ç‚¹ä¹˜ï¼Œæˆ–æ ‡é‡ä¹˜æ³•
+%wnaf ÊÇÊ²Ã´
+%K ÊÇÓĞÏŞÓò£¬ P ÊÇ¶¨ÒåÔÚÓò KÉÏµÄÍÖÔ²ÇúÏß E(K)ÉÏµÄµã£¬kÊÇÒ»¸ö´óÕûÊı,¸ù¾İÍÖÔ²ÇúÏßÉÏµãµÄ¼Ó·¨¹«Ê½½«µãPÓë×ÔÉíÏà¼Ó k´Î, k ³ÆÎª±êÁ¿£¬ kP³ÆÎªÍÖÔ²ÇúÏßµã³Ë£¬»ò±êÁ¿³Ë·¨
 $G$ is a point defined on the elliptic curve over the finite field,
  and the scalar $k$ is a big integer.
 Scalar multiplication $kG$ on the elliptic curve means that the point $G$ is added to itself $k$ times.
@@ -81,8 +81,8 @@ Algorithm \ref{alg:wnaf} introduces the concrete method for converting a scalar 
         \end{algorithmic}
     \end{algorithm}
 
-%äºŒè¿›åˆ¶è½¬åŒ–æˆnaf
-%è½¬åŒ–åå¦‚ä½•è®¡ç®—æ ‡é‡ä¹˜æ³•
+%¶ş½øÖÆ×ª»¯³Énaf
+%×ª»¯ºóÈçºÎ¼ÆËã±êÁ¿³Ë·¨
 When computing the scalar multiplication $kG$,
 first, a window size $w$ is chosen.
 Then precomputation and storage of the points $\{\pm G, \pm 3G, ..., \pm(2^{w - 1})G\}$ are executed.
@@ -124,12 +124,12 @@ The representation of modified wNAF is very similar to the wNAF.
 Each non-zero coefficient is followed by at least $w$ zero coefficients,
  except for the most significant digit which is allowed to violate this condition in some cases.
 As the use of modified wNAF affects the attack results little,
- we only consider the case of the wNAF for simplification. %æœ€åä¸€æ®µéœ€è¦ä¿®æ”¹ï¼Œä¸”è¿™ä¸€èŠ‚éœ€è¦å’Œå¤šç¯‡æ–‡ç« å¯¹æ¯”å®Œå–„, è¿˜æœ‰éœ€è¦åœ¨åˆé€‚çš„ä½ç½®åŠ ä¸Šæˆ‘ä»¬ä½¿ç”¨256çš„æ›²çº¿ï¼Œwindowå¤§å°ä¸º3
+ we only consider the case of the wNAF for simplification. %×îºóÒ»¶ÎĞèÒªĞŞ¸Ä£¬ÇÒÕâÒ»½ÚĞèÒªºÍ¶àÆªÎÄÕÂ¶Ô±ÈÍêÉÆ, »¹ÓĞĞèÒªÔÚºÏÊÊµÄÎ»ÖÃ¼ÓÉÏÎÒÃÇÊ¹ÓÃ256µÄÇúÏß£¬window´óĞ¡Îª3
 
 
-%å¯¹å…¶è¿›è¡Œä¸€äº›åˆ†æï¼Œæœ‰æ¡ä»¶åˆ¤æ–­ å¯ä»¥é€šè¿‡ä¾§ä¿¡é“è·å–ä¿¡æ¯ã€‚
+%¶ÔÆä½øĞĞÒ»Ğ©·ÖÎö£¬ÓĞÌõ¼şÅĞ¶Ï ¿ÉÒÔÍ¨¹ı²àĞÅµÀ»ñÈ¡ĞÅÏ¢¡£
 %
-%å®é™…ä¸­çš„ä½¿ç”¨k+q
+%Êµ¼ÊÖĞµÄÊ¹ÓÃk+q
 \subsection{The Scalar Multiplication in OpenSSL}
 \label{intro_smulinssl}
 In OpenSSL1.1.1b \cite{openssl}, the scalar multiplication with wNAF representation is implemented in the function \verb+ec_wNAF_mul()+.
@@ -210,13 +210,13 @@ Attackers exploit these time variations to deduce the operations of the target p
 Many attack methods are proposed \cite{Bonneau2006, Bernstein2005Cache, Osvik2006, cachegame2011, flushreload}
  since it is demonstrated feasible in theory \cite{Page2002}.
 We introduce two typical access-driven attacks called Flush+Reload \cite{flushreload} and Flush+Flush \cite{gruss2016flush} that are relevant to our work.
-%åœ¨è¿‘äº›å¹´çš„ç ”ç©¶ä¸­ï¼Œè®¿é—®é©±åŠ¨çš„æ”»å‡»å—åˆ°ç ”ç©¶è€…ä»¬çš„é’çï¼Œå› ä¸ºå…¶å…·æœ‰æ›´é«˜çš„æ”»å‡»ç²¾åº¦ï¼Œèƒ½å¤Ÿå¾ˆå‡†ç¡®çš„è·å–åˆ°ç›®æ ‡è¿›ç¨‹å¯¹cacheçš„è®¿é—®æƒ…å†µï¼Œä»¥åŠæ›´å¹¿çš„ä½¿ç”¨åœºæ™¯ï¼Œä¾‹å¦‚å¯¹è™šæ‹ŸåŒ–äº‘ç¯å¢ƒè¿›è¡Œæ”»å‡»ã€‚æ¥ä¸‹æ¥ï¼Œæˆ‘ä»¬å¯¹ä¸¤ç§å…¸å‹çš„è®¿é—®é©±åŠ¨æ”»å‡»è¿›è¡Œä»‹ç»ï¼Œè¿™ä¸¤ç§æ”»å‡»å’Œæœ¬æ–‡ç›¸å…³ã€‚
+%ÔÚ½üĞ©ÄêµÄÑĞ¾¿ÖĞ£¬·ÃÎÊÇı¶¯µÄ¹¥»÷ÊÜµ½ÑĞ¾¿ÕßÃÇµÄÇàíù£¬ÒòÎªÆä¾ßÓĞ¸ü¸ßµÄ¹¥»÷¾«¶È£¬ÄÜ¹»ºÜ×¼È·µÄ»ñÈ¡µ½Ä¿±ê½ø³Ì¶ÔcacheµÄ·ÃÎÊÇé¿ö£¬ÒÔ¼°¸ü¹ãµÄÊ¹ÓÃ³¡¾°£¬ÀıÈç¶ÔĞéÄâ»¯ÔÆ»·¾³½øĞĞ¹¥»÷¡£½ÓÏÂÀ´£¬ÎÒÃÇ¶ÔÁ½ÖÖµäĞÍµÄ·ÃÎÊÇı¶¯¹¥»÷½øĞĞ½éÉÜ£¬ÕâÁ½ÖÖ¹¥»÷ºÍ±¾ÎÄÏà¹Ø¡£
 
 The Flush+Reload attack \cite{flushreload} employs a spy process to monitor if the specific memory lines have been accessed or not by the victim process.
 So this attack relies on sharing pages between the spy and the victim processes.
 For attacks in the same machine, the spy can map the victim program file, the victim data file or shared libraries to its own address space to shared these pages with the victim.
 While in the virtualizition environments, the page de-duplication technique of the VMM ensures the page sharing between the spy and the victim.
-%ç›‘æ§LLCï¼Œéœ€è¦å†™ä¸€ä¸‹
+%¼à¿ØLLC£¬ĞèÒªĞ´Ò»ÏÂ
 
 One round of the attack consists of three phases:
 \begin{itemize}
@@ -235,7 +235,7 @@ One round of the attack consists of three phases:
     If the time is longer, it means that the attacker reloads the memory lines from the memory.
     That is the victim does not access these memory lines during the waiting time.
     Otherwise it means that these memory lines are already in the caches.
-    So these memory lines are accessed by the victim during the waiting time.%éœ€è¦ç²¾ç®€
+    So these memory lines are accessed by the victim during the waiting time.%ĞèÒª¾«¼ò
 \end{itemize}
 
 The Flush+Flush attack \cite{gruss2016flush} also needs the shared pages.
@@ -251,7 +251,7 @@ The first two phases are the same as in the Flush+Reload attack.
 But in the third phase it flushes the cache again and measures the flush time instead of the reload time.
 As the third phase flushes the caches, it doubles as the first phase for subsequent observations.
 
-%å†ä¸€æ®µF+F å’Œ F+Rè¿›è¡Œå¯¹æ¯”ï¼šæ›´åŠ é«˜æ•ˆï¼Œç²¾åº¦æ›´é«˜ï¼ŒFé˜¶æ®µå¯ä»¥å½“æˆæ˜¯ä¸‹ä¸€å¾ªç¯çš„Fï¼Œ
+%ÔÙÒ»¶ÎF+F ºÍ F+R½øĞĞ¶Ô±È£º¸ü¼Ó¸ßĞ§£¬¾«¶È¸ü¸ß£¬F½×¶Î¿ÉÒÔµ±³ÉÊÇÏÂÒ»Ñ­»·µÄF£¬
 The execution time of the \verb+clflush+ instruction is less than the reload time on average.
     Also the first and third phases are merged together in Flush+Flush attack.
   Therefore the Flush+Flush attack is faster and can obtain more information than the Flush+Reload attack over the same time scale.
@@ -260,8 +260,8 @@ Furthermore, compared with the Flush+Reload attack,
 The Flush+Flush attack does not trigger prefetches when monitoring consecutive memory lines, otherwise it may affect the validity of the attack.
 
 
-%è¿™ä¸€èŠ‚è¦å’Œå¤šç¯‡æ–‡ç« è¿›è¡Œå¯¹æ¯”æ”¹è¿›ï¼Œf+ræ”»å‡»éœ€è¦ç²¾ç®€ã€‚
-%f+rçš„ç®—æ³•ä¼ªä»£ç è€ƒè™‘éœ€ä¸éœ€è¦æ·»åŠ ã€‚
+%ÕâÒ»½ÚÒªºÍ¶àÆªÎÄÕÂ½øĞĞ¶Ô±È¸Ä½ø£¬f+r¹¥»÷ĞèÒª¾«¼ò¡£
+%f+rµÄËã·¨Î±´úÂë¿¼ÂÇĞè²»ĞèÒªÌí¼Ó¡£
 
 
 \subsection{The Hidden Number Problem and Lattice Attack}
@@ -345,17 +345,17 @@ Then we can acquire the hidden nubmer $\alpha$ by solving the SVP problem.
 
 %we can use LLL \cite{Lenstra1982} or BKZ \cite{Schnorr1994} algorithm to solve the SVP problem, while use Babai \cite{Babai1986} algorithm or Enumeration technique to solve the CVP problem.
 
-%è¿™ä¸€æ®µè¯´ï¼Œç”¨cacheæ”»å‡»å¯ä»¥è·å¾—ä¿¡æ¯ï¼Œç„¶åå°†å…¶è½¬åŒ–æˆhnpé—®é¢˜æ¥æ±‚è§£ã€‚
+%ÕâÒ»¶ÎËµ£¬ÓÃcache¹¥»÷¿ÉÒÔ»ñµÃĞÅÏ¢£¬È»ºó½«Æä×ª»¯³ÉhnpÎÊÌâÀ´Çó½â¡£
 For the ECDSA algorithm implemented by OpenSSL with the wNAF,
   the attackers can obtain some consecutive bit fragments of the ephemeral key $k$ through the cache side channels.
 Then, the problem of recovering the secret key can be transformed to the HNP problem.
  The attackers can recover the secret key by solving the HNP problem using lattice reduction algorithms.
 
 
-%1 ä»€ä¹ˆæ˜¯æ ¼
+%1 Ê²Ã´ÊÇ¸ñ
 
-%2 ä»€ä¹ˆæ˜¯æ ¼å›°éš¾é—®é¢˜
+%2 Ê²Ã´ÊÇ¸ñÀ§ÄÑÎÊÌâ
 
-%3 HNPé—®é¢˜å¦‚ä½•ç”¨æ ¼æ¥æ±‚è§£
+%3 HNPÎÊÌâÈçºÎÓÃ¸ñÀ´Çó½â
 
 

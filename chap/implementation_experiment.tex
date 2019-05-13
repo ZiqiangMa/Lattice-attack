@@ -8,9 +8,9 @@ Then we implement the lattice attacks and solve them by the BKZ lattice reductio
  The experiments demonstrate the results of our attacks with different parameters.
 Finally, we compare our method with some previous attacks.
 
-%è¿™ä¸€ç« æˆ‘ä»¬å±•ç¤ºæ”»å‡»çš„å…·ä½“å®ç°è¿‡ç¨‹ï¼Œ
-%å¯¹secp256k1è¿›è¡Œæ”»å‡»ï¼Œæ›²çº¿çš„windowæ˜¯3
-%å®ç°å¹³å°
+%ÕâÒ»ÕÂÎÒÃÇÕ¹Ê¾¹¥»÷µÄ¾ßÌåÊµÏÖ¹ı³Ì£¬
+%¶Ôsecp256k1½øĞĞ¹¥»÷£¬ÇúÏßµÄwindowÊÇ3
+%ÊµÏÖÆ½Ì¨
 
 \subsection{The Flush+Flush Attack}
 \label{ffattack}
@@ -20,7 +20,7 @@ The attacking target is the ECDSA implemented in OpenSSL1.1.1b, which uses wNAF 
 For the experiments, we use the Flush+Flush to attack the 256-bit curve secp256k1.
 Followings are the implementation details for the Flush+Flush attack.
 
-%å¹³å°
+%Æ½Ì¨
 
 \noindent\textbf{Get the virtual address. }
 We use a spy process to monitor the  \verb+EC_POINT_dbl()+,  \verb+EC_POINT_add()+ and \verb+EC_POINT_invert()+ functions in OpenSSL.
@@ -37,17 +37,17 @@ Typically the debugging symbols are not available for attackers,
 
 
 
-%è·å–è™šæ‹Ÿåœ°å€
+%»ñÈ¡ĞéÄâµØÖ·
 
-%é¦–å…ˆè·å–æ‰€éœ€ç›‘æ§å‡½æ•°ä»£ç åœ¨åŠ¨æ€åº“ä¸­çš„åç§»é‡
-%æ¥ç€è·å–å‡½æ•°ä»£ç è™šæ‹Ÿåœ°å€ï¼Œæœ‰ä¸¤ç§æ–¹æ³•
-%ä½¿ç”¨mmap()å‡½æ•°ï¼Œå°†æ‰€ç›‘æ§å‡½æ•°ä»£ç æ‰€åœ¨é¡µåŠ è½½å…¥åœ°å€ç©ºé—´ä¸­ï¼Œè·å–åˆ°å‡½æ•°ä»£ç çš„è™šæ‹Ÿåœ°å€
-%æˆ–ç¼–è¯‘æ—¶é“¾æ¥åŠ¨æ€åº“ï¼Œè¿è¡Œæ—¶ä½¿ç”¨dl_iterate_phdr()å‡½æ•°ï¼Œè·å–åˆ°åŠ¨æ€åº“åŠ è½½å…¥åœ°å€ç©ºé—´çš„èµ·å§‹åœ°å€ï¼Œæ ¹æ®åç§»é‡ï¼Œè·å¾—å‡½æ•°ä»£ç çš„è™šæ‹Ÿåœ°å€
+%Ê×ÏÈ»ñÈ¡ËùĞè¼à¿Øº¯Êı´úÂëÔÚ¶¯Ì¬¿âÖĞµÄÆ«ÒÆÁ¿
+%½Ó×Å»ñÈ¡º¯Êı´úÂëĞéÄâµØÖ·£¬ÓĞÁ½ÖÖ·½·¨
+%Ê¹ÓÃmmap()º¯Êı£¬½«Ëù¼à¿Øº¯Êı´úÂëËùÔÚÒ³¼ÓÔØÈëµØÖ·¿Õ¼äÖĞ£¬»ñÈ¡µ½º¯Êı´úÂëµÄĞéÄâµØÖ·
+%»ò±àÒëÊ±Á´½Ó¶¯Ì¬¿â£¬ÔËĞĞÊ±Ê¹ÓÃdl_iterate_phdr()º¯Êı£¬»ñÈ¡µ½¶¯Ì¬¿â¼ÓÔØÈëµØÖ·¿Õ¼äµÄÆğÊ¼µØÖ·£¬¸ù¾İÆ«ÒÆÁ¿£¬»ñµÃº¯Êı´úÂëµÄĞéÄâµØÖ·
 %
 %
 %
-%Victimï¼šé€šè¿‡è°ƒç”¨OpenSSLçš„crypto.soåº“æ¥è¿›è¡ŒECDSAç­¾åè¿ç®—ã€‚
-%Attackerï¼šä½¿ç”¨å’Œvictimç›¸åŒçš„cryptoåº“ï¼Œå¯¹victimä½¿ç”¨çš„ç‚¹åŠ å’Œå€ç‚¹å‡½æ•°ä»¥åŠEC_POINT_invert()ä»£ç æ‰€åœ¨çš„cacheè¡Œè¿›è¡Œç›‘æ§ã€‚
+%Victim£ºÍ¨¹ıµ÷ÓÃOpenSSLµÄcrypto.so¿âÀ´½øĞĞECDSAÇ©ÃûÔËËã¡£
+%Attacker£ºÊ¹ÓÃºÍvictimÏàÍ¬µÄcrypto¿â£¬¶ÔvictimÊ¹ÓÃµÄµã¼ÓºÍ±¶µãº¯ÊıÒÔ¼°EC_POINT_invert()´úÂëËùÔÚµÄcacheĞĞ½øĞĞ¼à¿Ø¡£
 
 
 
@@ -60,10 +60,10 @@ For each address of the monitored functions, we record the time of flushing the 
 The thresholds are recalculated every time before the attack is triggered.
 
 
-%é˜ˆå€¼
-%å¯¹æ¯ä¸ªéœ€è¦ç›‘æ§çš„åœ°å€éƒ½è®¡ç®—å„è‡ªçš„é˜ˆå€¼
-%æ¯æ¬¡ç›‘æµ‹éƒ½é‡æ–°è®¡ç®—é˜ˆå€¼
-%å¯¹æ¯ä¸ªåœ°å€ï¼Œç›‘æ§1000æ¬¡flushèŠ±è´¹çš„æ—¶é—´ï¼Œå–99%ä»¥ä¸Šæ ·æœ¬æ‰€èŠ±çš„æœ€å¤§æ—¶é—´åŠ ä¸Š6ä½œä¸ºè¯¥åœ°å€çš„é˜ˆå€¼
+%ãĞÖµ
+%¶ÔÃ¿¸öĞèÒª¼à¿ØµÄµØÖ·¶¼¼ÆËã¸÷×ÔµÄãĞÖµ
+%Ã¿´Î¼à²â¶¼ÖØĞÂ¼ÆËããĞÖµ
+%¶ÔÃ¿¸öµØÖ·£¬¼à¿Ø1000´Îflush»¨·ÑµÄÊ±¼ä£¬È¡99%ÒÔÉÏÑù±¾Ëù»¨µÄ×î´óÊ±¼ä¼ÓÉÏ6×÷Îª¸ÃµØÖ·µÄãĞÖµ
 
 
 \noindent\textbf{Trigger the monitoring.}
@@ -76,11 +76,11 @@ Then we have a valid record.
  Due to the  disturbance of noise,
   the valid record does not necessarily contain the activities of the monitored functions in the scalar multiplication.
 So we continuously obtain 10 valid records.
-%è§¦å‘
-%1) æŸä¸€ä¸ªç›‘æ§åœ°å€çš„flushæ—¶é—´å¤§äºé˜ˆå€¼ä»¥åï¼Œå¼€å§‹è®°å½•ï¼›
-%2ï¼‰æ‰€æœ‰åœ°å€è¿ç»­å°äºé˜ˆå€¼çš„æ•°é‡å¤§äº200åï¼Œåœæ­¢è®°å½•ï¼›
-%3ï¼‰å¦‚æœè®°å½•æ•°æ®é‡å°äº1000ï¼Œé‡æ–°å¼€å§‹è®°å½•ï¼›
-%4ï¼‰è¿ç»­è®°å½•10æ¬¡ã€‚
+%´¥·¢
+%1) Ä³Ò»¸ö¼à¿ØµØÖ·µÄflushÊ±¼ä´óÓÚãĞÖµÒÔºó£¬¿ªÊ¼¼ÇÂ¼£»
+%2£©ËùÓĞµØÖ·Á¬ĞøĞ¡ÓÚãĞÖµµÄÊıÁ¿´óÓÚ200ºó£¬Í£Ö¹¼ÇÂ¼£»
+%3£©Èç¹û¼ÇÂ¼Êı¾İÁ¿Ğ¡ÓÚ1000£¬ÖØĞÂ¿ªÊ¼¼ÇÂ¼£»
+%4£©Á¬Ğø¼ÇÂ¼10´Î¡£
 
 
 \noindent\textbf{Time slot.}
@@ -98,9 +98,9 @@ Also we can determine the start position by monitor the code of copy function in
  We note that when the computation of scalar multiplication starts, OpenSSL performs the copy function instead of the add function.
  Thus we can monitor the copy function, and when the copy function is called in the time slot and the add function is called in the next slot, it means that the scalar multiplication starts.
 
-%èµ·å§‹åˆ¤æ–­
-%å¯¹æ ‡é‡ä¹˜æ³•ä»£ç åˆ†æï¼Œåœ¨å¯¹kçš„æœ€é«˜ä½å¤„ç†æ—¶ï¼Œå¹¶ä¸æ˜¯ä½¿ç”¨çš„ç‚¹åŠ ï¼Œè€Œæ˜¯copyï¼Œå› æ­¤ï¼Œå¯ä»¥å¯¹copyå‡½æ•°è¿›è¡Œç›‘æ§ï¼Œå½“ä¸€ä¸ªæ—¶é—´æ§½å†…è¿›è¡Œäº†å€ç‚¹å’Œcopyæ“ä½œï¼Œå¯ä»¥è®¤å®šæ ‡é‡ä¹˜æ³•çš„å¼€å§‹ã€‚
-%å¦‚æœä¸ç›‘æ§copyï¼Œä¹Ÿå¯ä»¥æ ¹æ®ç‚¹åŠ å€ç‚¹çš„å‘ç”Ÿï¼Œå»æ’é™¤é”™è¯¯çš„è§¦å‘ï¼›ä¹Ÿå¯ä»¥æ ¹æ®NAFç¼–ç æ—¶ç‚¹åŠ å€ç‚¹çš„ç‰¹å¾æ¥åˆ¤æ–­èµ·å§‹ã€‚
+%ÆğÊ¼ÅĞ¶Ï
+%¶Ô±êÁ¿³Ë·¨´úÂë·ÖÎö£¬ÔÚ¶ÔkµÄ×î¸ßÎ»´¦ÀíÊ±£¬²¢²»ÊÇÊ¹ÓÃµÄµã¼Ó£¬¶øÊÇcopy£¬Òò´Ë£¬¿ÉÒÔ¶Ôcopyº¯Êı½øĞĞ¼à¿Ø£¬µ±Ò»¸öÊ±¼ä²ÛÄÚ½øĞĞÁË±¶µãºÍcopy²Ù×÷£¬¿ÉÒÔÈÏ¶¨±êÁ¿³Ë·¨µÄ¿ªÊ¼¡£
+%Èç¹û²»¼à¿Øcopy£¬Ò²¿ÉÒÔ¸ù¾İµã¼Ó±¶µãµÄ·¢Éú£¬È¥ÅÅ³ı´íÎóµÄ´¥·¢£»Ò²¿ÉÒÔ¸ù¾İNAF±àÂëÊ±µã¼Ó±¶µãµÄÌØÕ÷À´ÅĞ¶ÏÆğÊ¼¡£
 
 \noindent\textbf{Experimental results.}
 Fig.~\ref{fig1} shows a fragment of the output of the spy when OpenSSL performs ECDSA with the secp256k1 curve.
@@ -110,7 +110,7 @@ From this fragment, three operations can be clearly distinguished,
 
 
 
-%%10æ¬¡å®éªŒ
+%%10´ÎÊµÑé
 %We totally run 10 experiments, i.e. monitoring the ECDSA signature 10 times.
 %The accurate rate is defined as the value of the actual number of bits obtained divided by the ideal number of bits available.
 %Thus, from these experiments the average accurate rate of the data obtained from the Flush+Flush attack is xx\%.
@@ -122,31 +122,31 @@ From this fragment, three operations can be clearly distinguished,
 \end{figure}
 
 
-%å¯¹è¿™ä¸ªç¤ºä¾‹è¿›è¡Œè§£é‡Šï¼š
-%ä»€ä¹ˆç¬¦å·ä»£è¡¨å“ªä¸ªæ“ä½œ
-%sampleå¤§äºé˜ˆå€¼xx è¡¨ç¤ºåœ¨è¿™ä¸ªæ—¶é—´æ§½å†…ï¼Œå‡½æ•°è¢«æ‰§è¡Œäº†ã€‚
-%ç„¶åï¼Œfor exampleï¼Œ å¯¹äºæ—¶é—´æ§½1ï¼Œ ä»€ä¹ˆè¢«è®¿é—®äº†ï¼Œä»£è¡¨å“ªä¸ªå‡½æ•°è¢«æ‰§è¡Œäº†ï¼Œå› æ­¤å¯¹åº”äº0æˆ–è€…1ï¼Œ
-%ç„¶åæ—¶é—´æ§½xä»£è¡¨1ï¼Œ
-%æ¥ç€è¯´æ—¶é—´æ§½x2 ä»£è¡¨1ï¼ŒåŒæ—¶invertè°ƒç”¨äº†ï¼Œè¯´æ˜è¯¥ä½ç¬¦å·å’Œä¹‹å‰ç›¸åï¼Œ
-%æ—¶é—´æ§½x3ï¼Œæœªè°ƒç”¨invertï¼Œç¬¦å·ä½å’Œä¹‹å‰ç›¸åŒã€‚
+%¶ÔÕâ¸öÊ¾Àı½øĞĞ½âÊÍ£º
+%Ê²Ã´·ûºÅ´ú±íÄÄ¸ö²Ù×÷
+%sample´óÓÚãĞÖµxx ±íÊ¾ÔÚÕâ¸öÊ±¼ä²ÛÄÚ£¬º¯Êı±»Ö´ĞĞÁË¡£
+%È»ºó£¬for example£¬ ¶ÔÓÚÊ±¼ä²Û1£¬ Ê²Ã´±»·ÃÎÊÁË£¬´ú±íÄÄ¸öº¯Êı±»Ö´ĞĞÁË£¬Òò´Ë¶ÔÓ¦ÓÚ0»òÕß1£¬
+%È»ºóÊ±¼ä²Ûx´ú±í1£¬
+%½Ó×ÅËµÊ±¼ä²Ûx2 ´ú±í1£¬Í¬Ê±invertµ÷ÓÃÁË£¬ËµÃ÷¸ÃÎ»·ûºÅºÍÖ®Ç°Ïà·´£¬
+%Ê±¼ä²Ûx3£¬Î´µ÷ÓÃinvert£¬·ûºÅÎ»ºÍÖ®Ç°ÏàÍ¬¡£
 %
-%æ—¶é—´æ§½x4å¯èƒ½æ˜¯å™ªå£°ï¼Œå¯¹å™ªå£°çš„å¤„ç†
+%Ê±¼ä²Ûx4¿ÉÄÜÊÇÔëÉù£¬¶ÔÔëÉùµÄ´¦Àí
 %
-%å’ŒçœŸå®çš„kç›¸æ¯”ï¼Œæ­£ç¡®ç‡æ˜¯x\%
+%ºÍÕæÊµµÄkÏà±È£¬ÕıÈ·ÂÊÊÇx\%
 %
-%ç”¨ffæ”»å‡»ä¸€æ¡æ›²çº¿ï¼Œå¾—åˆ°ç»“æœï¼Œå¾—åˆ°double add invert é“¾ï¼Œè¿›è¡Œæ¢å¤
-%ç„¶åæ¢å¤æˆåŠŸç‡æ˜¯å¤šå°‘ï¼Ÿ
+%ÓÃff¹¥»÷Ò»ÌõÇúÏß£¬µÃµ½½á¹û£¬µÃµ½double add invert Á´£¬½øĞĞ»Ö¸´
+%È»ºó»Ö¸´³É¹¦ÂÊÊÇ¶àÉÙ£¿
 %
 %
-%ç»“æœ
+%½á¹û
 
 
 \subsection{Lattice Attack}
 \label{latticeattack}
-%ä½¿ç”¨å®Œç¾çš„ä¾§ä¿¡é“ç»“æœ
-%æˆ‘ä»¬çš„ç»“æœæ˜¯ï¼š
-%è¿›è¡Œåˆ†æ
-%åˆ†æä¸ºä»€ä¹ˆæˆ‘ä»¬æ²¡æœ‰åˆ©ç”¨å…¨éƒ¨çš„ä¿¡æ¯ï¼Œç†è®ºä¸Šæ€æ ·ï¼Œå®é™…æ€æ ·
+%Ê¹ÓÃÍêÃÀµÄ²àĞÅµÀ½á¹û
+%ÎÒÃÇµÄ½á¹ûÊÇ£º
+%½øĞĞ·ÖÎö
+%·ÖÎöÎªÊ²Ã´ÎÒÃÇÃ»ÓĞÀûÓÃÈ«²¿µÄĞÅÏ¢£¬ÀíÂÛÉÏÔõÑù£¬Êµ¼ÊÔõÑù
 We apply our lattice attack to the curve secp256k1 in our experiments, and we assume that the Flush+Flush attack is perfect, that is we can correctly obtain the ``double-add-invert" chain and recover all the information about the digits of the ephemeral key it contains.
 
 The HNP problem can be solved by exploiting both the CVP and SVP instances.
@@ -295,7 +295,7 @@ But the increase of the minimal length would lead to require more signatures to 
 %  the number of fragments of consecutive bits that we need to retrieve the private key of a 256-bit ECDSA is only $60$, less than the result of the SVP instance with the low block size.
 % The probability of success also increases as the the dimension or the block size increase.
 %Moreover, while the minimal length of consecutive bits increases, the probability of success becomes higher.
-%%å†åŠ ä¸€æ®µæˆ–å‡ å¥CVPç»“æœå’ŒSVPç»“æœè¿›è¡Œæ¯”è¾ƒã€‚
+%%ÔÙ¼ÓÒ»¶Î»ò¼¸¾äCVP½á¹ûºÍSVP½á¹û½øĞĞ±È½Ï¡£
 
 
 %The results of the SVP and CVP experiments (Appendix A) show that for fixed  minimal length of consecutive bits,
@@ -386,9 +386,9 @@ In theory, the number of signatures need to retrieve the private key is $2$.
   However, due to the limit of our method of lattice construction, we need at most $60$ signatures, which is more than Fan's and van's.
 
 
-%2017å¹´ï¼ŒèŒƒå›¢é˜Ÿè¿˜åœ¨science China information sciences ä¸Šå‘äº†ä¸€ç¯‡ï¼Œä½¿ç”¨HNPçš„æ–‡ç« ï¼Œ
-%è¿™æ˜¯ä¸€ä¸ªbç±»çš„æœŸåˆŠã€‚(äº¤å‰ç»¼åˆæ–°å…´)
-%æˆ‘ä»¬æ¯”è¿™ä¸ªæœŸåˆŠçš„æ–‡ç« æ•ˆæœè¦å¥½çš„ã€‚
+%2017Äê£¬·¶ÍÅ¶Ó»¹ÔÚscience China information sciences ÉÏ·¢ÁËÒ»Æª£¬Ê¹ÓÃHNPµÄÎÄÕÂ£¬
+%ÕâÊÇÒ»¸öbÀàµÄÆÚ¿¯¡£(½»²æ×ÛºÏĞÂĞË)
+%ÎÒÃÇ±ÈÕâ¸öÆÚ¿¯µÄÎÄÕÂĞ§¹ûÒªºÃµÄ¡£
 
 
 

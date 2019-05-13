@@ -1,8 +1,8 @@
 \section{Related work}
 \label{sec:relatedwork}
-%æˆ‘ç°åœ¨ç›¸å…³å·¥ä½œåˆ†æˆäº†ä¸¤å—ï¼Œä¸€å—æ˜¯éƒ¨åˆ†å¯†é’¥æ³„éœ²æ”»å‡»ï¼Œä¸€å—æ˜¯cacheä¾§ä¿¡é“æ”»å‡»ï¼Œ
-%æ—è€å¸ˆæ‚¨çœ‹ä¸‹è¿™å—æ˜¯å¦éœ€è¦è°ƒæ•´ï¼Œå¢åŠ å“ªäº›ï¼Œåˆ å»å“ªäº›ï¼Œæˆ–è€…ç»“æ„è°ƒæ•´ï¼Ÿ
-%å‰é¢è®²è¿‡çš„è¿™é‡Œè¿˜éœ€è¦å†è¯´å—ï¼Ÿ
+%ÎÒÏÖÔÚÏà¹Ø¹¤×÷·Ö³ÉÁËÁ½¿é£¬Ò»¿éÊÇ²¿·ÖÃÜÔ¿Ğ¹Â¶¹¥»÷£¬Ò»¿éÊÇcache²àĞÅµÀ¹¥»÷£¬
+%ÁÖÀÏÊ¦Äú¿´ÏÂÕâ¿éÊÇ·ñĞèÒªµ÷Õû£¬Ôö¼ÓÄÄĞ©£¬É¾È¥ÄÄĞ©£¬»òÕß½á¹¹µ÷Õû£¿
+%Ç°Ãæ½²¹ıµÄÕâÀï»¹ĞèÒªÔÙËµÂğ£¿
 \subsection{Partial Nonce Disclosure Attacks on DSA/ECDSA}
 Several works have proposed different attacks that exploit partial nonce disclosure to recover long-term private keys of the signature algorithms.
 Some of them focus on how to exploit the partial information efficiently to construct some appropriate lattice attacks to recover the private key.
@@ -32,7 +32,7 @@ Analogously, Ac{\i}i{\c{c}}mez et al. \cite{Brumley2010} used an L1 instruction 
 In 2011, Brumley and Tuveri \cite{Brumley2011} mounted a remote timing attack on the implementation of ECDSA with binary curves in OpenSSL 0.9.8o.
  They obtained the MSBs of the ephemeral keys through the timing attack and recovered the private key after collecting information over 8,000 TLS handshakes.
 In 2013, Mulder et al. \cite{Mulder2013} took advantage of a template attack to recover some LSBs of the ephemeral key.
-They improved the Bleichenbacherâ€™s FFT-based (Fast Fourier Transform) attack by using BKZ for range reduction to solve the HNP problem.
+They improved the Bleichenbacher¡¯s FFT-based (Fast Fourier Transform) attack by using BKZ for range reduction to solve the HNP problem.
 Their attack could extract the entire private key using a 5-bit leak of the ephemeral key from 4 000 signatures.
 Benger et al. \cite{Benger2014} and Van de Pol et al. \cite{Van2015} used the Flush+Reload technique to acquire the information of the ephemeral key.
 Allan et al. \cite{Allan2016} improved the  results in \cite{Van2015} by using a performance-degradation attack to amplify the side-channel. The amplification allowed them to recover a 256-bit private key in OpenSSL 1.0.2a after observing only 6 signatures.
@@ -57,7 +57,7 @@ The first practical cache side-channel attack on AES was appeared in 2005 by Ber
 Bonneau and Mironov \cite{Bonneau2006} showed how to exploit cache collisions when indexing the AES lookup tables to recover the  AES secret key.
 In 2006, Osvik et al. \cite{Osvik2006} presented two access-driven attacks: Evict+Prime and Prime+Probe.
 Although the latter one proved to be significantly more efficient, both of them recovered the AES encryption key used by an OpenSSL server.
- Ac{\i}i{\c{c}}mez and KoÂ¸c \cite{ac2006} presented a trace-driven attack targeting AES that exploited internal table lookup collisions in the cache during the first round.
+ Ac{\i}i{\c{c}}mez and Ko?c \cite{ac2006} presented a trace-driven attack targeting AES that exploited internal table lookup collisions in the cache during the first round.
 In 2011, Gullasch et al. \cite{cachegame2011} first presented a new attack which was later called the Flush+Reload is used to attack AES encryption by blocking the execution of AES after each memory access using the process scheduling algorithm.
 In 2014, Irazoqui \cite{Irazoqui2014} exploit the Flush+Reload technique to attack the AES.
 
@@ -69,13 +69,13 @@ Brumley and Hakala \cite{Brumley2009} mounted an L1 data cache-timing attack to 
   Then, again Yarom et al. used the Flush+Reload technique to recover the secret key from a ECDSA signature algorithm \cite{yarom2014recovering}.
 
 Cloud computing systems also can be attacked using the cache side channel attacks.
-In 2009, Ristenpart et al. \cite{get-off-my-cloud} presented the methods to co-locate an attackerâ€™s virtual machine (VM) with a potential victimâ€™s VM with a success probability of 40\% in the Amazon EC2 cloud.
- Also the authors  showed that the cache side-channel attacks are both practical and applicable to real world scenarios by successfully recovering keystrokes from the co-resident victimâ€™s VM.
+In 2009, Ristenpart et al. \cite{get-off-my-cloud} presented the methods to co-locate an attacker¡¯s virtual machine (VM) with a potential victim¡¯s VM with a success probability of 40\% in the Amazon EC2 cloud.
+ Also the authors  showed that the cache side-channel attacks are both practical and applicable to real world scenarios by successfully recovering keystrokes from the co-resident victim¡¯s VM.
 This work provided a practical method to find the co-resident VMs, which was the basis of the cache attacks cross VMs because the caches were only shared with co-resident VMs.
 For instance, Flush+Reload was used to attack AES \cite{Irazoqui2014} and RSA\cite{flushreload} in the cross-VM scenario.
 Also the Prime+Probe method was also
 adapted to work in virtualized environments by Zhang et al. \cite{YinqianZhang2012-cross-vm} and Liu \cite{liu2015last} to recover ElGamal encryption keys.
-Irazoqui et al. \cite{fine2014} recovered AES keys in virtualized environments with Bernsteinâ€™s attack.
+Irazoqui et al. \cite{fine2014} recovered AES keys in virtualized environments with Bernstein¡¯s attack.
 Benger et al. \cite{Benger2014} and Van de Pol et al. \cite{Van2015} demonstrated the viability of the Flush+Reload technique to recover ECDSA encryption keys.
 Fan et al. \cite{Fan2016} proposed a new way of extracting and utilizing information from the Flush+Reload attack.
 Flush+Flush \cite{gruss2016flush} and Prime+Abort \cite{disselkoen2017prime+abort} are the variants of Flush+Reload.
@@ -95,19 +95,19 @@ They exploited different methods to observe the cache access patterns to recover
 %Hence attackers exploit the incomplete information of $k$ to transform the problem of private key recovery into one that can be solved by lattice, such as HNP or EHNP problem.
 % Then the attackers retrieve the private key by solving the HNP or EHNP problem through being converted to the CVP/SVP problem in the lattice.
 %
-%%æ”»å‡»ä¸€èˆ¬æœ‰ä»¥ä¸‹å‡ ä¸ªæ­¥éª¤ï¼Œå¯¹æ ‡é‡ä¹˜æ³•è¿›è¡Œæ”»å‡»ï¼Œé¦–å…ˆæ˜¯é€šè¿‡cacheä¾§ä¿¡é“æ”»å‡»è·å–æœ‰å…³kçš„ä¸€äº›ä¿¡æ¯ï¼Œ
-%%ç„¶åé€šè¿‡ä¾§ä¿¡é“è·å–çš„ä¿¡æ¯ï¼Œå¾—åˆ°kçš„æŸäº›bitä½çš„ä¿¡æ¯ï¼Œæˆ–è€…kçš„ä¿¡æ¯ã€‚
-%%é€šè¿‡è·å¾—åˆ°çš„ä¿¡æ¯ï¼Œå°†æ±‚è§£ç§é’¥çš„é—®é¢˜è½¬åŒ–ä¸ºå¯ä»¥é€šè¿‡æ ¼æ¥æ±‚è§£çš„é—®é¢˜ï¼Œè¿›è€Œé€šè¿‡æ±‚è§£æ ¼å›°éš¾é—®é¢˜æ¥è·å–ç§é’¥ã€‚
-%%ECDSA wNAF éƒ¨åˆ†å¯†é’¥æ³„éœ²æ”»å‡»
+%%¹¥»÷Ò»°ãÓĞÒÔÏÂ¼¸¸ö²½Öè£¬¶Ô±êÁ¿³Ë·¨½øĞĞ¹¥»÷£¬Ê×ÏÈÊÇÍ¨¹ıcache²àĞÅµÀ¹¥»÷»ñÈ¡ÓĞ¹ØkµÄÒ»Ğ©ĞÅÏ¢£¬
+%%È»ºóÍ¨¹ı²àĞÅµÀ»ñÈ¡µÄĞÅÏ¢£¬µÃµ½kµÄÄ³Ğ©bitÎ»µÄĞÅÏ¢£¬»òÕßkµÄĞÅÏ¢¡£
+%%Í¨¹ı»ñµÃµ½µÄĞÅÏ¢£¬½«Çó½âË½Ô¿µÄÎÊÌâ×ª»¯Îª¿ÉÒÔÍ¨¹ı¸ñÀ´Çó½âµÄÎÊÌâ£¬½ø¶øÍ¨¹ıÇó½â¸ñÀ§ÄÑÎÊÌâÀ´»ñÈ¡Ë½Ô¿¡£
+%%ECDSA wNAF ²¿·ÖÃÜÔ¿Ğ¹Â¶¹¥»÷
 %
-%%æ‰¾åˆ°ä¸€ä¸ªå…±åŒçš„ç‚¹ï¼Œè®ºæ–‡åœ¨è¿™ä¸ªç‚¹ï¼Œæˆ–è¿™å‡ ä¸ªç‚¹ç›¸å…³ï¼Œç„¶åè¿›è¡Œåˆ†æã€‚
+%%ÕÒµ½Ò»¸ö¹²Í¬µÄµã£¬ÂÛÎÄÔÚÕâ¸öµã£¬»òÕâ¼¸¸öµãÏà¹Ø£¬È»ºó½øĞĞ·ÖÎö¡£
 %%
-%%é¦–å…ˆå¯¹è¿™äº›è®ºæ–‡æŒ‰æŸäº›ç‰¹ç‚¹è¿›è¡Œåˆ†ç±»
-%%åœ¨æ¯ä¸ªç±»åˆ«é‡Œï¼Œæ¯ä¸ªå·¥ä½œå’Œæœ¬æ–‡è¿›è¡Œè¯¦ç»†å¯¹æ¯”ï¼Œ
-%%å®ƒæ˜¯æ€ä¹ˆå®ç°çš„ï¼Œç”¨äº†ä»€ä¹ˆæŠ€æœ¯ï¼Œè¾¾åˆ°äº†ä»€ä¹ˆæ•ˆæœ
-%%æœ¬æ–‡çš„æƒ…å†µå¦‚ä½•
-%%ä»æ•°æ®è·å–ï¼Œåˆ°æ•°æ®åˆ†ææ–¹æ³•ï¼Œç„¶åç»“æœè¿›è¡Œæ¯”è¾ƒ
-%%ç›¸åŒç‚¹ï¼Œä¸åŒç‚¹
+%%Ê×ÏÈ¶ÔÕâĞ©ÂÛÎÄ°´Ä³Ğ©ÌØµã½øĞĞ·ÖÀà
+%%ÔÚÃ¿¸öÀà±ğÀï£¬Ã¿¸ö¹¤×÷ºÍ±¾ÎÄ½øĞĞÏêÏ¸¶Ô±È£¬
+%%ËüÊÇÔõÃ´ÊµÏÖµÄ£¬ÓÃÁËÊ²Ã´¼¼Êõ£¬´ïµ½ÁËÊ²Ã´Ğ§¹û
+%%±¾ÎÄµÄÇé¿öÈçºÎ
+%%´ÓÊı¾İ»ñÈ¡£¬µ½Êı¾İ·ÖÎö·½·¨£¬È»ºó½á¹û½øĞĞ±È½Ï
+%%ÏàÍ¬µã£¬²»Í¬µã
 %
 %Benger et al. \cite{Benger2014} presented an attack to the ECDSA implementation with the wNAF representation in 2014.
 %They got the least significant bits (LSBs) of the ephemeral key through the Flush + Reload attack
@@ -151,10 +151,10 @@ They exploited different methods to observe the cache access patterns to recover
 %Although it uses more signatures to retrieve the private key through our lattice attack,
 %theoretically the number of signatures needed is less than Fan's if a suitable lattice is constructed.
 %
-%2017å¹´ï¼ŒèŒƒå›¢é˜Ÿè¿˜åœ¨science China information sciences ä¸Šå‘äº†ä¸€ç¯‡ï¼Œä½¿ç”¨HNPçš„æ–‡ç« ï¼Œ
-%è¿™æ˜¯ä¸€ä¸ªbç±»çš„æœŸåˆŠã€‚(äº¤å‰ç»¼åˆæ–°å…´)
-%éœ€è¦åœ¨è¿™é‡Œå’Œå®ƒè¿›è¡Œå¯¹æ¯”å—ï¼Œè¿˜æ˜¯è¿™ä¸‰ç¯‡å°±å¤Ÿäº†ã€‚
-%æˆ‘ä»¬æ¯”è¿™ä¸ªæœŸåˆŠçš„æ–‡ç« æ•ˆæœè¦å¥½çš„ã€‚
+%2017Äê£¬·¶ÍÅ¶Ó»¹ÔÚscience China information sciences ÉÏ·¢ÁËÒ»Æª£¬Ê¹ÓÃHNPµÄÎÄÕÂ£¬
+%ÕâÊÇÒ»¸öbÀàµÄÆÚ¿¯¡£(½»²æ×ÛºÏĞÂĞË)
+%ĞèÒªÔÚÕâÀïºÍËü½øĞĞ¶Ô±ÈÂğ£¬»¹ÊÇÕâÈıÆª¾Í¹»ÁË¡£
+%ÎÒÃÇ±ÈÕâ¸öÆÚ¿¯µÄÎÄÕÂĞ§¹ûÒªºÃµÄ¡£
 %
 %
 %%In 2017, \cite{Wang2017} give a lattice attack on the ECDSA implementation in the
