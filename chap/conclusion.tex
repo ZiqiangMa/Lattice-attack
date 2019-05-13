@@ -1,4 +1,4 @@
-\section{Conclusion}
+\section{Conclusion and Future Work}
 \label{sec:conclusion}
 In this paper, we demonstrate a practical attack on the ECDSA algorithm implemented in OpenSSL with the scalar multiplication using the wNAF representation.
 We improve the original cache side channel attack
@@ -9,6 +9,9 @@ We construct a lattice attack using the HNP problem to recover the ECDSA private
 This is the first work to obtain the information about the signs of the non-zero digits of the ephemeral key and make use of it to recover the ECDSA private key.
 We implement our method to attack the secp256k1 curve.
 The experiments show that we successfully recover the private key from only $60$ signatures.
+In the future,
+ we will try to find a more efficient lattice construction to recover the private key
+    from the information achieved (e.g., an EHNP-based solution).
 
 \zf{please check the page limitation}
 
