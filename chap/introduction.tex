@@ -2,12 +2,12 @@
 
 \section{Introduction}
 \label{sec:intro}
-The Elliptic Curve Digital Signature Algorithm (ECDSA) \cite{Johnson2001, ansi2005} is a standard digital signature algorithm over elliptic curves.
-Due to the small key size and high security, it is widely used in many popular applications, such as TLS protocol \cite{rfc5246} and OpenPGP \cite{openpgp2007}, smart card \cite{smartcard2007}, and Bitcoin \cite{bitcoin2008}.
+The Elliptic Curve Digital Signature Algorithm (ECDSA) \cite{Johnson2001, ansi2005} is a digital signature algorithm over elliptic curves,
+    widely used in many popular applications, such as TLS protocol \cite{rfc5246} and OpenPGP \cite{openpgp2007}, smart card \cite{smartcard2007}, and Bitcoin \cite{bitcoin2008}.
+The security of ECDSA relies on the computational intractability of the Elliptic Curve Discrete Logarithm Problem (ECDLP).
+Theoretically it is hard to find the private key by breaking the algorithm directly.
 
-The security of ECDSA relies on the computational intractability of the elliptic curve discrete logarithm problem (ECDLP).
-Theoretically it is hard to extract the private key by breaking the algorithm directly.
-However, the implementation vulnerabilities are much easier to be exploited.
+The implementation vulnerabilities of ECDSA are much easier to be exploited.
 The scalar multiplication of a point over elliptic curves by a random nonce is the core operation of ECDSA.
 The private key can be extracted if the nonce (or implementations) is revealed,
 so this nonce must be kept secret.
