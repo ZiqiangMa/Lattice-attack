@@ -110,9 +110,9 @@ If the result of the Flush+Flush attack is perfect, we need $60$ signatures at l
 
 Through the cache side channel we get the information about the position and the sign of all non-zero digits of the ephemeral key.
 Compared to the previous works, ours obtains more information about the ephemeral key, i.e. the sign of all non-zero digits.
- More precisely, we can extract $153.2$ bits on average per signature for 256-bit ECDSA.
-Also, our method does not rely on some special properties of the curves.
-It  can be applied to all the curves without any restriction.
+ More precisely, we extract $153.2$ bits on average per signature for 256-bit ECDSA.
+Also, our method does not rely on some special properties of the elliptic curves.
+It  can be applied to other curves without any restriction.
 Furthermore,  for the first time we transform the information of the wNAF representation to the binary information of $k$ to construct the lattice attack.
 In theory the number of signatures needed is $2$ if a suitable lattice is constructed.
 
@@ -126,15 +126,15 @@ In theory the number of signatures needed is $2$ if a suitable lattice is constr
 In summary, our contributions are as follows:
 \begin{itemize}
   \item
-  We present a new lattice attack to retrieve the private key of ECDSA with wNAF representation.
+  We present a new lattice attack to recover the private key of ECDSA with wNAF representation.
   First we
     improve the cache side channel attacks by monitoring
       the invert function in OpenSSL.
-      It is the first work to attempt to achieve the sign of the non-zero digits of the ephemeral key.
+      It is the first work to exploit the sign of the non-zero digits of the ephemeral key in side channel attacks.
    Second, for the data from the cache side channel, we do not use them to construct the HNP instance directly.
     We obtain multiple consecutive bits of the ephemeral key by converting the wNAF representation to the binary representation.
-    Then we use the multiple consecutive bits to construct the HNP instance.
-The private key is retrieved by solving the HNP instance using lattice reduction algorithm.
+Then we use the multiple consecutive bits to construct the HNP instance.
+The private key is recovered by solving the HNP instance using lattice reduction algorithm.
 
   \item
     We apply our method to attack the secp256k1 curve in the latest version of OpenSSL.
