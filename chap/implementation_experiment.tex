@@ -104,9 +104,9 @@ Also we can determine the start position by monitor the code of copy function in
 
 \noindent\textbf{Experimental results.}
 Fig.~\ref{fig1} shows a fragment of the output of the spy when OpenSSL performs ECDSA with the secp256k1 curve.
-In this figure, $\square$, $\lozenge$ and $\vartriangle$ represent ``double", ``add" and ``invert" respectively.
-From this fragment, three operations can be clearly distinguished,
- so we success to obtain the ``double-add-invert" chain easily.
+In this figure, $\square$, $\lozenge$ and $\vartriangle$ represent ``double'', ``add'' and ``invert'' respectively.
+From this fragment, three operations are clearly distinguished,
+ so we success to obtain the ``double-add-invert'' chain easily.
 
 
 
@@ -147,7 +147,7 @@ From this fragment, three operations can be clearly distinguished,
 %我们的结果是：
 %进行分析
 %分析为什么我们没有利用全部的信息，理论上怎样，实际怎样
-We apply our lattice attack to the curve secp256k1 in our experiments, and we assume that the Flush+Flush attack is perfect, that is we can correctly obtain the ``double-add-invert" chain and recover all the information about the digits of the ephemeral key it contains.
+We apply our lattice attack to the curve secp256k1 in our experiments, and we assume that the Flush+Flush attack is perfect, that is we can correctly obtain the ``double-add-invert'' chain and recover all the information about the digits of the ephemeral key it contains.
 
 The HNP problem can be solved by exploiting both the CVP and SVP instances.
 However, the CVP problem does not have a polynomial time solution while the SVP problem has.
