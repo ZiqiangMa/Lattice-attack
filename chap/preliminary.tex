@@ -142,7 +142,7 @@ The core computing part of the function is shown in Algorithm  \ref{alg:smopenss
         \caption{The Implementation of The Scalar Multiplication in OpenSSL}
         \label{alg:smopenssl}
         \begin{algorithmic}[1]
-            \Require Scalar $k$ in wNAF: $k_0$, $k_1$, ..., $k_{l-1}$ and precomputed points $\{G, 3G, ..., (2^{w} - 1)G\}$
+            \Require Scalar $k$ in wNAF $\{k_0$, $k_1$, ..., $k_{l-1}\}$ and precomputed points $\{G, 3G, ..., (2^{w} - 1)G\}$
             \Ensure $kG$
 			
 			\State $r \gets 0$, $is\_neg \gets 0$, $r\_is\_inverted \gets 0$
@@ -183,7 +183,7 @@ Then it performs an addition operation (the \verb+EC_POINT_add()+ function) with
 absolute value of the digit.
 
 
-From Algorithm \ref{alg:smopenssl}, it is obviously that the two conditional branches are vulnerable.
+From Algorithm \ref{alg:smopenssl}, it can be found that two conditional branches are vulnerable.
 In each loop, the double operation is always performed.
 But the add operation is only performed if the digit is not zero and the invert operation is only performed if the sign of the digit is opposite to previous one.
 Therefore, if a spy process can obtain the execution sequence of
@@ -252,7 +252,7 @@ But in the third phase it flushes the cache again and measures the flush time in
 As the third phase flushes the caches, it doubles as the first phase for subsequent observations.
 
 %再一段F+F 和 F+R进行对比：更加高效，精度更高，F阶段可以当成是下一循环的F，
-The execution time of the \verb+clflush+ instruction is less than the reload time on average.
+The execution time of \verb+clflush+ is less than the reload time on average.
     Also the first and third phases are merged together in Flush+Flush attack.
   Therefore the Flush+Flush attack is faster and can obtain more information than the Flush+Reload attack over the same time scale.
 Thus, the Flush+Flush attack has a better accuracy.
