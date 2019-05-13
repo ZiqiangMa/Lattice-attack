@@ -103,7 +103,7 @@ Also we can determine the start position by monitor the code of copy function in
 %如果不监控copy，也可以根据点加倍点的发生，去排除错误的触发；也可以根据NAF编码时点加倍点的特征来判断起始。
 
 \noindent\textbf{Experimental results}
-Figure \ref{} shows a fragment of the output of the spy when OpenSSL performs ECDSA with the secp256k1 curve.
+Figure \ref{fig1} shows a fragment of the output of the spy when OpenSSL performs ECDSA with the secp256k1 curve.
 
 Then explain the figure.
 
@@ -112,6 +112,11 @@ We totally run 10 experiments, i.e. monitoring the ECDSA signature 10 times.
 The accurate rate is defined as the value of the actual number of bits obtained divided by the ideal number of bits available.
 Thus, from these experiments the average accurate rate of the data obtained from the Flush+Flush attack is xx\%.
 
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{pic/slot2500.pdf}
+\caption{a fragment of the output of the Flush+Flush attack.} \label{fig1}
+\end{figure}
 
 
 %对这个示例进行解释：
@@ -228,8 +233,8 @@ i.e. the dimension of the lattice for the SVP is $d + 2$.
 Table \ref{svp9} shows the success probability for different dimensions and block sizes of solving the SVP instance in the
              cases that the minimal length of the consecutive bits ranges from $9$ to $11$.
 As shown in the table, we successfully retrieve the private key of a 256-bit ECDSA only need $60$ sequences of consecutive bits with the success probability being $1\%$.
-These $60$ sequences come from up to $60$ signatures. 
-Therefore we just need at most $60$ signatures to successfully recover the ECDSA private key. 
+These $60$ sequences come from up to $60$ signatures.
+Therefore we just need at most $60$ signatures to successfully recover the ECDSA private key.
 
   For the fixed  minimal length of consecutive bits,
  increasing the dimension generally increases the probability of success.

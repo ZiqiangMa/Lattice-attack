@@ -26,9 +26,9 @@ Then, Brumley and co-workers employ this lattice attack to recover ECDSA keys fr
 %In 2003, Nguyen \cite{Nguyen2003} presented a polynomial-time algorithm that recovers the ECDSA private key when a few consecutive bits of the random nonce $k$ are known for a number of signatures, which used the similar results for the DSA \cite{Nguyen2002}.
 
 
-With the Flush+Reload cache side channels \cite{flushreload}, 
-	Benger et al. \cite{Benger2014} obtained the LSBs of the ephemeral key.
-This side channel exploits 
+With the Flush+Reload cache side channels \cite{flushreload},
+	Benger et al. \cite{Benger2014} obtained the position of the least non-zero digit to infer the LSBs of the ephemeral key.
+This side channel exploits
 	the windowed non-adjacent form (wNAF) implementation \cite{GORDON1998129,Miyaji1997,Koyama1002,Solinas2000}
 	for the scalar multiplication	
 		of a known point $G$ by the secret nonce $k$.
@@ -36,7 +36,8 @@ This exploitation works for the elliptic curves over a prime field $\mathbb{F}_{
 			in ECDSA, which is implemented in OpenSSL\cite{openssl}.
 Then,
 	by constructing a HNP instance solved by the lattice reduction algorithm, they recover the ECDSA private key from about 200 signatures.
-In 2015, van de Pol et al. improved this method by deriving a more effective way of exacting information from the cache side channel \cite{Van2015}.
+In 2015, van de Pol et al. improved this method by deriving a more effective way of exacting information from the cache side channel \cite{Van2015}, 
+ which used the information about the position of top half non-zero digits of the wNAF representation of the ephemeral key.
 In the same year, paper \cite{Cao2015} presents two lattice-based differential fault attacks against ECDSA with wNAF implementations.
 In 2016, \cite{Dahmun2016}  extended the basic lattice attack to the ephemeral keys,  which are blinded by the addition of a random multiple of the elliptic-curve group order or by a random Euclidean splitting.
 While in paper \cite{Fan2016}, Fan et al. proposed a new way of extracting and utilizing information from the Flush+Reload attack. The problem of recovering the
@@ -72,12 +73,13 @@ They exploited the positions of two non-zero digits together with the length of 
 
 %只是对数据分析进行了改进，并没有获得更多的数据
 
-Previous works exploit the side channel attacks to extract the information in the wNAF representation of the ephemeral key.
-
-They are just able to determine whether the digit is zero or not.
-In this respect, though the methods used are slightly different in these works, no improvement has been made to achieve more information.
-They attempt to make more use of the data achieved through the side channels and construct more effective lattice attacks to retrieve the private key,
- from the initial use of only the least significant bits to the later use of all the information obtained.
+Previous works exploited the side channel attacks to extract the digit information in the wNAF representation of the ephemeral key.
+They used the least non-zero digit \cite{Benger2014}, half non-zero digits \cite{Van2015}, all non-zero digits \cite{Fan2016} or two non-zero digits with the total length~\cite{Wang2017}.
+To some degree,
+They just attempted to make more use of the data achieved through the side channels and construct more effective lattice attacks to retrieve the private key.
+All they exploited are the information about the positions of the non-zero digits, 
+ and no more information about the ephemeral key is extracted from the side channels.
+In this respect, though the methods are different in these works, no improvement has been made to achieve more information.
 
 In our paper, we also focus on the ECDSA algorithm with wNAF representation of the ephemeral key, especially the implementation in the OpenSSL library.
  We propose a new method to retrieve the ECDSA private key.
