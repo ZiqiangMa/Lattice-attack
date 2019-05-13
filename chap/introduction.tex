@@ -85,7 +85,7 @@ In this respect, though the methods are different in these works, no improvement
 In our paper, we also focus on the ECDSA algorithm with wNAF representation of the ephemeral key, especially the implementation in the OpenSSL library.
  We propose a new method to recover the ECDSA private key from the information leaked through side channels.
 We expect not only to make better use of the information,
-  but also to achieve more information from the side channels.
+  but also to extract more information from the side channels.
 First, we analyse the code of the implementation of ECDSA in OpenSSL,
  and find that
 in the implementation of the scalar multiplication the invert function plays a very important role.
@@ -100,7 +100,7 @@ Finally, we constructed a HNP \cite{boneh1996} instance making the best of the c
 This problem is solved by lattice reduction algorithms  through converting to the SVP/CVP in some lattice.
 
 This method is applied to attack the secp256k1 curve in OpenSSL1.1.1b in this paper.
-We choose the Flush+Flush\cite{gruss2016flush} method to implement the cache side channels.
+We choose the Flush+Flush~\cite{gruss2016flush} attack as the implementation of the cache side channel attack.
 By monitoring the  invert function
 	in addition to the double and add functions in OpenSSL,
 	we obtain the ``double-add-invert'' chain.
@@ -135,7 +135,7 @@ In summary, our contributions are as follows:
       It is the first work to exploit the sign of the non-zero digits of the ephemeral key in side channel attacks.
    Second, for the data from the cache side channel, we do not use them to construct the HNP instance directly.
     We obtain multiple consecutive bits of the ephemeral key by converting the wNAF representation to the binary representation.
-Then we use the multiple consecutive bits to construct the HNP instance.
+Finally we use the multiple consecutive bits to construct the HNP instance.
 The private key is recovered by solving the HNP instance using lattice reduction algorithm.
 
   \item
@@ -147,10 +147,10 @@ The private key is recovered by solving the HNP instance using lattice reduction
 The remainder of this paper is organized as follows.
 Section \ref{sec:background} presents some preliminaries.
 Section \ref{sec:attack} provides the details about our attack,
-and Section \ref{sec:impl&exper} shows the implementation details and the experiment results.
+and Section \ref{sec:impl&exper} shows the implementation details and the experimental results.
 Section \ref{sec:discussion} contains some extended discussions.
 Section \ref{sec:relatedwork} introduces some related works.
-Section \ref{sec:conclusion} draws the conclusions.
+Section \ref{sec:conclusion} draws the conclusion.
 
 %ECDSA被广泛应用
 %基于椭圆曲线离散对数问题

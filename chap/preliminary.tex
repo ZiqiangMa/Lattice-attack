@@ -225,7 +225,7 @@ One round of the attack consists of three phases:
     In this phase, the attacker uses the \verb+clflush+ instruction to flush the desired memory lines out from the caches.
     This ensures that the next time these lines are accessed from the memory instead of the caches.
   \item
-    \textbf{Waiting:}
+    \textbf{Wait:}
     In this phase, the attacker waits a moment while the victim runs.
   \item
     \textbf{Reload:}
@@ -257,7 +257,7 @@ The execution time of \verb+clflush+ is less than the reload time on average.
   Therefore the Flush+Flush attack is faster and can obtain more information than the Flush+Reload attack over the same time scale.
 Thus, the Flush+Flush attack has a better accuracy.
 Furthermore, compared with the Flush+Reload attack,
-The Flush+Flush attack does not trigger prefetches when monitoring consecutive memory lines, otherwise it may affect the validity of the attack.
+the Flush+Flush attack does not trigger prefetches when monitoring consecutive memory lines, otherwise it may affect the validity of the attack.
 
 
 %这一节要和多篇文章进行对比改进，f+r攻击需要精简。

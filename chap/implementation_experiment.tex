@@ -349,8 +349,8 @@ Benger et al. \cite{Benger2014} got the least significant bits (LSBs) of the eph
 although this is not all the information obtained from the side channel.
 Then they used the LSBs of many signatures to construct a HNP problem and
 successfully recovered the private key by solving the CVP/SVP instance of a specific lattice converted from the HNP problem.
-The number of bits extracted from each signature is very small, only an average of 2 bits information can be obtained.
-Thus made it require more than $200$ signatures to recover a 256-bit private key with the probability being $3.5\%$.
+The number of bits extracted from each signature is very small, only an average of 2 bits information can be obtained,
+thus making it require more than $200$ signatures to recover a 256-bit private key with the probability being $3.5\%$.
 In our work, we exploit information from the cache side channel to extract the consecutive bits at the position of every non-zero bits for the ephemeral key.
 All the consecutive bits can be used to construct the lattice attack.
 Therefore, we can get much more bits per signature and the number of signatures is decreased for recovering the private key.
@@ -376,11 +376,11 @@ We can extract 153.2 bits information per signature.
 Although it uses more signatures to recover the private key through our lattice attack,
 theoretically the number of signatures needed is less than Fan's if a suitable lattice is constructed.
 
-Wang et al. \cite{Wang2017} obtain the positions of two non-zero digits and the length of the wNAF representation of $k$ from the Flush+Reload attack.
-They can obtain no less than 2.99 bits information per signature and exploit the HNP to recover the private key for the 256-bit curve using $85$ signatures.
+Wang et al. \cite{Wang2017} obtained the positions of two non-zero digits and the length of the wNAF representation of $k$ from the Flush+Reload attack.
+They could obtain no less than 2.99 bits information per signature and exploit the HNP to recover the private key for the 256-bit curve using $85$ signatures.
 Obviously, our method obtains more information and uses less signatures to recover the private key.
 
-In summary, our method obtain the sign and the position of the ephemeral key $k$ from the Flush+Flush attack.
+In summary, our method obtains the sign and the position of the non-zero digits of the ephemeral key $k$ from the Flush+Flush attack.
 It can extract the largest amount of data, on average $153.2$ bits information per signature.
 In theory, the number of signatures need to recover the private key is $2$.
   However, due to the limit of our method of lattice construction, we need at most $60$ signatures, which is more than Fan's and van's.
