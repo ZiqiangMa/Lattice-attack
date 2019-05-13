@@ -351,15 +351,16 @@ Then they used the LSBs of many signatures to construct an HNP problem and
 successfully recovered the private key by solving the CVP/SVP instance of a specific lattice converted from the HNP problem.
 The number of bits extracted from each signature is very small, only an average of 2 bits information can be obtained.
 Thus made it require more than $200$ signatures to recover a 256-bit private key with the probability being $3.5\%$.
-In our work, we exploit information from the cache side channel to extract the consecutive bits at the position of every non-zero bits for the ephemeral key.
-All the consecutive bits can be used to construct the lattice attack.
-Therefore, we can get much more bits per signature and the number of signatures is decreased to recover the private key.
+%In our work, we exploit information from the cache side channel to extract the consecutive bits at the position of every non-zero bits for the ephemeral key.
+%All the consecutive bits can be used to construct the lattice attack.
+%Therefore, we can get much more bits per signature and the number of signatures is decreased to recover the private key.
+% 因为这个结果是200，实在太大，没有必要比较了。
 
 van de Pol et al. \cite{Van2015} improved Benger's attack  relying on the property of some specific elliptic curves, that is the order $q$ of the base point is a pseudo-Mersenne prime which can be expressed as $2^n - \epsilon$, where $|\epsilon| < 2^p $, $p \approx n/2$.
 With this property, this attack uses the information from the consecutive non-zero digits whose positions are between $p+1$ and $n$ extracted from the Flush+Reload attack, not only the LSBs.
 It is able to extract $47.6$ bits per signature on average for the secp256k1 curve and recover the private key with 13 signatures.
-Then they constructed a new HNP instance using this information and
-successfully retrieved the private key.
+Then they constructed an HNP instance using this information and
+successfully recovered the private key.
 Although this work greatly reduced the number of signatures needed to recover the private key,
 the information from the cache side channel is not fully utilized.
 But our work can use all the information from the cache side channel.
