@@ -112,7 +112,8 @@ Compared to the previous works, ours obtains more information about the ephemera
  More precisely, we can extract $153.2$ bits on average per signature for 256-bit ECDSA.
 Also, our method does not rely on some special properties of the curves.
 It  can be applied to all the curves without any restriction.
-Furthermore,  for the first time we transform the information of the wNAF representation to the binary information of $k$ to construct the lattice attack.
+The sign information of non-zero digits can not be directly applied to previous works.
+To make better use of the sign information of the non-zero digits, we exploit the information obtained about the wNAF representation to extract sequences of consecutive bits of $k$ to construct the lattice attack. 
 In theory the number of signatures needed is $2$ if a suitable lattice is constructed.
 
 
