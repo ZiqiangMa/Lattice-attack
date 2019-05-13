@@ -28,10 +28,10 @@ Given a hash function $h$, the ECDSA signature of a message $m$ is computed as f
 \end{enumerate}
 
 The pair $(r, s)$ is the ECDSA signature of the message $m$.
-For ECDSA signature, the ephemeral key $k$ is very important that must be kept random and confidential.
-The equation in the third step shows the private key can be easily computed if $k$ is leaked.
-If some signatures use the same $k$, or the random number generator in use has the predictability, attackers can obtain the private key without difficulty.
-Even if portion of $k$ is known, the private key can be retrieved by lattice attacks.
+For ECDSA signature, the ephemeral key $k$ must be kept random and secret.
+The equation in the third step shows the private key can be computed if $k$ is leaked.
+If some signatures use the same $k$, or the random number generator in use has the predictability, attackers can obtain the private key directly.
+Even if a portion of $k$ is known, the private key can be retrieved by lattice attacks.
 Therefore, the target of most attackers is the scalar multiplication $kG$ expecting to get some effective bits information about $k$.
 
 %Given the knowledge of the ephemeral key k and all the
@@ -113,7 +113,7 @@ After converting $k$ to the wNAF form, the multiplication $kG$ is executed as th
 
 From the algorithm we can find that the \textbf{if-then} block is vulnerable.
 An attacker can use a spy process to monitor the conditional branches through side channels.
-Then he can get an ``double-and-add" chain, and through it whether the value of $k_i$ is zero can be inferred.
+Then he can get an ``double-add'' chain, and through it whether the value of $k_i$ is zero can be inferred.
 The attacker can use these information to retrieve the private key.
 
 In the actual OpenSSL execution, the bit length of $k$ is set to a fixed value$\lfloor\log_{2}{q}\rfloor + 1$ of by adding itself $q$
