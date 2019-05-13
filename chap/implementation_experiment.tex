@@ -163,9 +163,9 @@ When solving a SVP instance, there are two outcomes that either we obtain the pr
 We want to find the optimal strategy for our attack in terms of the following parameters:
 \begin{itemize}
 %\item CVP or SVP
- \item  lattice dimensions
- \item  the block size of BKZ
  \item  the minimal value of $l$ (length of the consecutive bits of $k$)
+ \item  the block size of BKZ
+ \item  the lattice dimensions
  %\item  pruning strategy (optional)
  %\item  total signature number
 \end{itemize}
@@ -237,7 +237,7 @@ i.e. the dimension of the lattice for the SVP is $d + 2$.
 
 Table \ref{svp9} shows the success probability for different dimensions and block sizes of solving the SVP instance in the
              cases that the minimal length of the consecutive bits ranges from $9$ to $11$.
-As shown in the table, we successfully retrieve the private key of a 256-bit ECDSA only need $60$ sequences of consecutive bits with the success probability being $3.0\%$.
+As shown in the table, we successfully recover the private key of a 256-bit ECDSA only need $60$ sequences of consecutive bits with the success probability being $3.0\%$.
 These $60$ sequences come from up to $60$ signatures.
 Therefore we just need at most $60$ signatures to successfully recover the ECDSA private key.
 
@@ -245,9 +245,9 @@ Therefore we just need at most $60$ signatures to successfully recover the ECDSA
  increasing the dimension generally increases the probability of success.
 In some sense, as the dimension increases
      more information is being added to the lattice and this makes the desired solution vector stand out more.
-Also, the higher block sizes perform with a higher probability of success,
+Also, the higher block sizes perform with a higher success probability,
  as the stronger reduction allows them to isolate the solution vector better.
-  We believe that the success probability would be surely higher with the block size $30$ or the BKZ2.0~\cite{bkz2}.
+  We believe that the success probability would be surely higher with the block size $30$ or the BKZ 2.0~\cite{bkz2}.
 
 When $l$ is fixed, to get a suitable success probability, attackers can either increase the dimension or use stronger algorithms (increasing the block size).
 However, increasing the dimension requires more signatures
@@ -316,7 +316,7 @@ However,
  it is hard to directly recover the whole ephemeral key just depending on the ``double-add'' chain.
 From the obtained information it can recover partial bits of the ephemeral key.
 Hence attackers exploit the incomplete information of $k$ to transform the problem of private key recovery into one that can be solved by lattice, such as HNP or EHNP problem.
- Then the attackers retrieve the private key by solving the HNP or EHNP problem through being converted to the CVP/SVP problem in the lattice.
+ Then the attackers recover the private key by solving the HNP or EHNP problem through being converted to the CVP/SVP problem in the lattice.
 
 We compare the previous attack methods with ours in several aspects and the result is shown in Table \ref{compare1}.
 
@@ -348,12 +348,12 @@ We compare the previous attack methods with ours in several aspects and the resu
 Benger et al. \cite{Benger2014} got the least significant bits (LSBs) of the ephemeral key through the Flush+Reload attack
 although this is not all the information obtained from the side channel.
 Then they used the LSBs of many signatures to construct an HNP problem and
-successfully retrieved the private key by solving the CVP/SVP instance of a specific lattice converted from the HNP problem.
+successfully recovered the private key by solving the CVP/SVP instance of a specific lattice converted from the HNP problem.
 The number of bits extracted from each signature is very small, only an average of 2 bits information can be obtained.
 Thus made it require more than $200$ signatures to recover a 256-bit private key with the probability being $3.5\%$.
 In our work, we exploit information from the cache side channel to extract the consecutive bits at the position of every non-zero bits for the ephemeral key.
 All the consecutive bits can be used to construct the lattice attack.
-Therefore, we can get much more bits per signature and the number of signatures is decreased for retrieve the private key.
+Therefore, we can get much more bits per signature and the number of signatures is decreased to recover the private key.
 
 van de Pol et al. \cite{Van2015} improved Benger's attack  relying on the property of some specific elliptic curves, that is the order $q$ of the base point is a pseudo-Mersenne prime which can be expressed as $2^n - \epsilon$, where $|\epsilon| < 2^p $, $p \approx n/2$.
 With this property, this attack uses the information from the consecutive non-zero digits whose positions are between $p+1$ and $n$ extracted from the Flush+Reload attack, not only the LSBs.
@@ -370,10 +370,10 @@ Moreover, their work is only effective to some special curves,
 
 Fan et al.\cite{Fan2016} extract all positions of digits from the Flush+Reload attack and take advantage of them to construct an EHNP instance.
 They managed to obtain on average 105.8 bits per signature for the secp256k1 curve
- and only need 4 signatures to retrieve the private key with the probability being $8\%$.
+ and only need 4 signatures to recover the private key with the probability being $8\%$.
  Compared with their work, ours obtains more information about the ephemeral key, i.e. the sign of all non-zero digits, from the side channel by analysing the OpenSSL implementation.
 We can extract 153.2 bits information per signature.
-Although it uses more signatures to retrieve the private key through our lattice attack,
+Although it uses more signatures to recover the private key through our lattice attack,
 theoretically the number of signatures needed is less than Fan's if a suitable lattice is constructed.
 
 Wang et al. \cite{Wang2017} obtain the positions of two non-zero digits and the length of the wNAF representation of $k$ from the Flush+Reload attack.

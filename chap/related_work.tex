@@ -11,7 +11,7 @@ Some of them focus on how to exploit the partial information efficiently to cons
 
 % first
 Boneh and Venkatesan \cite{boneh1996} initially investigated to use the partial information of the ephemeral key to construct an HNP problem and recovered the private key of Diffie-Hellman by solving it using the lattice reduction algorithm.
-Howgrave-Graham and Smart \cite{HG2001} extended the work of Boneh and Venkatesan \cite{boneh1996} and  showed how to retrieve the DSA private key by  constructing an HNP instance from leaked LSBs and MSBs of the ephemeral key.
+Howgrave-Graham and Smart \cite{HG2001} extended the work of Boneh and Venkatesan \cite{boneh1996} and  showed how to recover the DSA private key by  constructing an HNP instance from leaked LSBs and MSBs of the ephemeral key.
 Nguyen and Shparlinski \cite{Nguyen2002} improved their method  and gave a provable polynomial-time attack that
       knowing the $l \geq 3$ LSBs , the $l+1$ MSBs  or any $2l$ consecutive bits of a certain number of ephemeral keys was enough for recovering the DSA private key.
  They recovered  a $160$-bit DSA key only using the $3$ LSBs of a certain number of ephemeral keys.
@@ -58,7 +58,7 @@ The first practical cache side-channel attack on AES was appeared in 2005 by Ber
 Bonneau and Mironov \cite{Bonneau2006} showed how to exploit cache collisions when indexing the AES lookup tables to recover the  AES secret key.
 In 2006, Osvik et al. \cite{Osvik2006} presented two access-driven attacks: Evict+Prime and Prime+Probe.
 Although the latter one proved to be significantly more efficient, both of them recovered the AES encryption key used by an OpenSSL server.
- Ac{\i}i{\c{c}}mez and Ko?c \cite{ac2006} presented a trace-driven attack targeting AES that exploited internal table lookup collisions in the cache during the first round.
+ Ac{\i}i{\c{c}}mez and Koc \cite{ac2006} presented a trace-driven attack targeting AES that exploited internal table lookup collisions in the cache during the first round.
 In 2011, Gullasch et al. \cite{cachegame2011} first presented a new attack which was later called the Flush+Reload is used to attack AES encryption by blocking the execution of AES after each memory access using the process scheduling algorithm.
 In 2014, Irazoqui \cite{Irazoqui2014} exploit the Flush+Reload technique to attack the AES.
 

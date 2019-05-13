@@ -9,9 +9,12 @@ We construct a lattice attack using the HNP problem to recover the ECDSA private
 This is the first work to obtain the information about the signs of the non-zero digits of the ephemeral key and make use of it to recover the ECDSA private key.
 We implement our method to attack the secp256k1 curve.
 The experiments show that we successfully recover the private key from only $60$ signatures.
+
 In the future,
  we will try to find a more efficient lattice construction to recover the private key
     from the information achieved (e.g., an EHNP-based solution).
+We will also extend this attack to other cryptographic engines,
+    and also the blinded ephemeral keys of ECDSA.
 
 \zf{please check the page limitation}
 
