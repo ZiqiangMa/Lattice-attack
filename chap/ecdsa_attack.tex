@@ -1,6 +1,6 @@
 \section{Attacking ECDSA}
 \label{sec:attack}
-In this section, we propose a new method to retrieve the private key of ECDSA.
+In this section, we propose a new method to recover the private key of ECDSA.
 First, we analyse the invert function in the scalar multiplication with wNAF representation in the ECDSA algorithm.
  Then we use the invert function for improving the cache side channel attacks, from which the sign of the non-zero digits of $k$ is determined.
 After that, we make use of the obtained information to recover the consecutive bits at the position of every non-zero digits of $k$.
@@ -39,7 +39,7 @@ According to the ``double" and ``add" in this chain, we can determine whether ea
 Also, based on the ``invert" in this chain, we can infer the sign of each non-zero digit.
 
 
-Specific to the OpenSSL implementation (especially the OpenSSL1.1.1b used in this paper),
+Specific to the OpenSSL implementation (especially the OpenSSL1.1.1b used here),
   the double, add and invert function are implemented using  \verb+EC_POINT_dbl()+, \verb+EC_POINT_add()+ and \verb+EC_POINT_invert()+.
  The original cache side channel attack monitors the \verb+EC_POINT_dbl()+ and \verb+EC_POINT_add()+ function.
 So as in our attack, we improve the original cache side channel attack by adding a new monitor to the \verb+EC_POINT_invert()+ function.
@@ -143,7 +143,7 @@ Based on \cite{Benger2014} on average we can get $2$ least significant bits of t
 Thus, on average we can obtain $3(\lfloor\log_{2}{q}\rfloor+1) /(w+2) - 1$ bits of the ephemeral key $k$ in total.
 Meanwhile, because the minimal value of $n$ is $w + 1$, the minimal length of the consecutive bits is $2$.
 This illustrates that all the sequences of consecutive bits obtained (except the least) are no less than $2$ bits.
-For the secp256k1 curve implemented in OpenSSL, $\lfloor\log_{2}{q}\rfloor  + 1= 256$, $w = 3$.
+For the \textbf{secp256k1} curve implemented in OpenSSL, $\lfloor\log_{2}{q}\rfloor  + 1= 256$, $w = 3$.
  Also, as introduced previous, the scalar multiplication uses $k+q$ instead of $k$ in most cases,
   so the total number of bits per signature we obtain is $3(\lfloor\log_{2}{q}\rfloor +2)/(w+2)-1 = 153.2$.
 In theory, two signatures would be enough to recover the 256-bit private key as $2\times 153.2 = 306.4 > 256$.
@@ -248,7 +248,7 @@ Let the vector $\textbf{u} = (2^{l_1+1}u_1, ..., 2^{l_d+1}u_d, 0)$,
 While the lattice determinant of $L(B)$ is $2^{d + \sum{l_i}}q^d$,
  thus the vector $\textbf{x}$ is very close to the vector $\textbf{u}$.
 By solving the CVP problem with the input $B$ and $\textbf{u}$, the vector $\textbf{x}$ is revealed,
- hence the private key $\alpha$ is retrieved as it is the last element of the vector $\textbf{x}$.
+ hence the private key $\alpha$ is recovered as it is the last element of the vector $\textbf{x}$.
 
 To transform it to a SVP instance we use $d$ triples $(t_i, u_i, l_i)$ to construct a $d+2$ dimensional lattice $L(B')$ spanned by the rows of the matrix
 $$B' =
@@ -268,7 +268,7 @@ Note that this lattice also contains another vector $(-t_1, ..., -t_d, q, 0)\cdo
 Therefore we expect the second vector in a reduced basis of the lattice is equal to $\textbf{x}'$ with a ``good" chance for a suitably lattice reduction algorithm.
 Then we acquire the secret key $\alpha$.
 
-we can use LLL~\cite{Lenstra1982} or BKZ~\cite{Schnorr1994} algorithm to solve the SVP problem, while use Babai~\cite{Babai1986} algorithm or Enumeration technique to solve the CVP problem.
+%we can use LLL~\cite{Lenstra1982} or BKZ~\cite{Schnorr1994} algorithm to solve the SVP problem, while use Babai~\cite{Babai1986} algorithm or Enumeration technique to solve the CVP problem.
 
 
 %转化为hnp问题，%引理

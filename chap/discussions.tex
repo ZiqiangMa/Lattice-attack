@@ -26,7 +26,7 @@ In our work, we construct an HNP instance using the partial information about th
  From the Inequation~\ref{lattice2}, the length of the most significant bits of $\lfloor\alpha t_i\rfloor$ is $l/2-\log_{2}{3} -1$.
 When constructing the lattice, it should contain the information about the most significant bits of $\lfloor\alpha t_i\rfloor$.
 Thus it requests $l/2-\log_{2}{3} -1 \geq 1$, so $l$ representing the minimal length of the consecutive bits needs to be larger than $7$.
-In practical, only when $l > 8$, we successfully retrieve the ECDSA private key in our experiments.
+In practical, only when $l > 8$, we successfully recover the ECDSA private key in our experiments.
 However, the average length of the consecutive bits is $3$, which is much smaller than needed.
 This makes it impossible to use all the bits obtained through the cache side channel attack  to construct the lattice attack.
 Although in theory we only need $2$ signatures to recover the 256-bit private key,

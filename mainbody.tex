@@ -62,27 +62,30 @@
 \maketitle              % typeset the header of the contribution
 %
 \begin{abstract}
-This paper presents a practical lattice attack on the ECDSA algorithm which is implemented %in the OpenSSL,
- with the windowed Non-Adjacent-Form (wNAF) representation to compute the scalar multiplications over elliptic curves.
-Our method recovers the private key 
-            by extracting more information from side channels,
-            than existing lattice attacks in the literature.
+This paper presents a practical lattice attack on ECDSA which is implemented %in the OpenSSL,
+ with the windowed Non-Adjacent-Form (wNAF) representations to compute the scalar multiplication over elliptic curves.
+Compared with the existing lattice attacks in the literature,
+    our method recovers the private key  from side channels
+            by extracting more information per signature.
 In particular, in the scalar multiplications,
- we monitor the invert function through the cache side channels,
-    in addition to the double and add functions which are monitored in existing works.
+ we monitor the invert function through cache side channels,
+    in addition to the functions of double and add which are only exploited in the literature.
 By monitoring the invert function,
     we obtain the signs of the wNAF representations of an ephemeral key.
 % Through this improvement, we obtain the extra information about the sign of the wNAF representations the ephemeral key.
 The ``double-add-invert'' chain obtained from the cache side channels,
-    is disposed to extract more bits of the ephemeral key at the position of the non-zero digits.
-In theory $153.2$ bits of the ephemeral key will be extracted per signature
-    for 256-bit ECDSA over elliptic curves on a prime field.
+    is disposed to extract the information of the ephemeral key at the position of the non-zero digits.
+Theoretically $153.2$ bits of the ephemeral key will be extracted per signature
+    for 256-bit ECDSA on a prime field,
+    much more than existing methods.
 Then,
-    we convert the problem of recovering the private key based on the extracted bits to the Hidden Number Problem (HNP),
+    we convert the problem of recovering the private key based on the extracted bits, to the Hidden Number Problem (HNP)
  which is solved by lattice reduction algorithms.
-We implemented the Flush+Flush method as the cache side channel attack and applied it to ECDSA with the secp256k1 curve in OpenSSL 1.1.1b.
+We implemented the Flush+Flush cache-based side channel and applied it to ECDSA with the secp256k1 curve in OpenSSL 1.1.1b,
+    to monitor the functions of double, add and invert.
+In the experiments, the BKZ lattice reduction algorithm is used to solve the Shortest Vector Problem (SVP) of HNP instances.
 The experimental results show that the private key is successfully recovered from $60$ signatures,
-    if the Flush+Flush attack is finished without any error.
+    if the Flush+Flush side channel is built without any error.
 To the best of our knowledge, this is the first time to obtain and exploit the signs of the wNAF representations
     in the side channel attacks against ECDSA,
     and we demonstrate the potential to recover the private key from fewer signatures.
