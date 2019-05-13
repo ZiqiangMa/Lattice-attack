@@ -84,7 +84,7 @@ So we continuously obtain 10 valid records.
 
 
 \noindent\textbf{Time slot.}
-For the attack, the spy process divides time into time slots of approximately $800$ cycles.
+For the attack, the spy process divides time into time slots of approximately $2500$ cycles.
 In each slot, the spy flushes the memory lines in the add, double and invert functions (\verb+EC_POINT_dbl()+,  \verb+EC_POINT_add()+ and \verb+EC_POINT_invert()+) out of the caches.
 Also, the length of the time slot is chosen to ensure that the three functions only execute once.
 This allows the spy to correctly distinguish consecutive doubles.
@@ -102,20 +102,23 @@ Also we can determine the start position by monitor the code of copy function in
 %对标量乘法代码分析，在对k的最高位处理时，并不是使用的点加，而是copy，因此，可以对copy函数进行监控，当一个时间槽内进行了倍点和copy操作，可以认定标量乘法的开始。
 %如果不监控copy，也可以根据点加倍点的发生，去排除错误的触发；也可以根据NAF编码时点加倍点的特征来判断起始。
 
-\noindent\textbf{Experimental results}
-Figure \ref{fig1} shows a fragment of the output of the spy when OpenSSL performs ECDSA with the secp256k1 curve.
+\noindent\textbf{Experimental results.}
+Fig.~\ref{fig1} shows a fragment of the output of the spy when OpenSSL performs ECDSA with the secp256k1 curve.
+In this figure, $\square$, $\lozenge$ and $\vartriangle$ represent ``double", ``add" and ``invert" respectively.
+From this fragment, three operations can be clearly distinguished,
+ so we success to obtain the ``double-add-invert" chain easily.
 
-Then explain the figure.
 
-%10次实验
-We totally run 10 experiments, i.e. monitoring the ECDSA signature 10 times.
-The accurate rate is defined as the value of the actual number of bits obtained divided by the ideal number of bits available.
-Thus, from these experiments the average accurate rate of the data obtained from the Flush+Flush attack is xx\%.
+
+%%10次实验
+%We totally run 10 experiments, i.e. monitoring the ECDSA signature 10 times.
+%The accurate rate is defined as the value of the actual number of bits obtained divided by the ideal number of bits available.
+%Thus, from these experiments the average accurate rate of the data obtained from the Flush+Flush attack is xx\%.
 
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{pic/slot2500.pdf}
-\caption{a fragment of the output of the Flush+Flush attack.} \label{fig1}
+\caption{A fragment of the output of the Flush+Flush attack.} \label{fig1}
 \end{figure}
 
 
@@ -318,7 +321,7 @@ But the increase of the minimal length would lead to require more signatures to 
   \hline
   Wang et al. \cite{Wang2017} & positions of two non-zero digits and the length of the wNAF representation of $k$ & HNP & $\geq$ 2.99 & 85 \\
   \hline
-  Ours & all positions and signs of non-zero digits & HNP & 154.2  & $\leq$ 60 \\
+  Ours & all positions and signs of non-zero digits & HNP & 153.2  & $\leq$ 60 \\
 %  \hline
 %  190 & 39.3 & 63.5 & & \\
   \hline
@@ -367,7 +370,7 @@ Fan et al.\cite{Fan2016} extract all positions of digits from the Flush+Reload a
 They managed to obtain on average 105.8 bits per signature for the secp256k1 curve
  and only need 4 signatures to retrieve the private key with the probability being $8\%$.
  Compared with their work, ours obtains more information about the ephemeral key, i.e. the sign of all non-zero digits, from the side channel by analysing the OpenSSL implementation.
-We can extract 154.2 bits information per signature.
+We can extract 153.2 bits information per signature.
 Although it uses more signatures to retrieve the private key through our lattice attack,
 theoretically the number of signatures needed is less than Fan's if a suitable lattice is constructed.
 
@@ -376,7 +379,7 @@ They can obtain no less than 2.99 bits information per signature and exploit the
 Obviously, our method obtains more information and uses less signatures to recover the private key.
 
 In summary, our method obtain the sign and the position of the ephemeral key $k$ from the Flush+Flush attack.
-It can extract the largest amount of data, on average $154.2$ bits information per signature.
+It can extract the largest amount of data, on average $153.2$ bits information per signature.
 In theory, the number of signatures need to retrieve the private key is $2$.
   However, due to the limit of our method of lattice construction, we need at most $60$ signatures, which is more than Fan's and van's.
 

@@ -133,18 +133,20 @@ And if $m$ is the position of the least non-zero digit of $k$,
  \right.  .
  \end{align}
 
-In this way, at the position of every non-zero digit we can obtain $l - w + 1$ consecutive bits of $k$.
-For the wNAF representation, every non-zero digit is followed by at least $w$ zero values.
+In this way, at the position of every non-zero digit we can obtain $l - w + 1$ consecutive bits of $k$
+ except at the  position of the least non-zero digit being $m+1$.
+For the wNAF representation, every non-zero digit (except the least) is followed by at least $w$ zero values.
  The average number of non-zero digits of $k$ is $\lfloor\log_{2}{q}\rfloor /(w+2)$.
  The average distance between consecutive non-zero digits is $w+2$, i.e. on average $l = w + 2$.
- This means we can obtain $3$ consecutive bits on average at the every non-zero digit.
-Thus, on average we can obtain $3\lfloor\log_{2}{q}\rfloor /(w+2)$ bits of the ephemeral key $k$ in total.
-Meanwhile, because $\min(l) = w + 1$, the minimal length of the consecutive bits is $2$.
-This illustrates that all the sequences of consecutive bits obtained satisfy $l \geq 2$.
+ This means we can obtain $3$ consecutive bits on average at the every non-zero digit (except the least).
+Based on \cite{Benger2014} on average we can get $2$ least significant bits of the ephemeral key.
+Thus, on average we can obtain $3\lfloor\log_{2}{q}\rfloor /(w+2) - 1$ bits of the ephemeral key $k$ in total.
+Meanwhile, because the minimal value of $l$ is $w + 1$, the minimal length of the consecutive bits is $2$.
+This illustrates that all the sequences of consecutive bits obtained (except the least) satisfy $l \geq 2$.
 For the secp256k1 curve implemented in OpenSSL, $\lfloor\log_{2}{q}\rfloor = 256$, $w = 3$.
  Also, as introduced previous, the scalar multiplication uses $k+q$ instead of $k$ in most cases,
-  so the total number of bits per signature we obtain is $3(\lfloor\log_{2}{q}\rfloor +1)/(w+2) = 154.2$.
-In theory, two signatures would be enough to recover the 256-bit private key as $2\times 154.2 = 308.4 > 256$.
+  so the total number of bits per signature we obtain is $3(\lfloor\log_{2}{q}\rfloor +1)/(w+2)-1 = 153.2$.
+In theory, two signatures would be enough to recover the 256-bit private key as $2\times 153.2 = 306.4 > 256$.
 
 %这里再加一小段，理论上[文献x]说，只要知道连续的2bit信息，就能够用来构造格攻击恢复密钥。
 %因此，对侧信道得到的数据使用我们的方法恢复出来的连续比特位，全部都可以被用到后续的攻击中
