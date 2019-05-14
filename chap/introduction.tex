@@ -19,8 +19,8 @@ As long as some bits of the ephemeral key are leaked,
 %As long as parts of the nonce are revealed through the side channels,
 % some efficient attacks can be launched to recover the private key .
 %
-Howgrave-Graham and Smart \cite{HG2001} theoretically showed that DSA is vulnerable to such partial ephemeral key exposures in 2001.
-Then, Nguyen and Shparlinski \cite{Nguyen2002} improved their method with further details and gave a provable polynomial-time attack.
+Howgrave-Graham and Smart \cite{HG2001} theoretically showed that DSA was vulnerable to such partial ephemeral key exposures in 2001.
+Then, Nguyen and Shparlinski \cite{Nguyen2002} improved their method with further details and proposed a provable polynomial-time attack.
 More importantly, they extended this theoretical attack from DSA to ECDSA \cite{Nguyen2003}.
 The basic idea is to reduce the problem of private key recovery to an instance of the Hidden Number Problem
 (HNP), which is further reduced to the Closest Vector Problem (CVP) or the Shortest Vector Problem (SVP) in a lattice, with the knowledge of consecutive bits of the ephemeral keys.
@@ -43,7 +43,7 @@ In 2015, Van de Pol et al. improved this attack by a more effective way of exact
  which exploited the information about the positions of higher half non-zero digits of the wNAF representations of the ephemeral key.
 In the same year, Cao et al.~\cite{Cao2015} presented two lattice-based differential fault attacks against ECDSA with wNAF implementations.
 In 2016, Goudarzi et al.~\cite{Dahmun2016}  extended this attack to the blinded ephemeral keys,
-  which are protected by the addition of a random multiple of the elliptic-curve group order or by a random Euclidean splitting.
+  which were protected by the addition of a random multiple of the elliptic-curve group order or by a random Euclidean splitting.
 Then,
 Fan et al. proposed a new way of extracting and utilizing information obtained from the Flush+Reload side channels.
  The problem of recovering the
@@ -96,7 +96,7 @@ In our paper, we also focus on ECDSA with the wNAF representation of the ephemer
 We try to not only make better use of the information achieved from side channels,
   but also to extract different information from the side channels.
 First, we analyse the implementation code of ECDSA in OpenSSL
- and find that 
+ and find that
 the invert function is another exploitable vulnerability in the implementation of the scalar multiplication.
 It inverts a number so that the subtraction is replaced by addition and the space storing the precomputed points is reduced by half.
 In the calculation, if the sign of current non-zero digit of the ephemeral key is opposite to the previous one, the invert function is called, and the absolute value of this digit is used to index the precomputed points. Otherwise, the invert function is not called.
@@ -105,7 +105,7 @@ It helps us to determine the sign of the non-zero digits of the wNAF representat
 So we obtain the sign of the non-zero digits in the wNAF representations of the ephemeral key by adding a monitor to the invert function.
  Thus, we achieve more information about the ephemeral key compared to previous attacks.
 After that, we manage to recover the consecutive bits at the position of every non-zero digits of the ephemeral key based on the information obtained from the cache side channels.
-Finally, we construct an HNP \cite{boneh1996} instance making the best of the consecutive bits of the ephemeral key.
+Finally, we construct an HNP \cite{boneh1996} instance making use of the consecutive bits of the ephemeral key.
 This problem is solved by lattice reduction algorithms  through converting to the SVP.
 
 This attack is applied to the secp256k1 curve in OpenSSL 1.1.1b in this paper.
@@ -138,7 +138,7 @@ signs of the wNAF representations in the side channel attacks against ECDSA,
 Our contributions are summarized as follows:
 \begin{itemize}
   \item
-  We present a new lattice attack to recover the private key of ECDSA with wNAF representations.
+  We present a new lattice attack to recover the private key of ECDSA with the wNAF representation.
   First, we
     improve the cache side channel attacks by monitoring
       the invert function.

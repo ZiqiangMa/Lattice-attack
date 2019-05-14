@@ -21,10 +21,10 @@ Given a hash function $h$, the ECDSA signature of a message $m$ is computed as f
     Select a random ephemeral key $0 < k < q$.
   \item
     Compute the point $(x, y) = kG$, and let $r = x$ mod $q$;
-    if $r = 0$, then return to the first step.
+    if $r = 0$, then go back to the first step.
   \item
     Compute $s = k^{-1} (h(m) + r\cdot\alpha)$ mod $q$;
-    if $s = 0$, then return to the first step.
+    if $s = 0$, then go back to the first step.
 \end{enumerate}
 
 The pair $(r, s)$ is the ECDSA signature of the message $m$.
@@ -149,7 +149,7 @@ The core computation of the function is shown in Algorithm  \ref{alg:smopenssl}.
 			\State $r \gets 0$, $is\_neg \gets 0$, $r\_is\_inverted \gets 0$
             \For{$i$ from $l-1$ to $0$}
             	\If {$r \neq 0$}
-            		\State \Call{$EC\_POINT\_dbl$}{$r$}     {   }  $//$ $double$
+            		\State \Call{$EC\_POINT\_dbl$}{$r$}     {    }  $//$ $double$
                 \EndIf
                 \If {$k_i \neq 0$}
                 	\State $is\_neg \gets (k_i < 0)$
@@ -158,7 +158,7 @@ The core computation of the function is shown in Algorithm  \ref{alg:smopenssl}.
                 	\EndIf
                 	\If {$is\_neg \neq r\_is\_inverted$}
                 		\If {$r \neq 0$}
-                			\State \Call{$EC\_POINT\_invert$}{$r$}   {   }  $//$ $invert$
+                			\State \Call{$EC\_POINT\_invert$}{$r$}   {    }  $//$ $invert$
                 		\EndIf                	
                     	\State $r\_is\_inverted \gets !r\_is\_inverted$
                 	\EndIf
@@ -216,7 +216,7 @@ We introduce two typical access-driven attacks called Flush+Reload \cite{flushre
 
 The Flush+Reload attack \cite{flushreload} employs a spy process to monitor whether the specific memory lines have been accessed or not by the victim process.
 So this attack relies on shared memory between the spy and the victim processes.
-For attacks in the same machine, the spy can map the victim program file, the victim data file or shared libraries to its own address space to share these pages with the victim.
+For attacks in the same machine, the spy can map the victim program file, the victim data file or shared libraries into its own address space to share these pages with the victim.
 While in the virtualization environments, the page de-duplication technique of the VMM ensures the page sharing between the spy and the victim.
 %监控LLC，需要写一下
 

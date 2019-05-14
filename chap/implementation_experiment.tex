@@ -165,7 +165,7 @@ We want to find the optimal strategy for our attack in terms of the following pa
 %\item CVP or SVP
  \item  the minimal value of $l$ (length of the consecutive bits of $k$)
  \item  the block size of BKZ
- \item  the lattice dimensions
+ \item  the lattice dimension
  %\item  pruning strategy (optional)
  %\item  total signature number
 \end{itemize}
@@ -174,9 +174,10 @@ Thus we perform a number of experiments with different values of the parameters.
  In each case, we run $200$ experiments and compute the success probability.
 Because in Section \ref{sec:attack} the HNP problem introduced requires $l/2 - \log_{2}{3} -1 \geq 1$ to contain more than one bit information, the value of $l$ should be larger than $7$.
  But in our experiments, when $l = 8$, the private key can not be successfully recovered.
-  The reason is that the HNP instance contains not enough information.
+  The reason is that the HNP instance contains not enough information in this case.
 So the minimal length of the consecutive bits of $k$ is set ranging from $9$ to $11$ in the experiments.
-The block size in BKZ is set $10$  and $20$.
+When $l \geq 9$ or $l \geq 10$, the block size in BKZ is set $10$  and $20$.
+While $l \geq 11$, the block is set only $10$.
 The number of sequences of the consecutive bits for constructing the lattice denoted as $d$ is ranged from $50$ to $230$,
 i.e. the dimension of the lattice for the SVP is $d + 2$.
 
@@ -189,7 +190,7 @@ i.e. the dimension of the lattice for the SVP is $d + 2$.
     \multirow{3}{*}{Dimension}&
     \multicolumn{5}{c|}{Block size}   \\ %
     \cline{2-6}
-    ~& \multicolumn{2}{c|}{$l > 8$} & \multicolumn{2}{c|}{$l > 9$} & $l > 10$  \\
+    ~& \multicolumn{2}{c|}{$l \geq 9$} & \multicolumn{2}{c|}{$l \geq 10$} & $l \geq 11$  \\
     \cline{2-6}
     ~& 10 & 20 & 10 & 20  & 10 \\
     %\hline

@@ -12,7 +12,7 @@ Then, we use these consecutive bits to construct the HNP instance.
 
 \subsection{Attacking wNAF through the Cache Side Channels}
 \label{data_get}
-First recalling the implementation of scalar multiplication in OpenSSL, it uses the invert function to
+First, recalling the implementation of scalar multiplication in OpenSSL, it uses the invert function to
   compute the inverse element of a number.
 Applying this function, the space of precomputed points is saved by half, only need to store $\{G, 3G, ..., (2^{w} - 1)G\}$.
 As shown in Algorithm~\ref{alg:smopenssl},
