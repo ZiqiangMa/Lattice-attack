@@ -34,7 +34,7 @@ With the Flush+Reload cache side channels \cite{flushreload},
 This side channel exploits
 	the windowed Non-Adjacent Form (wNAF) implementation \cite{GORDON1998129,Miyaji1997,Koyama1002,Solinas2000}
 	for the scalar multiplication	
-		of a known point $G$ by the the random ephemeral key $k$.
+		of a known point $G$ by the random ephemeral key $k$.
 This exploitation works for the elliptic curves over a prime field $\mathbb{F}_{p}$
 			in ECDSA, which is implemented in OpenSSL\cite{openssl} and other cryptographic engines.
 Then,
@@ -47,7 +47,7 @@ In 2016, Goudarzi et al.~\cite{Dahmun2016}  extended this attack to the blinded 
 Then,
 Fan et al. proposed a new way of extracting and utilizing information obtained from the Flush+Reload side channels.
  The problem of recovering the
-secret key is then transformed to the Extended Hidden Number Problem (EHNP) which is also solved by lattice reduction algorithm.
+secret key is then transformed to the Extended Hidden Number Problem (EHNP) which is also solved by the lattice reduction algorithm.
 The number of signatures needed is reduced to $4$ to recover the private key \cite{Fan2016}.
 In 2017, Wang et al.~\cite{Wang2017} presented another lattice attack on ECDSA using
  a small fraction of information from the ephemeral key.
@@ -113,7 +113,7 @@ We choose the Flush+Flush~\cite{gruss2016flush} attack to monitor the functions 
 By monitoring the  invert function
 	in addition to the double and add functions in OpenSSL, %	we obtain the ``double-add-invert'' chain.
 we successfully extract whether each digit of the ephemeral key is zero or not,
- and determine the signs of the non-zero digits.% from this chain.
+ and determine the signs of the non-zero digits. % from this chain.
 Then we use the BKZ \cite{Schnorr1994} algorithm to solve the HNP instance,
     and effectively recover the ECDSA private key.
 If the result of the Flush+Flush attack is perfect, we need about $60$ signatures to recover the private key with a probability of $3\%$.
