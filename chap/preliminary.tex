@@ -228,7 +228,7 @@ The execution of such an attack consists of three phases:
     This ensures that these lines are accessed from the memory instead of the caches for the next time.
   \item
     \textbf{Wait:}
-    In this phase, the attacker waits a moment while the victim runs.
+    In this phase, the attacker waits a moment while the victim is running.
   \item
     \textbf{Reload:}
     This phase detects whether the victim accesses the memory lines flushed in the first phase during the waiting time.
@@ -267,7 +267,7 @@ Thus, the Flush+Flush attack has a better accuracy.
 
 \subsection{The Hidden Number Problem and Lattice Attack}
 \label{intro_hnp}
-The Hidden Number Problem (HNP) is first presented by Boneh and Venkatesan \cite{boneh1996} in 1996.
+The Hidden Number Problem (HNP) is first presented by Boneh and Venkatesan~\cite{boneh1996} in 1996.
 It is used to recover the secret key of Diffie-Hellman key exchange, DSA and ECDSA, given some leaked consecutive bits of the ephemeral key.
 
 Given a prime number $q$ and a positive $l$,
