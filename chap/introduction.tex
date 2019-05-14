@@ -96,8 +96,8 @@ In our paper, we also focus on ECDSA with the wNAF representation of the ephemer
 We try to not only make better use of the information achieve from side channels,
   but also to extract different information from the side channels.
 First, we analyse the implementation code of ECDSA in OpenSSL
- and find that
-in the implementation of the scalar multiplication the invert function is another exploitable vulnerability.
+ and find that 
+the invert function is another exploitable vulnerability in the implementation of the scalar multiplication.
 It inverts a number so that the subtraction is replaced by addition and the space storing the precomputed points is reduced by half.
 In the calculation, if the sign of current non-zero digit of the ephemeral key is opposite to the previous one, the invert function is called, and the absolute value of this digit is used to index the precomputed points. Otherwise, the invert function is not called.
 It helps us to determine the sign of the non-zero digits of the wNAF representations.

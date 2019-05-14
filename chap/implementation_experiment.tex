@@ -56,7 +56,7 @@ We monitor the execution time of the \verb+clflush+ instruction to flush the mon
 If the time is larger than the threshold, meaning the memory line is accessed by the victim.
 Otherwise, the memory line is not accessed.
 The thresholds are calculated for every monitored functions.
-For each address of the monitored functions, we record the time of flushing the cache 1000 times, and take the time larger than 99 percent samples plus 6 as the threshold of this address.
+For each address of the monitored functions, we record the time of flushing the cache 1000 times, and take the time larger than 99 percent samples plus 6 cycles as the threshold of this address.
 The thresholds are recalculated every time before the attack is triggered.
 
 
@@ -147,7 +147,7 @@ From this fragment, three operations are clearly distinguished,
 %我们的结果是：
 %进行分析
 %分析为什么我们没有利用全部的信息，理论上怎样，实际怎样
-We apply our lattice attack to the curve secp256k1 in our experiments, and we assume that the Flush+Flush attack is perfect, that is we can correctly obtain the ``double-add-invert'' chain and recover all the information about the digits of the ephemeral key it contains.
+We apply our lattice attack to the curve secp256k1 in our experiments, and we assume that the Flush+Flush attack is perfect, which means we can correctly obtain the ``double-add-invert'' chain and recover all the information about the digits of the ephemeral key it contains.
 
 The HNP problem can be solved by exploiting both the CVP and SVP instances.
 However, the CVP problem does not have a polynomial time solution while the SVP problem has.
@@ -158,7 +158,7 @@ Therefore,
  in our experiments, we only demonstrate the result of using the SVP problem to solve the HNP instance.
 
  We use the BKZ algorithm implemented in \verb+fplll+~\cite{fplll} to solve the SVP problem.
-When solving a SVP instance, there are two outcomes that either we obtain the private key or a wrong answer.
+When solving an SVP instance, there are two outcomes that either we obtain the private key or a wrong answer.
  So we denote the success probability as the amount of successfully recovering the private key divided by the total number of the lattice attacks.
 We want to find the optimal strategy for our attack in terms of the following parameters:
 \begin{itemize}

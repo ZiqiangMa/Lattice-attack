@@ -257,7 +257,9 @@ While the lattice determinant of $L(B)$ is $2^{d + \sum{l_i}}q^d$,
 By solving the CVP problem with the input $B$ and $\textbf{u}$, the vector $\textbf{x}$ is revealed,
  hence the private key $\alpha$ is recovered as it is the last element of the vector $\textbf{x}$.
 
-To transform it to a SVP instance we use $d$ triples $(t_i, u_i, l_i)$ to construct a $d+2$ dimensional lattice $L(B')$ spanned by the rows of the matrix
+To solve the CVP problem in polynomial time,
+we transform it to an SVP instance.
+ We use $d$ triples $(t_i, u_i, l_i)$ to construct a $d+2$ dimensional lattice $L(B')$ spanned by the rows of the matrix
 $$B' =
 \left(
   \begin{array}{cc}

@@ -2,18 +2,19 @@
 \label{sec:conclusion}
 In this paper, we demonstrate a practical attack on the ECDSA algorithm implemented in OpenSSL with the scalar multiplication using the wNAF representation.
 We improve the original cache side channel attack
- by adding an extra monitor to the invert function and get the extra information about the sign of all non-zero digits of the ephemeral key.
-Then we exploit a new method to get the consecutive bits of the ephemeral key at the position of the non-zero digits through the ``double-add-invert'' chain obtained by the cache side channel attack.
+ by adding an extra monitor to the invert function and get the extra information about the signs of all non-zero digits of the ephemeral key.
+Then we exploit a new method to get the consecutive bits of the ephemeral key at each position of the non-zero digits through the ``double-add-invert'' chain obtained by the cache side channel attack.
 From the side channel, we obtain $153.2$ bits of information per signature for the 256-bit ECDSA secp256k1 curve.
 We construct a lattice attack using the HNP problem to recover the ECDSA private key.
 This is the first work to obtain the information about the signs of the non-zero digits of the ephemeral key and make use of it to recover the ECDSA private key.
 We implement our method to attack the secp256k1 curve.
 The experiments show that we successfully recover the private key from only $60$ signatures.
 
-In the future,
- we will try to find a more efficient lattice construction to recover the private key
-    from the information achieved (e.g., an EHNP-based solution).
-We will also extend this attack to other cryptographic engines,
+In the future, 
+we will optimize this work in order to use less signatures and achieve higher success probability by finding ways to decrease the length of consecutive bits required and using more efficient lattice reduction algorithms such as the BKZ2.0. 
+Next, we will try to find a more efficient lattice construction to recover the private key,
+    making full use of the information achieved (e.g., an EHNP-based solution).
+Also, we will extend this attack to other cryptographic engines,
     and also the blinded ephemeral keys of ECDSA.
 
 \zf{please check the page limitation}
