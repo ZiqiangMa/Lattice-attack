@@ -22,7 +22,7 @@ Therefore, lattice attacks to this library are invalid.
 %Crypto++ Library \cite{cryptopp} is a free C++ class library of cryptographic algorithms and schemes.
 
 \subsection{The Method of Constructing Lattice Attacks}
-In our work, we construct an HNP instance using the partial information about the $k$ obtained from the cache side channel attack.
+In our work, we construct an HNP instance using partial information about the $k$ obtained from the cache side channel attack.
  From the Inequation~\ref{lattice2}, the length of the most significant bits of $\lfloor\alpha t_i\rfloor$ is $l/2-\log_{2}{3} -1$.
 When constructing the lattice, it should contain the information about the most significant bits of $\lfloor\alpha t_i\rfloor$.
 Thus it requests $l/2-\log_{2}{3} -1 \geq 1$, so $l$ representing the minimal length of the consecutive bits needs to be larger than $7$.
@@ -30,7 +30,7 @@ In practical, only when $l > 8$, we successfully recover the ECDSA private key i
 However, the average length of the consecutive bits is $3$, which is much smaller than needed.
 This makes it impossible to use all the bits obtained through the cache side channel attack  to construct the lattice attack.
 Although in theory we only need $2$ signatures to recover the 256-bit private key,
- in practical we need at least $60$ signatures to get the enough information satisfied the restriction on $l$ to construct the lattice attack.
+ in practical we need at least $60$ signatures to get enough information satisfied the restriction on $l$ to construct the lattice attack.
 Therefore due to the restriction on $l$, we can not make full use of the information obtained from the cache side channel although we obtained $153.2$ bits information per signature on average.
 
 However, based on the work in~\cite{Nguyen2002} and \cite{Liu2013},
@@ -38,9 +38,9 @@ However, based on the work in~\cite{Nguyen2002} and \cite{Liu2013},
 In our work, all the sequences of consecutive bits (except the least) obtained from the cache side channel satisfy $l \geq 2$,
  and the length the consecutive least significant bits is larger than $1$.
  That means at least $152.2$ bits information we obtained is valid and exploitable, only $1$ bit information may be discarded.
-Therefore, if we find a efficient way to construct the lattice attack, making full use of all the information of the consecutive bits,
+Therefore, if we find an efficient way to construct the lattice attack, making full use of all the information of the consecutive bits,
    the number of signatures required to recover the private key can be greatly reduced, even the best case only $2$ signatures is enough for a 256-bit private key.
-In theory this result is better than the prior work in \cite{Fan2016} which theoretically needs 3 signatures for a 256-bit private key.
+In theory, this result is better than the prior work in \cite{Fan2016} which theoretically needs 3 signatures for a 256-bit private key.
 This is what we are going to do next, finding a suitable and powerful method to construct the lattice attack.
 
 %我们的工作中，我们使用了XX方法
