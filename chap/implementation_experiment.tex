@@ -25,15 +25,15 @@ For the experiments, we use the Flush+Flush to attack the 256-bit curve secp256k
 \noindent\textbf{Get the virtual address. }
 We use a spy process to monitor the  \verb+EC_POINT_dbl()+,  \verb+EC_POINT_add()+ and \verb+EC_POINT_invert()+ functions in OpenSSL.
 So we need to know the virtual addresses of the three functions.
-First we get the offsets of the three functions required to monitor in the code of the dynamic library.
-Then we use the \verb+mmap()+ function to load each page locating the monitored function codes into the virtual address space of the spy process.
+First, we get the offsets of the three functions required to monitor in the code of the dynamic library.
+Then, we use the \verb+mmap()+ function to load each page locating the monitored function codes into the virtual address space of the spy process.
 The \verb+mmap()+ function will return the initial address of the page so that we can get the virtual address of the monitored function based on the offset and the address of this page.
-Alternative way is to use the \verb+dl_iterate_phdr()+ function to get the initial address of the dynamic library when loaded into the address space.
+An alternative way is to use the \verb+dl_iterate_phdr()+ function to get the initial address of the dynamic library when loaded into the address space.
 
-To determine offsets of the memory lines in the  dynamic library,  we build OpenSSL with debugging symbols.
+To determine the offsets of the memory lines in the  dynamic library,  we build OpenSSL with debugging symbols.
  These symbols are not loaded at run time and do not affect the performance of the code.
 Typically the debugging symbols are not available for attackers,
- however they could use reverse engineering [16] to determine the offsets.
+ however, they could use reverse engineering [16] to determine the offsets.
 
 
 
@@ -55,7 +55,7 @@ Typically the debugging symbols are not available for attackers,
 We monitor the execution time of the \verb+clflush+ instruction to flush the monitored functions.
 If the time is larger than the threshold, meaning the memory line is accessed by the victim.
 Otherwise, the memory line is not accessed.
-The thresholds are calculated for every monitored functions.
+The thresholds are calculated for every monitored function.
 For each address of the monitored functions, we record the time of flushing the cache 1000 times, and take the time larger than 99 percent samples plus 6 cycles as the threshold of this address.
 The thresholds are recalculated every time before the attack is triggered.
 
@@ -70,7 +70,7 @@ The thresholds are recalculated every time before the attack is triggered.
 We monitor the execution time of the address of the three functions.
 When the time of any one is larger than the corresponding threshold,
  we start to record execution times, meaning that the attack starts.
-The record stops when the number of consecutive execution time of all the monitored addresses less than the threshold  is larger than 300.
+The record stops when the number of the consecutive execution time of all the monitored addresses less than the threshold  is larger than 300.
 If the number of record is less than 1000, we re-record the execution time.
 Then we have a valid record.
  Due to the  disturbance of noise,
@@ -94,7 +94,7 @@ In order to precisely recover the sign of the ephemeral key, we need to determin
 We can determine the
 start of the scalar multiplication
 by combining the double-add chain and the profiles of the double and add functions with wNAF representation.
-Also we can determine the start position by monitor the code of the copy function in OpenSSL.
+Also, we can determine the start position by monitor the code of the copy function in OpenSSL.
  We note that when the computation of scalar multiplication starts, OpenSSL performs the copy function instead of the add function.
  Thus we can monitor the copy function, and when the copy function is called in the time slot and the add function is called in the next slot, it means that the scalar multiplication starts.
 
@@ -106,7 +106,7 @@ Also we can determine the start position by monitor the code of the copy functio
 Fig.~\ref{fig1} shows a fragment of the output of the spy when OpenSSL performs ECDSA with the secp256k1 curve.
 In this figure, $\square$, $\lozenge$ and $\vartriangle$ represent ``double'', ``add'' and ``invert'' respectively.
 From this fragment, three operations are clearly distinguished,
- so we success to obtain the ``double-add-invert'' chain easily.
+ so we succeed to obtain the ``double-add-invert'' chain easily.
 
 
 
