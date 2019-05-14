@@ -33,7 +33,7 @@ Analogously, Ac{\i}i{\c{c}}mez et al. \cite{Brumley2010} used an L1 instruction 
 In 2011, Brumley and Tuveri \cite{Brumley2011} mounted a remote timing attack on the implementation of ECDSA with binary curves in OpenSSL 0.9.8o.
  They obtained the MSBs of the ephemeral keys through the timing attack and recovered the private key after collecting information over 8,000 TLS handshakes.
 In 2013, Mulder et al. \cite{Mulder2013} took advantage of a template attack to recover some LSBs of the ephemeral key.
-They improved the Bleichenbacher¡¯s FFT-based (Fast Fourier Transform) attack by using BKZ for range reduction to solve the HNP problem.
+They improved the Bleichenbacher's FFT-based (Fast Fourier Transform) attack by using BKZ for range reduction to solve the HNP problem.
 Their attack could extract the entire private key using a 5-bit leak of the ephemeral key from 4 000 signatures.
 Benger et al. \cite{Benger2014} and Van de Pol et al. \cite{Van2015} used the Flush+Reload technique to acquire the information of the ephemeral key.
 Allan et al. \cite{Allan2016} improved the  results in \cite{Van2015} by using a performance-degradation attack to amplify the side-channel. The amplification allowed them to recover a 256-bit private key in OpenSSL 1.0.2a after observing only 6 signatures.

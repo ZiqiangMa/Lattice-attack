@@ -111,7 +111,7 @@ After converting $k$ to the wNAF form, the multiplication $kG$ is executed as de
 
 \zf{I think alg1 and alg2 can be merged into one figure}
 
-From the algorithm, we can find that the \textbf{if-then} block (Line 4) is vulnerable to side channel attacks.
+From the algorithm, we can find that the if-then block (Line 4) is vulnerable to side channel attacks.
 An attacker can use a spy process to monitor the conditional branches through side channels.
 Then he can get a ``double-add'' chain, and through it, whether the value of $k_i$ is zero can be inferred.
 The attacker can use this information to recover the private key.
@@ -133,7 +133,7 @@ As the use of modified wNAF affects the attack results little,
 %实际中的使用k+q
 \subsection{The Scalar Multiplication in OpenSSL}
 \label{intro_smulinssl}
-In OpenSSL1.1.1b \cite{openssl}, the scalar multiplication with wNAF representation is implemented in the function \verb+ec_wNAF_mul()+.
+In OpenSSL 1.1.1b \cite{openssl}, the scalar multiplication with wNAF representation is implemented in the function \verb+ec_wNAF_mul()+.
 The core computation of the function is shown in Algorithm  \ref{alg:smopenssl}.
 
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
@@ -217,7 +217,7 @@ We introduce two typical access-driven attacks called Flush+Reload \cite{flushre
 The Flush+Reload attack \cite{flushreload} employs a spy process to monitor if the specific memory lines have been accessed or not by the victim process.
 So this attack relies on shared memory between the spy and the victim processes.
 For attacks in the same machine, the spy can map the victim program file, the victim data file or shared libraries to its own address space to shared these pages with the victim.
-While in the visualization environments, the page de-duplication technique of the VMM ensures the page sharing between the spy and the victim.
+While in the virtualization environments, the page de-duplication technique of the VMM ensures the page sharing between the spy and the victim.
 %监控LLC，需要写一下
 
 The execution of such an attack consists of three phases:

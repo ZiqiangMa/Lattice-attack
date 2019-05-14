@@ -4,7 +4,7 @@
 \label{sec:intro}
 
 The Elliptic Curve Digital Signature Algorithm (ECDSA) \cite{Johnson2001, ansi2005} is a digital signature algorithm over elliptic curves,
-    widely used in many popular applications, such as TLS \cite{rfc5246} and OpenPGP \cite{openpgp2007}, smart card \cite{smartcard2007}, and Bitcoin \cite{bitcoin2008}.
+    widely used in many popular applications, such as TLS \cite{rfc5246}, OpenPGP \cite{openpgp2007}, smart card \cite{smartcard2007}, and Bitcoin \cite{bitcoin2008}.
 The core operation of ECDSA is the scalar multiplication of a base point (or generator) over elliptic curves
     by a random nonce (or ephemeral key),
  and its semantical security relies on the computational intractability to find the ephemeral key
@@ -80,10 +80,10 @@ They exploited the positions of two non-zero digits together with the length of 
 
 %只是对数据分析进行了改进，并没有获得更多的数据
 
-The above works extract the information in the wNAF representation of the ephemeral key.
+The above works extracted the information in the wNAF representation of the ephemeral key.
 They tried to make better use of the data achieved through the side channels and construct more effective lattice attacks
  to recover the private key.
-They extract the least non-zero digit \cite{Benger2014}, half non-zero digits \cite{Van2015}, all non-zero digits \cite{Fan2016} or two non-zero digits with the total length~\cite{Wang2017}.
+They extracted the least non-zero digit \cite{Benger2014}, half non-zero digits \cite{Van2015}, all non-zero digits \cite{Fan2016} or two non-zero digits with the total length~\cite{Wang2017}.
 In summary,
 all information exploited in these attacks are the positions of the non-zero digits,
  and no more extra information about the ephemeral key is extracted from the side channels.
@@ -111,15 +111,15 @@ This problem is solved by lattice reduction algorithms  through converting to th
 This attack is applied to the secp256k1 curve in OpenSSL 1.1.1b in this paper.
 We choose the Flush+Flush~\cite{gruss2016flush} attack to monitor the functions of double, add and invert.
 By monitoring the  invert function
-	in addition to the double and add functions in OpenSSL. %	we obtain the ``double-add-invert'' chain.
-We successfully extract whether each digit of the ephemeral key is zero or not,
- and determine the signs of the non-zero digits from this chain.
+	in addition to the double and add functions in OpenSSL, %	we obtain the ``double-add-invert'' chain.
+we successfully extract whether each digit of the ephemeral key is zero or not,
+ and determine the signs of the non-zero digits.% from this chain.
 Then we use the BKZ \cite{Schnorr1994} algorithm to solve the HNP instance,
     and effectively recover the ECDSA private key.
 If the result of the Flush+Flush attack is perfect, we need about $60$ signatures to recover the private key with a probability of $3\%$.
 
 Through the cache side channel, we get the information about the positions and the signs of all non-zero digits of the ephemeral key.
-Compared to previous works, our method obtain more information about the ephemeral key, i.e. the signs of all non-zero digits.
+Compared to previous works, our method obtains more information about the ephemeral key, i.e. the signs of all non-zero digits.
 We extract $153.2$ bits on average per signature for 256-bit ECDSA.
 In theory, the number of signatures that required is $2$ if a suitable lattice is constructed.
 %It  can be applied to all the curves without any restriction.

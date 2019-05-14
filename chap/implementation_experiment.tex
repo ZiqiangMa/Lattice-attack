@@ -94,7 +94,7 @@ In order to precisely recover the sign of the ephemeral key, we need to determin
 We can determine the
 start of the scalar multiplication
 by combining the double-add chain and the profiles of the double and add functions with wNAF representation.
-Also we can determine the start position by monitor the code of copy function in OpenSSL.
+Also we can determine the start position by monitor the code of the copy function in OpenSSL.
  We note that when the computation of scalar multiplication starts, OpenSSL performs the copy function instead of the add function.
  Thus we can monitor the copy function, and when the copy function is called in the time slot and the add function is called in the next slot, it means that the scalar multiplication starts.
 
@@ -237,7 +237,7 @@ i.e. the dimension of the lattice for the SVP is $d + 2$.
 
 Table \ref{svp9} shows the success probability for different dimensions and block sizes of solving the SVP instance in the
              cases that the minimal length of the consecutive bits ranges from $9$ to $11$.
-As shown in the table, we successfully recover the private key of a 256-bit ECDSA only need $60$ sequences of consecutive bits with the success probability being $3.0\%$.
+As shown in the table, we successfully recover the private key of a 256-bit ECDSA only need $60$ sequences of consecutive bits with a success probability of $3.0\%$.
 These $60$ sequences come from up to $60$ signatures.
 Therefore we just need at most $60$ signatures to successfully recover the ECDSA private key.
 
@@ -327,11 +327,11 @@ Finally, the attackers recover the private key by solving the HNP or EHNP proble
 \begin{tabular}{|c|m{90pt}|c|c|c|}
   \hline
   % after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
-  Methods & The exploited information & HNP or EHNP & \# of bits & \# of signatures \\
+  Methods & Exploited information & HNP or EHNP & \# of bits & \# of signatures \\
   \hline
   Benger et al. \cite{Benger2014} & LSB & HNP & 2 & 200 \\
   \hline
-  van de Pol et al. \cite{Van2015} & half positions of non-zero digits & HNP & 47.6 & 13 \\
+  Van de Pol et al. \cite{Van2015} & half positions of non-zero digits & HNP & 47.6 & 13 \\
   \hline
   Fan et al. \cite{Fan2016} & all positions of non-zero digits & EHNP & 105.8 & 4 \\
   \hline
@@ -349,14 +349,14 @@ Benger et al. \cite{Benger2014} got the least significant bits (LSBs) of the eph
 although this is not all the information obtained from the side channel.
 Then they used the LSBs of many signatures to construct an HNP problem and
 successfully recovered the private key by solving the CVP/SVP instance of a specific lattice converted from the HNP problem.
-The number of bits extracted from each signature is very small, only an average of 2 bits information can be obtained.
-Thus made it require more than $200$ signatures to recover a 256-bit private key with the probability being $3.5\%$.
+The number of bits extracted from each signature is very small, only an average of 2 bits information can be obtained,
+thus making it require more than $200$ signatures to recover a 256-bit private key with the probability being $3.5\%$.
 %In our work, we exploit information from the cache side channel to extract the consecutive bits at the position of every non-zero bits for the ephemeral key.
 %All the consecutive bits can be used to construct the lattice attack.
 %Therefore, we can get much more bits per signature and the number of signatures is decreased to recover the private key.
 % 因为这个结果是200，实在太大，没有必要比较了。
 
-van de Pol et al. \cite{Van2015} improved Benger's attack  relying on the property of some specific elliptic curves, that is the order $q$ of the base point is a pseudo-Mersenne prime which can be expressed as $2^n - \epsilon$, where $|\epsilon| < 2^p $, $p \approx n/2$.
+Van de Pol et al. \cite{Van2015} improved Benger's attack  relying on the property of some specific elliptic curves, that is the order $q$ of the base point is a pseudo-Mersenne prime which can be expressed as $2^n - \epsilon$, where $|\epsilon| < 2^p $, $p \approx n/2$ and $n$ is the length of $q$.
 With this property, this attack uses the information from the consecutive non-zero digits whose positions are between $p+1$ and $n$ extracted from the Flush+Reload attack, not only the LSBs.
 It is able to extract $47.6$ bits per signature on average for the secp256k1 curve and recover the private key with 13 signatures.
 Then they constructed an HNP instance using this information and
@@ -369,7 +369,7 @@ Moreover, their work is only effective to some special curves,
 %This means that they can use about half of the information they got from the side channel.
 
 
-Fan et al.\cite{Fan2016} extract all positions of digits from the Flush+Reload attack and take advantage of them to construct an EHNP instance.
+Fan et al.\cite{Fan2016} extracted all positions of digits from the Flush+Reload attack and take advantage of them to construct an EHNP instance.
 They managed to obtain on average 105.8 bits per signature for the secp256k1 curve
  and only need 4 signatures to recover the private key with the probability being $8\%$.
  Compared with their work, ours obtains more information about the ephemeral key, i.e. the sign of all non-zero digits, from the side channel by analysing the OpenSSL implementation.
@@ -377,15 +377,15 @@ We can extract 153.2 bits information per signature.
 Although it uses more signatures to recover the private key in our lattice attack,
 theoretically the number of signatures needed is less than Fan's if a more suitable lattice is constructed.
 
-Wang et al. \cite{Wang2017} obtain the positions of two non-zero digits and the length of the wNAF representation of $k$ from the Flush+Reload attack.
-They can obtain no less than 2.99 bits information per signature and exploit the HNP to recover the private key for the 256-bit curve using $85$ signatures.
+Wang et al. \cite{Wang2017} obtained the positions of two non-zero digits and the length of the wNAF representation of $k$ from the Flush+Reload attack.
+They could obtain no less than 2.99 bits information per signature and exploit the HNP to recover the private key for the 256-bit curve using $85$ signatures.
 Obviously, our method obtains more information and uses less signatures to recover the private key.
 
-In summary, our method exploit both the signs and the positions of the ephemeral key $k$ achieved from the Flush+Flush attack.
+In summary, our method exploits both the signs and the positions  of the non-zero digits of the ephemeral key $k$ achieved from the Flush+Flush attack.
 It extracts the largest amount of information, on average $153.2$ bits per signature.
 In theory, the number of signatures needed to recover the private key is only $2$.
 However, due to the limit of our method of lattice construction,
- we need at most $60$ signatures, which is more than Fan's and van de Pol's.
+ we need at most $60$ signatures, which is more than Fan's and Van de Pol's.
 One of our future work is to find an efficient lattice construction to solve the problem (e.g., an EHNP-based solution).
 
 %2017年，范团队还在science China information sciences 上发了一篇，使用HNP的文章，
