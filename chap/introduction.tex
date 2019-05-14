@@ -93,7 +93,7 @@ Although the lattice attacks are different in these works,
 In our paper, we also focus on ECDSA with the wNAF representation of the ephemeral key.
 %, especially the implementation in the OpenSSL library.
  We propose a new method to recover the ECDSA private key from the information leaked through side channels.
-We try to not only make better use of the information achieve from side channels,
+We try to not only make better use of the information achieved from side channels,
   but also to extract different information from the side channels.
 First, we analyse the implementation code of ECDSA in OpenSSL
  and find that 
@@ -151,7 +151,7 @@ The private key is recovered by solving the HNP instance using lattice reduction
 These steps are different from existing works.
   \item
     We apply our method to the secp256k1 curve in the latest version of OpenSSL.
-     Through the cache side channel, $153.2$ bits of information per signature is obtained on average.
+     Through the cache side channel, $153.2$ bits of information per signature are obtained on average.
     The experiments show that $60$ signatures are enough to recover the private key with a probability of $3\%$.
 \end{itemize}
 

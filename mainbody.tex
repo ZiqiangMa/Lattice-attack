@@ -81,7 +81,7 @@ Theoretically, $153.2$ bits of the ephemeral key will be extracted per signature
 Then,
     we convert the problem of recovering the private key based on the extracted bits, to the Hidden Number Problem (HNP)
  which is solved by lattice reduction algorithms.
-We implemented the Flush+Flush cache-based side channel and applied it to ECDSA with the secp256k1 curve in OpenSSL 1.1.1b,
+We implement the Flush+Flush cache-based side channel and applied it to ECDSA with the secp256k1 curve in OpenSSL 1.1.1b,
     to monitor the functions of double, add and invert.
 In the experiments, the BKZ lattice reduction algorithm is used to solve the Shortest Vector Problem (SVP) of HNP instances.
 The experimental results show that the private key is successfully recovered from $60$ signatures,

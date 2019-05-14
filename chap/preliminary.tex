@@ -44,7 +44,7 @@ Therefore, the target of most attackers is the scalar multiplication $kG$ expect
 \label{intro_wnaf}
 %wnaf 是什么
 %K 是有限域， P 是定义在域 K上的椭圆曲线 E(K)上的点，k是一个大整数,根据椭圆曲线上点的加法公式将点P与自身相加 k次, k 称为标量， kP称为椭圆曲线点乘，或标量乘法
-%$G$ is a point defined on the elliptic curve over the finite field,
+$G$ is a point defined on the elliptic curve over the finite field,
  and the scalar $k$ is a big integer.
 Scalar multiplication $kG$ on the elliptic curve means that the point $G$ is added to itself $k$ times.
 There are several algorithms to implement the scalar multiplication.
@@ -214,9 +214,9 @@ We introduce two typical access-driven attacks called Flush+Reload \cite{flushre
  that can be used to monitor the functions of the implementation of ECDSA.
 %在近些年的研究中，访问驱动的攻击受到研究者们的青睐，因为其具有更高的攻击精度，能够很准确的获取到目标进程对cache的访问情况，以及更广的使用场景，例如对虚拟化云环境进行攻击。接下来，我们对两种典型的访问驱动攻击进行介绍，这两种攻击和本文相关。
 
-The Flush+Reload attack \cite{flushreload} employs a spy process to monitor if the specific memory lines have been accessed or not by the victim process.
+The Flush+Reload attack \cite{flushreload} employs a spy process to monitor whether the specific memory lines have been accessed or not by the victim process.
 So this attack relies on shared memory between the spy and the victim processes.
-For attacks in the same machine, the spy can map the victim program file, the victim data file or shared libraries to its own address space to shared these pages with the victim.
+For attacks in the same machine, the spy can map the victim program file, the victim data file or shared libraries to its own address space to share these pages with the victim.
 While in the virtualization environments, the page de-duplication technique of the VMM ensures the page sharing between the spy and the victim.
 %监控LLC，需要写一下
 
@@ -281,7 +281,7 @@ the integer $u$ represents the $l$ most significant bits of $\alpha t$ which is 
 
 The HNP problem can be converted to the CVP/SVP problem in lattices
  and solved by the lattice reduction.
-Here we provide a briefly introduce.
+Here we provide a brief introduction.
 For more details on lattice, please refer to the literature \cite{latticereduction2000}.
 Consider the Euclidean space $\mathbb{R}^{d}$
  and let $B = \{\mathbf{b_1}, \mathbf{b_2}, ..., \mathbf{b_z}\}$ be a set of linearly independent vectors in $\mathbb{R}^d$.

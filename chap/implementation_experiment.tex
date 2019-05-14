@@ -94,7 +94,7 @@ In order to precisely recover the sign of the ephemeral key, we need to determin
 We can determine the
 start of the scalar multiplication
 by combining the double-add chain and the profiles of the double and add functions with wNAF representation.
-Also, we can determine the start position by monitor the code of the copy function in OpenSSL.
+Also, we can determine the start position by monitoring the code of the copy function in OpenSSL.
  We note that when the computation of scalar multiplication starts, OpenSSL performs the copy function instead of the add function.
  Thus we can monitor the copy function, and when the copy function is called in the time slot and the add function is called in the next slot, it means that the scalar multiplication starts.
 
