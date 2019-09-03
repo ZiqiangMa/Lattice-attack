@@ -18,7 +18,7 @@ The private key of ECDSA is an integer $\alpha$ that satisfies $0 < \alpha < q$,
 Given a hash function $h$, the ECDSA signature of a message $m$ is computed as follows:
 \begin{enumerate}
   \item
-    Select a random ephemeral key $0 < k < q$.
+    Select a random integer as the ephemeral key $0 < k < q$.
   \item
     Compute the point $(x, y) = kG$, and let $r = x$ mod $q$;
     if $r = 0$, then go back to the first step.
@@ -49,7 +49,7 @@ $G$ is a point defined on the elliptic curve over the finite field,
 Scalar multiplication $kG$ on the elliptic curve means that the point $G$ is added to itself $k$ times.
 There are several algorithms to implement the scalar multiplication.
 In OpenSSL, scalar multiplication in the prime field is implemented using the wNAF representation \cite{GORDON1998129,Miyaji1997,Koyama1002,Solinas2000} of the scalar $k$.
-In wNAF, a number $k$ is represented by a sequence of digits which value is either zero or an odd number satisfied $-2^{w} < k_{i} < 2^{w}$,
+In wNAF, a number $k$ is represented by a sequence of digits which value is either zero or an odd number satisfying $-2^{w} < k_{i} < 2^{w}$,
  where $w$ is the window size. In this representation, any continuous non-zero digit interval is with at least $w$ zero digits.
 The value of $k$ can be expressed as $k = \sum{2^{i} k_{i}}$.
 Algorithm \ref{alg:wnaf} introduces the concrete method for converting a scalar into its wNAF representation.
@@ -319,8 +319,8 @@ Thus the vector $\mathbf{h}$ belongs to $L(B)$.
 We call $\mathbf{h}$ the hidden vector because the last coordinate of $\mathbf{h}$ discloses the hidden number $\alpha$.
 Let the vector $\mathbf{u} = (u_1, ..., u_d, 0)$,
  so the distance between $\mathbf{h}$ and $\mathbf{u}$ is $\|\mathbf{h} - \mathbf{u}\| \leq q\sqrt{d+1}/2^{l+1}$.
-While the lattice determinant of $L(B)$ is $q^d/2^{l+1}$,
- thus the vector $\mathbf{h}$ is very close to the vector $\mathbf{u}$.
+Because the lattice determinant of $L(B)$ is $q^d/2^{l+1}$,
+  the vector $\mathbf{h}$ is very close to the vector $\mathbf{u}$.
 Solving the CVP problem with input $B$ and $\mathbf{u}$ reveals the vector $\mathbf{h}$,
  hence the private key $\alpha$ is recovered.
 

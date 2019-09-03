@@ -39,7 +39,7 @@ This exploitation works for the elliptic curves over a prime field $\mathbb{F}_{
 			in ECDSA, which is implemented in OpenSSL\cite{openssl} and other cryptographic engines.
 Then,
 	by constructing an HNP instance solved by the lattice reduction algorithm, they recovered the ECDSA private key from about 200 signatures.
-In 2015, Van de Pol et al. improved this attack by a more effective way of exacting information from the cache side channel \cite{Van2015},
+In 2015, Van de Pol et al. improved this attack by a more effective way of extracting information from the cache side channel \cite{Van2015},
  which exploited the information about the positions of higher half non-zero digits of the wNAF representations of the ephemeral key.
 In the same year, Cao et al.~\cite{Cao2015} presented two lattice-based differential fault attacks against ECDSA with wNAF implementations.
 In 2016, Goudarzi et al.~\cite{Dahmun2016}  extended this attack to the blinded ephemeral keys,

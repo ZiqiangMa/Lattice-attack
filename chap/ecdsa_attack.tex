@@ -47,7 +47,6 @@ In the OpenSSL library (especially the latest OpenSSL 1.1.1b),
  the functions of double, add and invert are implemented as \verb+EC_POINT_dbl()+, \verb+EC_POINT_add()+ and \verb+EC_POINT_invert()+.
  The existing attacks monitor \verb+EC_POINT_dbl()+ and \verb+EC_POINT_add()+.
 In our attack, we improve the original cache side channel attack by adding a new monitor to the \verb+EC_POINT_invert()+ function.
-We use a spy process to monitor one memory line of each function.
  In each time slot
   the spy determines whether three functions are performed or not.
 Then we get a new ``double-add-invert'' chain through the cache side channel attack.
@@ -74,9 +73,9 @@ If the ``invert'' appears, it represents that the sign of $k_i$ is opposite to t
  While, if the ``invert'' does not appear when ``add'' comes out, it represents that
 the sign of this digit is the same as the previous non-zero one.
 
-Because the wNAF representation of $k$, the most significant digit is always positive.
+Because in the wNAF representation of $k$, the most significant digit is always positive.
  Thus we can determine the sign of all non-zero digits.
-In this way, we obtain all the positions of the non-zero digits and the signs of them.
+In this way, we obtain all the positions of the non-zero digits and their signs.
 
 
 % In our work, we implement the Flush+Flush attack to obtain the ''double-add-invert'' chain because it has a better precision.
@@ -221,9 +220,9 @@ We then have that
 \label{lattice}
     |\alpha t - u|_q < q/2^{(l/2-1)}.
 \end{equation}
-This way, we transform to the an HNP instance.
+This way, we transform to an HNP instance.
 
-In practice, OpenSSL uses $k+q$ as the ephemeral key. So the Equation \ref{tu} remains the same, but the Inequation \ref{lattice} turns into
+In practice, OpenSSL uses $k+q$ as the ephemeral key. So the Equation \ref{tu} remains the same, but the Inequality~\ref{lattice} turns into
  \begin{equation}
 \label{lattice2}
     |\alpha t - u|_q < q/2^{(l/2-\log_{2}{3})}.
