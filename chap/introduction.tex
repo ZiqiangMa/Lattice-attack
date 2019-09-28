@@ -1,19 +1,17 @@
-\zf{is this attack on the latest openssl? if so, please list the version}
-
 \section{Introduction}
 \label{sec:intro}
 
-The Elliptic Curve Digital Signature Algorithm (ECDSA) \cite{Johnson2001, ansi2005} is a digital signature algorithm over elliptic curves,
+The Elliptic Curve Digital Signature Algorithm (ECDSA) \cite{Johnson2001, ansi2005} is a digital signature scheme based on the elliptic-curve cryptography (ECC),
     widely used in many popular applications, such as TLS \cite{rfc5246}, OpenPGP \cite{openpgp2007}, smart card \cite{smartcard2007}, and Bitcoin \cite{bitcoin2008}.
-The core operation of ECDSA is the scalar multiplication of a base point (or generator) over elliptic curves
-    by a random nonce (or ephemeral key),
- and its semantical security relies on the computational intractability to find the ephemeral key
-        for any given pair of a scalar multiplication and a base point, i.e., the elliptic curve discrete logarithm problem (ECDLP).
+The core operation of ECDSA sign/verify is the scalar multiplication of a base point (or generator) over elliptic curves
+    by a random nonce (or ephemeral key).
+ And the security of ECDSA relies on the intractability of the elliptic curve discrete logarithm problem (ECDLP) that 
+ the inability to compute the scalar (ephemeral key) given the original (base) and product points. 
 
-However, there are side channel attacks to obtain the information on the ephemeral key,
-    during the scalar multiplication.
-As long as some bits of the ephemeral key are leaked,
-    the private key will be recovered \cite{Nguyen2001,HG2001,Nguyen2002,Nguyen2003}.
+However, in actual implementation, the ephemeral key and the scalar multiplication need careful protection.
+Side channel attacks can obtain the information on the ephemeral key during the scalar multiplication.
+Furthermore, as long as some bits of the ephemeral key are leaked,
+    the ECDSA private key will be recovered \cite{Nguyen2001,HG2001,Nguyen2002,Nguyen2003}.
 %
 %The confidentiality of this nonce is very important
 %As long as parts of the nonce are revealed through the side channels,
