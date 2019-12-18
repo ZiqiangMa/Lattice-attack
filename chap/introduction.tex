@@ -5,19 +5,20 @@ The Elliptic Curve Digital Signature Algorithm (ECDSA) \cite{Johnson2001, ansi20
     widely used in many popular applications, such as TLS \cite{rfc5246}, OpenPGP \cite{openpgp2007}, smart card \cite{smartcard2007}, and Bitcoin \cite{bitcoin2008}.
 The core operation of ECDSA sign/verify is the scalar multiplication of a base point (or generator) over elliptic curves
     by a random nonce (or ephemeral key).
- And the security of ECDSA relies on the intractability of the elliptic curve discrete logarithm problem (ECDLP) that 
- the inability to compute the scalar (ephemeral key) given the original (base) and product points. 
+ And the security of ECDSA relies on the intractability of the elliptic curve discrete logarithm problem (ECDLP) that
+ the inability to compute the scalar (ephemeral key) given the original (base) and product points.
 
 However, in actual implementation, the ephemeral key and the scalar multiplication need careful protection.
 Side channel attacks can obtain the information on the ephemeral key during the scalar multiplication.
 Furthermore, as long as some bits of the ephemeral key are leaked,
     the ECDSA private key will be recovered \cite{Nguyen2001,HG2001,Nguyen2002,Nguyen2003}.
+
 %
 %The confidentiality of this nonce is very important
 %As long as parts of the nonce are revealed through the side channels,
 % some efficient attacks can be launched to recover the private key .
 %
-Howgrave-Graham and Smart \cite{HG2001} theoretically showed that DSA was vulnerable to such partial ephemeral key exposures in 2001.
+In 2001 Howgrave-Graham and Smart \cite{HG2001} theoretically showed that DSA was vulnerable to such partial ephemeral key exposures.
 Then, Nguyen and Shparlinski \cite{Nguyen2002} improved their method with further details and proposed a provable polynomial-time attack.
 More importantly, they extended this theoretical attack from DSA to ECDSA \cite{Nguyen2003}.
 The basic idea is to reduce the problem of private key recovery to an instance of the Hidden Number Problem
