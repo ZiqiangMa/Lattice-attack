@@ -2,65 +2,135 @@
 % LLNCS macro package for Springer Computer Science proceedings;
 % Version 2.20 of 2017/10/04
 %
-\documentclass[runningheads]{llncs}
+\documentclass[sigconf]{acmart}
 %
 
-\usepackage{caption}
+%%
+%% \BibTeX command to typeset BibTeX logo in the docs
+\AtBeginDocument{%
+  \providecommand\BibTeX{{%
+    \normalfont B\kern-0.5em{\scshape i\kern-0.25em b}\kern-0.8em\TeX}}}
+
+%% Rights management information.  This information is sent to you
+%% when you complete the rights form.  These commands have SAMPLE
+%% values in them; it is your responsibility as an author to replace
+%% the commands and values with those provided to you when you
+%% complete the rights form.
+\setcopyright{acmcopyright}
+\copyrightyear{2018}
+\acmYear{2018}
+\acmDOI{10.1145/1122445.1122456}
+
+%% These commands are for a PROCEEDINGS abstract or paper.
+\acmConference[Woodstock '18]{Woodstock '18: ACM Symposium on Neural
+  Gaze Detection}{June 03--05, 2018}{Woodstock, NY}
+\acmBooktitle{Woodstock '18: ACM Symposium on Neural Gaze Detection,
+  June 03--05, 2018, Woodstock, NY}
+\acmPrice{15.00}
+\acmISBN{978-1-4503-XXXX-X/18/06}
+
+
+%\usepackage{caption}
 \usepackage{algorithm}
 \usepackage{algorithmicx}
 \usepackage{algpseudocode}
 \usepackage{amsmath,amssymb}
-\usepackage{graphicx}
-%\usepackage{subfigure}
-\usepackage{url}
+%\usepackage{graphicx}
+%%\usepackage{subfigure}
+%\usepackage{url}
 \usepackage{multirow}
-\usepackage{listings}
-\usepackage{cite}
+%\usepackage{listings}
+%\usepackage{cite}
 \usepackage{array}
-\usepackage{enumerate}
-%\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
-\usepackage{xcolor}
-\usepackage{color}
+%\usepackage{enumerate}
+%%\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+%\usepackage{xcolor}
+%\usepackage{color}
 
-% Used for displaying a sample figure. If possible, figure files should
-% be included in EPS format.
-%
-% If you use the hyperref package, please uncomment the following line
-% to display URLs in blue roman font according to Springer's eBook style:
-% \renewcommand\UrlFont{\color{blue}\rmfamily}
-
-%\newcommand{\authnote}[2]{{\bf \textcolor{blue}{#1}: \em \textcolor{red}{#2}}}
-\newcommand{\authnote}[2]{}
-\newcommand{\zf}[1]{\authnote{zf}{#1}}
-%End of New packages and commands
 
 
 
 \begin{document}
 %
 \title{Another Lattice Attack against the wNAF Implementation of ECDSA to Recover More Bits per Signature}
-%
-\titlerunning{Another Lattice Attack against ECDSA to Recover More Bits per Signature}
-% If the paper title is too long for the running head, you can set
-% an abbreviated paper title here
-%
-%\author{First Author\inst{1}\orcidID{0000-1111-2222-3333} \and
-%Second Author\inst{2,3}\orcidID{1111-2222-3333-4444} \and
-%Third Author\inst{3}\orcidID{2222--3333-4444-5555}}
+
 %%
-%\authorrunning{F. Author et al.}
-%% First names are abbreviated in the running head.
-%% If there are more than two authors, 'et al.' is used.
-%%
-%\institute{Princeton University, Princeton NJ 08544, USA \and
-%Springer Heidelberg, Tiergartenstr. 17, 69121 Heidelberg, Germany
-%\email{lncs@springer.com}\\
-%\url{http://www.springer.com/gp/computer-science/lncs} \and
-%ABC Institute, Rupert-Karls-University Heidelberg, Heidelberg, Germany\\
-%\email{\{abc,lncs\}@uni-heidelberg.de}}
-%%
-\maketitle              % typeset the header of the contribution
+%% The "author" command and its associated commands are used to define
+%% the authors and their affiliations.
+%% Of note is the shared affiliation of the first two authors, and the
+%% "authornote" and "authornotemark" commands
+%% used to denote shared contribution to the research.
+\author{Ben Trovato}
+%\authornote{Both authors contributed equally to this research.}
+\email{trovato@corporation.com}
+\orcid{1234-5678-9012}
+%\author{G.K.M. Tobin}
+%\authornotemark[1]
+%\email{webmaster@marysville-ohio.com}
+%\affiliation{%
+%  \institution{Institute for Clarity in Documentation}
+%  \streetaddress{P.O. Box 1212}
+%  \city{Dublin}
+%  \state{Ohio}
+%  \postcode{43017-6221}
+%}
 %
+%\author{Lars Th{\o}rv{\"a}ld}
+%\affiliation{%
+%  \institution{The Th{\o}rv{\"a}ld Group}
+%  \streetaddress{1 Th{\o}rv{\"a}ld Circle}
+%  \city{Hekla}
+%  \country{Iceland}}
+%\email{larst@affiliation.org}
+%
+%\author{Valerie B\'eranger}
+%\affiliation{%
+%  \institution{Inria Paris-Rocquencourt}
+%  \city{Rocquencourt}
+%  \country{France}
+%}
+%
+%\author{Aparna Patel}
+%\affiliation{%
+% \institution{Rajiv Gandhi University}
+% \streetaddress{Rono-Hills}
+% \city{Doimukh}
+% \state{Arunachal Pradesh}
+% \country{India}}
+%
+%\author{Huifen Chan}
+%\affiliation{%
+%  \institution{Tsinghua University}
+%  \streetaddress{30 Shuangqing Rd}
+%  \city{Haidian Qu}
+%  \state{Beijing Shi}
+%  \country{China}}
+%
+%\author{Charles Palmer}
+%\affiliation{%
+%  \institution{Palmer Research Laboratories}
+%  \streetaddress{8600 Datapoint Drive}
+%  \city{San Antonio}
+%  \state{Texas}
+%  \postcode{78229}}
+%\email{cpalmer@prl.com}
+%
+%\author{John Smith}
+%\affiliation{\institution{The Th{\o}rv{\"a}ld Group}}
+%\email{jsmith@affiliation.org}
+%
+%\author{Julius P. Kumquat}
+%\affiliation{\institution{The Kumquat Consortium}}
+%\email{jpkumquat@consortium.net}
+
+%%
+%% By default, the full list of authors will be used in the page
+%% headers. Often, this list is too long, and will overlap
+%% other information printed in the page headers. This command allows
+%% the author to define a more concise list
+%% of authors' names for this purpose.
+\renewcommand{\shortauthors}{Trovato and Tobin, et al.}
+
 \begin{abstract}
 This paper presents a practical lattice attack on ECDSA which uses
  the windowed Non-Adjacent-Form (wNAF) representation to compute the scalar multiplication over elliptic curves.
@@ -90,9 +160,58 @@ To the best of our knowledge, this is the first time to obtain and exploit the s
     in the side channel attacks against ECDSA,
     and we demonstrate the potential to recover the private key from fewer signatures.
 %This is better than some prior methods of only using partial information gained from the cache side channel.
-
-\keywords{ECDSA \and windowed Non-Adjacent-Form \and OpenSSL \and Lattice Attack \and Hidden Number Problem \and Cache Side Channel}
 \end{abstract}
+
+%%
+%% The code below is generated by the tool at http://dl.acm.org/ccs.cfm.
+%% Please copy and paste the code instead of the example below.
+%%
+\begin{CCSXML}
+<ccs2012>
+ <concept>
+  <concept_id>10010520.10010553.10010562</concept_id>
+  <concept_desc>Computer systems organization~Embedded systems</concept_desc>
+  <concept_significance>500</concept_significance>
+ </concept>
+ <concept>
+  <concept_id>10010520.10010575.10010755</concept_id>
+  <concept_desc>Computer systems organization~Redundancy</concept_desc>
+  <concept_significance>300</concept_significance>
+ </concept>
+ <concept>
+  <concept_id>10010520.10010553.10010554</concept_id>
+  <concept_desc>Computer systems organization~Robotics</concept_desc>
+  <concept_significance>100</concept_significance>
+ </concept>
+ <concept>
+  <concept_id>10003033.10003083.10003095</concept_id>
+  <concept_desc>Networks~Network reliability</concept_desc>
+  <concept_significance>100</concept_significance>
+ </concept>
+</ccs2012>
+\end{CCSXML}
+
+\ccsdesc[500]{Computer systems organization~Embedded systems}
+\ccsdesc[300]{Computer systems organization~Redundancy}
+\ccsdesc{Computer systems organization~Robotics}
+\ccsdesc[100]{Networks~Network reliability}
+
+
+
+\keywords{ECDSA , windowed Non-Adjacent-Form , OpenSSL , Lattice Attack , Hidden Number Problem , Cache Side Channel}
+
+%% A "teaser" image appears between the author and affiliation
+%% information and the body of the document, and typically spans the
+%% page.
+%\begin{teaserfigure}
+%  \includegraphics[width=\textwidth]{sampleteaser}
+%  \caption{Seattle Mariners at Spring Training, 2010.}
+%  \Description{Enjoying the baseball game from the third-base
+%  seats. Ichiro Suzuki preparing to bat.}
+%  \label{fig:teaser}
+%\end{teaserfigure}
+
+\maketitle
 %
 %
 %
@@ -105,7 +224,16 @@ To the best of our knowledge, this is the first time to obtain and exploit the s
 \input{chap/related_work}
 \input{chap/conclusion}
 
-%\section{Acknowledgment}
+
+%%
+%% The acknowledgments section is defined using the "acks" environment
+%% (and NOT an unnumbered section). This ensures the proper
+%% identification of the section in the article metadata, and the
+%% consistent spelling of the heading.
+\begin{acks}
+To Robert, for the bagels and explaining CMYK and color spaces.
+\end{acks}
+
 
 %
 % ---- Bibliography ----
@@ -117,9 +245,14 @@ To the best of our knowledge, this is the first time to obtain and exploit the s
 % \bibliography{mybibliography}
 %
 
-\bibliographystyle{splncs04}
-%\bibliographystyle{alpha}
+%%
+%% The next two lines define the bibliography style to be used, and
+%% the bibliography file.
+\bibliographystyle{ACM-Reference-Format}
 \bibliography{bib/Reference}
 
 
 \end{document}
+\endinput
+%%
+%% End of file `sample-sigconf.tex'.
