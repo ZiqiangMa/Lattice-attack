@@ -13,42 +13,23 @@ Side channel attacks can obtain the information on the ephemeral key during the 
 Furthermore, as long as some bits of the ephemeral key are leaked,
     the ECDSA private key will be recovered \cite{Nguyen2001,HG2001,Nguyen2002,Nguyen2003}.
 
-%
-%The confidentiality of this nonce is very important
-%As long as parts of the nonce are revealed through the side channels,
-% some efficient attacks can be launched to recover the private key .
-%
-In 2001 Howgrave-Graham and Smart \cite{HG2001} theoretically showed that DSA was vulnerable to such partial ephemeral key exposures.
-Then, Nguyen and Shparlinski \cite{Nguyen2002} improved their method with further details and proposed a provable polynomial-time attack.
-More importantly, they extended this theoretical attack from DSA to ECDSA \cite{Nguyen2003}.
-The basic idea is to reduce the problem of private key recovery to an instance of the Hidden Number Problem
-(HNP), which is further reduced to the Closest Vector Problem (CVP) or the Shortest Vector Problem (SVP) in a lattice, with the knowledge of consecutive bits of the ephemeral keys.
-Brumley et al. employed this lattice attack to recover the ECDSA private keys from leaked least significant bits (LSBs) \cite{Brumley2009} or leaked most significant bits (MSBs) \cite{Brumley2011}.
+The partial ephemeral key exposure attack was first proposed by Howgrave-Graham and Smart~\cite{HG2001} in 2001 to recover the whole DSA private key.
+It was improved by Nguyen and Shparlinski \cite{Nguyen2002} and extended to ECDSA \cite{Nguyen2003}.
+The basic idea is to construct a Hidden Number Problem (HNP) with the partial knowledge of the ephemeral keys,
+ and then reduce to the Closest Vector Problem (CVP) or the Shortest Vector Problem (SVP) in a lattice to calculate the private key.
+In 2007, the Extended Hidden Number Problem (EHNP)~\cite{ehnp} was introduced as another way to construct the problem to be solved in the lattice to recover the private key using the partial ephemeral key information. 
 
-%In 2003, Nguyen \cite{Nguyen2003} presented a polynomial-time algorithm that recovers the ECDSA private key when a few consecutive bits of the random nonce $k$ are known for a number of signatures, which used the similar results for the DSA \cite{Nguyen2002}.
-
-
+While the cache side channel attack is an efficient way to obtain the partial information of the ephemeral key.
 With the Flush+Reload cache side channels \cite{flushreload},
 	Benger et al. \cite{Benger2014} obtained the position of the least non-zero digit to infer the LSBs of the ephemeral key.
-This side channel exploits
-	the windowed Non-Adjacent Form (wNAF) implementation \cite{GORDON1998129,Miyaji1997,Koyama1002,Solinas2000}
-	for the scalar multiplication	
-		of a known point $G$ by the random ephemeral key $k$.
-This exploitation works for the elliptic curves over a prime field $\mathbb{F}_{p}$
-			in ECDSA, which is implemented in OpenSSL\cite{openssl} and other cryptographic engines.
 Then,
 	by constructing an HNP instance solved by the lattice reduction algorithm, they recovered the ECDSA private key from about 200 signatures.
-In 2015, Van de Pol et al. improved this attack by a more effective way of extracting information from the cache side channel \cite{Van2015},
+In 2015, Van de Pol et al.~\cite{Van2015} improved this attack,
  which exploited the information about the positions of higher half non-zero digits of the wNAF representations of the ephemeral key.
-%In the same year, Cao et al.~\cite{Cao2015} presented two lattice-based differential fault attacks against ECDSA with wNAF implementations.
-%In 2016, Goudarzi et al.~\cite{Dahmun2016}  extended this attack to the blinded ephemeral keys,
-%  which were protected by the addition of a random multiple of the elliptic-curve group order or by a random Euclidean splitting.
-%Then,
 In 2016,
-Fan et al. proposed a new way of extracting and utilizing information obtained from the Flush+Reload side channels.
- The problem of recovering the
-secret key is then transformed to the Extended Hidden Number Problem (EHNP) which is also solved by the lattice reduction algorithm.
-The number of signatures needed is reduced to $4$ to recover the private key \cite{Fan2016}.
+Fan et al.~\cite{Fan2016} extracted and utilized the information obtained from the Flush+Reload side channels to 
+construct the EHNP to recover the private key of ECDSA.
+The number of signatures needed is reduced to $4$.
 In 2017, Wang et al.~\cite{Wang2017} presented another lattice attack on ECDSA using
  a small fraction of information from the ephemeral key.
 They exploited the positions of two non-zero digits together with the length of the wNAF representation of the ephemeral key to construct an HNP instance. They need 85 signatures to recover the private key.
