@@ -17,47 +17,20 @@ The partial ephemeral key exposure attack was first proposed by Howgrave-Graham 
 It was improved by Nguyen and Shparlinski \cite{Nguyen2002} and extended to ECDSA \cite{Nguyen2003}.
 The basic idea is to construct a Hidden Number Problem (HNP) with the partial knowledge of the ephemeral keys,
  and then reduce to the Closest Vector Problem (CVP) or the Shortest Vector Problem (SVP) in a lattice to calculate the private key.
-In 2007, the Extended Hidden Number Problem (EHNP)~\cite{ehnp} was introduced as another way to construct the problem to be solved in the lattice to recover the private key using the partial ephemeral key information. 
+In 2007, the Extended Hidden Number Problem (EHNP)~\cite{ehnp} was introduced as another way to construct the problem to be solved in the lattice to recover the private key using the partial ephemeral key information.
 
 While the cache side channel attack is an efficient way to obtain the partial information of the ephemeral key.
 With the Flush+Reload cache side channels \cite{flushreload},
-	Benger et al. \cite{Benger2014} obtained the position of the least non-zero digit to infer the LSBs of the ephemeral key.
-Then,
-	by constructing an HNP instance solved by the lattice reduction algorithm, they recovered the ECDSA private key from about 200 signatures.
-In 2015, Van de Pol et al.~\cite{Van2015} improved this attack,
- which exploited the information about the positions of higher half non-zero digits of the wNAF representations of the ephemeral key.
+ attackers can get a "double-add" chain and extract some useful information about the ephemeral key.
+	Benger et al. \cite{Benger2014} extracted the LSBs of the ephemeral keys from the chain and constructed an HNP instance to recover the ECDSA private key from about 200 signatures.
+In 2015, Van de Pol et al.~\cite{Van2015} improved Benger's attack,
+ which exploited the positions of higher half non-zero digits of the wNAF representations of the ephemeral key extracted from the "double-add" chain.
 In 2016,
-Fan et al.~\cite{Fan2016} extracted and utilized the information obtained from the Flush+Reload side channels to 
+Fan et al.~\cite{Fan2016} extracted and utilized the information from the the "double-add" chain to
 construct the EHNP to recover the private key of ECDSA.
 The number of signatures needed is reduced to $4$.
-In 2017, Wang et al.~\cite{Wang2017} presented another lattice attack on ECDSA using
- a small fraction of information from the ephemeral key.
-They exploited the positions of two non-zero digits together with the length of the wNAF representation of the ephemeral key to construct an HNP instance. They need 85 signatures to recover the private key.
+In 2017, Wang et al.~\cite{Wang2017} exploited the positions of two non-zero digits together with the length of the wNAF representation of the ephemeral key to construct an HNP instance. They need 85 signatures to recover the private key.
 %这一部分仍需要修改
-
-
-%Benger et al. [22] proposed a method to extract the LSBs of the ephemeral key with the knowledge
-%of double-and-add chain of the execution of scalar multiplication in ECDSA implementation via the
-%Flush+Reload attack, being able to recover the private key of the secp256k1 curve using about 200 signatures
-%
-%It was first in 2001 that Howgrave-Graham and Smart [23] proposed
-%their attack against DSA heuristically under the assumption that some consecutive leaked ephemeral
-%key bits be known by side-channel attacks. In 2002, Nguyen and Shparlinski [24] analyzed their method
-%in further details and gave a provable polynomial-time attack against DSA when some consecutive bits
-%(e.g., the LSBs) of the ephemeral keys were leaked. They also extended their results to ECDSA [25] and
-%managed to recover a 160-bit private key with 100 signatures each leaking 3 consecutive least significant
-%bits. The basic idea is to reduce the key recovery problem to an instance of the hidden number problem
-%(HNP), which can be further reduced to the closest vector problem (CVP) in a suitable lattice, with the
-%knowledge of consecutive leaked ephemeral key bits. The best result of this method so far is achieved
-%by Liu and Nguyen [26] in 2013, using the algorithm BKZ 2.0 [27], which is one of the best lattice
-%reduction algorithms up to now. A 160-bit signature with 2-bit leakage of LSBs can be recovered with
-%100 signatures.
-
-%之前的工作存在哪些问题：1.2.3
-%我们的工作，我们做了什么事情，详细说明，做了什么，得到了什么结果，
-%先说方案，再说实现
-%和之前相比，我们的效果好在了什么地方。
-%然后summary贡献：
 
 %只是对数据分析进行了改进，并没有获得更多的数据
 
