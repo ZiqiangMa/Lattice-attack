@@ -39,10 +39,11 @@ They tried to make better use of the data achieved through the side channels and
  to recover the private key.
 They extracted the least non-zero digit \cite{Benger2014}, half non-zero digits \cite{Van2015}, all non-zero digits \cite{Fan2016} or two non-zero digits with the total length~\cite{Wang2017}.
 In summary,
-all information exploited in these attacks are the positions of the non-zero digits,
+all information exploited in these attacks are from the "double-add" chain,
  and no more extra information about the ephemeral key is extracted from the side channels.
-Although the lattice attacks are different in these works,
-     no effort and improvement have been made to achieve and exploit more information.
+%Although the lattice attacks are different in these works,
+%     no effort and improvement have been made to achieve and exploit more information.
+
 
 In our paper, we focus on ECDSA with the wNAF representation of the ephemeral key.
 %, especially the implementation in the OpenSSL library.
