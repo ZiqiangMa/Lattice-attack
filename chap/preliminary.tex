@@ -271,7 +271,7 @@ For the wNAF algorithm,
  the if-statement block (Line 4 in Algorithm\ref{alg:kg}) is vulnerable to side channel attacks.
 An attacker can use a spy process to monitor the conditional branches through side channels.
 Then he can get a ``double-add'' chain, and through it, whether the value of $k_i$ is zero can be inferred.
-But this is not enough to determine the complete ephemeral key, 
+But this is not enough to determine the complete ephemeral key,
  only some bits of the ephemeral key are obtained.
 The attacker then use this information to launch a lattice attack to recover the private key.
 
@@ -281,7 +281,8 @@ It is used to recover the secret key of Diffie-Hellman key exchange, DSA and ECD
 Given a prime number $q$ and a positive $l$,
  and let $t_1, t_2, ..., t_d$ be randomly chosen, which are uniformly and independently in $\mathbb{F}_q$.
 The HNP can be stated as follows:
-  recovering an unknown number $\alpha \in \mathbb{F}_q$ such that the known number pairs $(t_i, u_i)$ satisfy $v_i = |\alpha t_i - u_i|_{q} \leq q/2^{l+1}$ for $1 \leq i \leq d$,
+  recovering an unknown number $\alpha \in \mathbb{F}_q$ such that the known number pairs $(t_i, u_i)$ satisfy 
+  $$v_i = |\alpha t_i - u_i|_{q} \leq q/2^{l+1}, \ \ \ \ 1 \leq i \leq d,$$
    where $|\cdot|_q$ denotes the reduction modulo $q$ into range $[-q/2, ..., q/2)$.
 If $|\alpha t - u|_{q} \leq q/2^{l+1}$ is satisfied,
 the integer $u$ represents the $l$ most significant bits of $\alpha t$ which is defined as ${MSB}_l(\alpha t)$.
@@ -301,7 +302,7 @@ Based on the partial information about the ephemeral key obtained by the attacke
  they transform this equation to satisfy the form of HNP or EHNP.
    Then the private key as the hidden number can be recovered
       by solving the SVP/CVP problem in lattice converted from HNP or EHNP using the lattice reduction algorithm such as LLL \cite{Lenstra1982} or BKZ \cite{Schnorr1994}.
-      
+
 %we can use  algorithm to solve the SVP problem, while use Babai \cite{Babai1986} algorithm or Enumeration technique to solve the CVP problem.
 
 %这一段说，用cache攻击可以获得信息，然后将其转化成hnp问题来求解。
@@ -309,7 +310,7 @@ Based on the partial information about the ephemeral key obtained by the attacke
 %  the attackers can obtain some consecutive bit fragments of the ephemeral key $k$ through the cache side channels.
 %Then, the problem of recovering the secret key can be transformed to the HNP problem.
 % The attackers can recover the secret key by solving the HNP problem using lattice reduction algorithms.
- 
+
 %
 %The HNP problem can be converted to the CVP/SVP problem in lattices
 % and solved by the lattice reduction.
