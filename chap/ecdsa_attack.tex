@@ -1,4 +1,4 @@
-\section{Attacking ECDSA}
+\section{Improving Cache Side Channel Attack on wNAF Representation}
 \label{sec:attack}
 This section proposes a new method to recover the private key of ECDSA.
 First, we analyse the invert function in the scalar multiplication with wNAF representation in the ECDSA algorithm.
@@ -91,204 +91,436 @@ In this way, we obtain all the positions of the non-zero digits and their signs.
 
 %问题是：标量乘法运算的起始位置很重要。
 
-%符号：sign
-%这一节用不用一个图来说明add-double链
 
 
-\subsection{Recovering Consecutive Bits}
-\label{data_proc1}
-In this section, we introduce how to recover the consecutive bits at the position of every non-zero bits for the ephemeral key $k$, exploiting the information obtained from the side channel.
+\subsection{The Flush+Flush Attack}
+\label{ffattack}
+We launched the cache side channel attack on an Acer Veriton T830 running Ubuntu 16.04.
+The machine features an Intel Core i7-6700 processor with four execution cores and an $8$ MB LLC.
+The attacking target is the ECDSA implemented in OpenSSL 1.1.1b, which uses wNAF representation in the scalar multiplication.
+For the experiments, we use the Flush+Flush to attack the 256-bit curve secp256k1.
+%Followings are the implementation details for the Flush+Flush attack.
 
-First, we denote the wNAF representation of $k$ as $k = \sum{k_{i}2^{i}}$,
- and the binary representation as $k = \sum{b_{i}2^{i}}$.
-From the Algorithm \ref{alg:wnaf} we know that the position of $k_i$ in the wNAF representation is the same as $b_i$ in the binary representation.
- When we know the information about whether $k_i$ is zero and the sign of the non-zero $k_i$, we can simply determine some bits of $k$.
- For example, if we obtain the sign of the least non-zero $k_j$, we can infer that $b_j$ is one and $b_i$ is zero for $0\leq i<j$.
- But for arbitrary non-zero digits, it can not determine whether the bit is zero or one.
+%平台
 
- Let $m$ and $m + n$ be the positions of two consecutive non-zero digits of the wNAF representation, and $w$ be the window size.
- That is, $k_m, k_{m+n} \neq 0$ and $k_{m+i} = 0$ for all $0 < i < n$.
- We analyse the transformation method between the binary and wNAF representation, getting the following result:
+\noindent\textbf{Get the virtual address. }
+We use a spy process to monitor the  \verb+EC_POINT_dbl()+,  \verb+EC_POINT_add()+ and \verb+EC_POINT_invert()+ functions in OpenSSL.
+So we need to know the virtual addresses of the three functions.
+First, we get the offsets of the three functions required to monitor in the code of the dynamic library.
+Then, we use the \verb+mmap()+ function to load each page locating the monitored function codes into the virtual address space of the spy process.
+The \verb+mmap()+ function will return the initial address of the page so that we can get the virtual address of the monitored function based on the offset and the address of this page.
+An alternative way is to use the \verb+dl_iterate_phdr()+ function to get the initial address of the dynamic library when loaded into the address space.
 
- \begin{align}
- &b_{m+n} = \left\{
- \begin{aligned}
- 	&0,\,\;\ \   k_m < 0 \\
- 	&1,\,\;\ \   k_m > 0
- \end{aligned}
- \right.  , \\
- &b_{m+i} = \left\{
- \begin{aligned}
- 	&0,\,\;\ \   k_m > 0 \\
- 	&1,\,\;\ \   k_m < 0
- \end{aligned}
- \right.
- ,\ \ \ \ \  w \leq i \leq n-1
- \end{align}
-%这里的公式有漏洞，需要加上最低位即m最小时的bm
+To determine the offsets of the memory lines in the  dynamic library,  we build OpenSSL with debugging symbols.
+ These symbols are not loaded at run time and do not affect the performance of the code.
+Typically the debugging symbols are not available for attackers,
+ however, they could use reverse engineering [16] to determine the offsets.
 
-And if $m$ is the position of the least non-zero digit of $k$,
- \begin{align}
- &b_{i} = \left\{
- \begin{aligned}
- 	&1,\,\;\ \   i = m \\
- 	&0,\,\;\ \   0 \leq i < m
- \end{aligned}
- \right.  .
- \end{align}
 
-In this way, at the position of every non-zero digit we can obtain $n - w + 1$ consecutive bits of $k$
- except at the  position of the least non-zero digit being $m+1$.
-For the wNAF representation, every non-zero digit (except the least) is followed by at least $w$ zero values.
- The average number of non-zero digits of $k$ is $(\lfloor\log_{2}{q}\rfloor +1) /(w+2)$.
- The average distance between consecutive non-zero digits is $w+2$, i.e. on average $n = w + 2$.
- This means we can obtain $3$ consecutive bits on average at the every non-zero digit (except the least).
-Based on \cite{Benger2014} on average we can get $2$ least significant bits of the ephemeral key.
-Thus, on average we can obtain $3(\lfloor\log_{2}{q}\rfloor+1) /(w+2) - 1$ bits of the ephemeral key $k$ in total.
-Meanwhile, because the minimal value of $n$ is $w + 1$, the minimal length of the consecutive bits is $2$.
-This illustrates that all the sequences of consecutive bits obtained (except the least) are no less than $2$ bits.
 
-For the secp256k1 curve implemented in OpenSSL, $\lfloor\log_{2}{q}\rfloor  + 1= 256$, $w = 3$.
- Also, as introduced previous, the scalar multiplication uses $k+q$ instead of $k$ in most cases,
-  so the total number of bits per signature we obtain is $3(\lfloor\log_{2}{q}\rfloor +2)/(w+2)-1 = 153.2$.
-In theory, two signatures would be enough to recover the 256-bit private key as $2\times 153.2 = 306.4 > 256$.
+%获取虚拟地址
 
-%这里再加一小段，理论上[文献x]说，只要知道连续的2bit信息，就能够用来构造格攻击恢复密钥。
-%因此，对侧信道得到的数据使用我们的方法恢复出来的连续比特位，全部都可以被用到后续的攻击中
-
-%首先，k的二进制表示和k的wnaf表示
-%他们的位是对应的。
-%当我们知道了digit的正负消息后，简单的，我们就可以判断出某些二进制位是多少了
-%然后我们来看，怎么去确定
-%得到一个公式：
+%首先获取所需监控函数代码在动态库中的偏移量
+%接着获取函数代码虚拟地址，有两种方法
+%使用mmap()函数，将所监控函数代码所在页加载入地址空间中，获取到函数代码的虚拟地址
+%或编译时链接动态库，运行时使用dl_iterate_phdr()函数，获取到动态库加载入地址空间的起始地址，根据偏移量，获得函数代码的虚拟地址
 %
-%然后我们就得到了连续的bit信息
-%通过一个签名，我们能够获得的bit数为：
+%
+%
+%Victim：通过调用OpenSSL的crypto.so库来进行ECDSA签名运算。
+%Attacker：使用和victim相同的crypto库，对victim使用的点加和倍点函数以及EC_POINT_invert()代码所在的cache行进行监控。
 
 
-\subsection{Constructing the Lattice Attack}
-\label{data_proc2}
-In this section, we transform the problem of recovering the private key to the HNP instance, and further convert to the CVP/SVP instance in a lattice.
-Our method is based on the analysis from \cite{Nguyen2002}.
-But we make some improvements to it.
-First, the length of the consecutive bits used to construct the lattice is variable while the prior work fixes the length, which may lose some information.
-Second,  in our method the position of consecutive bits is arbitrary in the ephemeral key and does not need to be fixed, while the prior work needs all the consecutive bits at the same position.
-Finally, from one signature we obtain multiple sequences of consecutive bits, and all of them can be used for constructing the lattice as long as the length of the sequence is satisfied, while the prior work only generates one sequence of consecutive bits for one signature.
 
-To construct an HNP instance using arbitrary consecutive bits, we need to use the following theorem\cite{Nguyen2002}:
-\begin{theorem}
- \label{theorem1}
-There exists a polynomial-time algorithm which, given $A$ and $B$ in $[1, q]$, finds $\lambda \in Z^{*}_{q}$ such that
-$$
-|\lambda |_q < B  \ \  \text{and} \ \  |\lambda A|_q \leq q/B .
-$$
-\end{theorem}
-The value of $\lambda$ can be computed exploiting the continued fractions.
-
-Recall the ECDSA signature, $s = k^{-1} (h(m) + r\cdot\alpha) \bmod q$.
-We rewrite it as
-\begin{equation}
-\label{sig}
-\alpha rs^{-1} = k - s^{-1}h(m)  \ \  \text{mod} \ \ q.
-\end{equation}
-Then assume that we have the $l$ consecutive bits of $k$ with the value of $a$, starting at some known position $j$.
- So $k$ is represented as $k = 2^{j}a + 2^{l+j}b +c$ for $0 \leq a \leq 2^l -1$, $0\leq b \leq q/2^{l+j}$ and $0 \leq c < 2^j$.
- We apply the theorem with $A = 2^{j+l}$ and $B = q2^{-j-l/2}$, to obtain $\lambda$ such that
-$$
-|\lambda |_q < q2^{-j-l/2}  \ \  \text{and} \ \  |\lambda 2^{j+l}|_q \leq q/2^{j+l/2} .
-$$
-
-Plugging the value of $k$ and multiplying by $\lambda$, Equation \ref{sig} is transformed to
-$$
-\alpha r\lambda s^{-1} = (2^{j}a - s^{-1}h(m))\lambda +(c\lambda + 2^{l+j}b\lambda)  \ \  \bmod \ \ q.
-$$
-
- Let
- \begin{equation}
- \label{tu}
- \left\{
- \begin{aligned}
- 	&t = \lfloor r\lambda s^{-1} \rfloor_q    \\
- 	&u = \lfloor (2^{j}a - s^{-1}h(m))\lambda \rfloor_q
- \end{aligned}
- \right. ,
- \end{equation}
- where $\lfloor \cdot\rfloor_q$ denotes the reduction modulo $q$ into range $[0, ..., q)$.
-
-We then have that
- \begin{equation}
-\label{lattice}
-    |\alpha t - u|_q < q/2^{(l/2-1)}.
-\end{equation}
-This way, we transform to an HNP instance.
-
-In practice, OpenSSL uses $k+q$ as the ephemeral key. So the Equation \ref{tu} remains the same, but the Inequality~\ref{lattice} turns into
- \begin{equation}
-\label{lattice2}
-    |\alpha t - u|_q < q/2^{(l/2-\log_{2}{3})}.
-\end{equation}
-
-Note that, the Equation \ref{lattice2} represents that the $l/2-\log_{2}{3} -1$ most significant bits of $\lfloor\alpha t\rfloor_q$ is $u$, based on the definition of the HNP.
-So it should satisfy that $l/2-\log_{2}{3} -1 \geq 1$, i.e. $l > 7$.
-That means the length of the consecutive bits used to  construct the HNP instance should be larger than $7$,
-although we could use all the sequences of the consecutive bits of the ephemeral key in theory.
-
-Next we turn the HNP instance into the lattice problem.
-We use $d$ triples $(t_i, u_i, l_i)$ to construct a $d+1$ dimensional lattice $L(B)$ spanned by the rows of the following matrix:
-$$B =
-\left(
-  \begin{array}{ccccc}
-    2^{l_1+1}q & 0 & \cdots & 0 & 0 \\
-    0 & 2^{l_2+1}q & \ddots & \vdots & \vdots \\
-    \vdots & \ddots & \ddots & 0 & \vdots \\
-    0 & \cdots & 0 & 2^{l_d+1}q & 0 \\
-    2^{l_1+1}t_1 & \cdots & \cdots & 2^{l_d+1}t_d & 1 \\
-  \end{array}
-\right).
-$$
-Considering the vector $\textbf{x} = (2^{l_1+1}\alpha t_1 \bmod q, ..., 2^{l_d+1}\alpha t_d \bmod q, \alpha)$,
- it can be obtained by multiplying the last row vector of $B$ by $\alpha$ and then subtracting appropriate multiples of the first $d$ row vectors.
-Thus the vector $\textbf{x}$ belongs to $L(B)$.
-Let the vector $\textbf{u} = (2^{l_1+1}u_1, ..., 2^{l_d+1}u_d, 0)$,
- so the distance between $\textbf{x}$ and $\textbf{u}$ is $\|\textbf{x} - \textbf{u}\| \leq q\sqrt{d+1}$.
-While the lattice determinant of $L(B)$ is $2^{d + \sum{l_i}}q^d$,
- thus the vector $\textbf{x}$ is very close to the vector $\textbf{u}$.
-By solving the CVP problem with the input $B$ and $\textbf{u}$, the vector $\textbf{x}$ is revealed,
- hence the private key $\alpha$ is recovered as it is the last element of the vector $\textbf{x}$.
-
-To solve the CVP problem in polynomial time,
-we transform it to an SVP instance.
- We use $d$ triples $(t_i, u_i, l_i)$ to construct a $d+2$ dimensional lattice $L(B')$ spanned by the rows of the matrix
-$$B' =
-\left(
-  \begin{array}{cc}
-     B\ \  &\  0\ \  \\
-    \textbf{u}\ \ &\ q \ \  \\
-  \end{array}
-\right).
-$$
-Similarly, the vector $\textbf{x}' = (2^{l_1+1}(\alpha t_1 - u_1) \bmod q, ..., 2^{l_d+1}(\alpha t_d - u_d) \bmod q, \alpha, -q)$ belongs to the lattice $L(B')$.
- Its norm satisfies that $\|\textbf{x}'\| \leq q\sqrt{d+2}$,
-  while the lattice determinant of $L(B')$ is $2^{d + \sum{l_i}}q^{d+1}$.
-   This indicates that the vector $\textbf{x}'$ is a very short vector.
-Note that this lattice also contains another vector $(-t_1, ..., -t_d, q, 0)\cdot B = (0, ..., 0, q, 0)$,
- which is most likely the shortest vector of the lattice.
-Therefore we expect the second vector in a reduced basis of the lattice is equal to $\textbf{x}'$ with a ``good'' chance for a suitably lattice reduction algorithm.
-Then we acquire the secret key $\alpha$.
-
-%we can use LLL~\cite{Lenstra1982} or BKZ~\cite{Schnorr1994} algorithm to solve the SVP problem, while use Babai~\cite{Babai1986} algorithm or Enumeration technique to solve the CVP problem.
+\noindent\textbf{Thresholds.}
+We monitor the execution time of the \verb+clflush+ instruction to flush the monitored functions.
+If the time is larger than the threshold, meaning the memory line is accessed by the victim.
+Otherwise, the memory line is not accessed.
+The thresholds are calculated for every monitored function.
+For each address of the monitored functions, we record the time of flushing the cache 1000 times, and take the time larger than 99 percent samples plus 6 cycles as the threshold of this address.
+The thresholds are recalculated every time before the attack is triggered.
 
 
-%转化为hnp问题，%引理
-%构造格
-%cvp/svp求解
+%阈值
+%对每个需要监控的地址都计算各自的阈值
+%每次监测都重新计算阈值
+%对每个地址，监控1000次flush花费的时间，取99%以上样本所花的最大时间加上6作为该地址的阈值
+
+
+\noindent\textbf{Trigger the monitoring.}
+We monitor the execution time of the address of the three functions.
+When the time of any one is larger than the corresponding threshold,
+ we start to record execution times, meaning that the attack starts.
+The record stops when the number of the consecutive execution time of all the monitored addresses less than the threshold  is larger than 300.
+If the number of record is less than 1000, we re-record the execution time.
+Then we have a valid record.
+ Due to the  disturbance of noise,
+  the valid record does not necessarily contain the activities of the monitored functions in the scalar multiplication.
+So we continuously obtain 10 valid records.
+%触发
+%1) 某一个监控地址的flush时间大于阈值以后，开始记录；
+%2）所有地址连续小于阈值的数量大于200后，停止记录；
+%3）如果记录数据量小于1000，重新开始记录；
+%4）连续记录10次。
+
+
+\noindent\textbf{Time slot.}
+For the attack, the spy process divides time into time slots of approximately $2500$ cycles.
+In each slot, the spy flushes the memory lines in the add, double and invert functions (\verb+EC_POINT_dbl()+,  \verb+EC_POINT_add()+ and \verb+EC_POINT_invert()+) out of the caches.
+Also, the length of the time slot is chosen to ensure that the three functions only execute once.
+This allows the spy to correctly distinguish consecutive doubles.
+
+\noindent\textbf{Determine the initial point.}
+In order to precisely recover the sign of the ephemeral key, we need to determine which sample represents the start of the scalar multiplication.
+We can determine the
+start of the scalar multiplication
+by combining the double-add chain and the profiles of the double and add functions with wNAF representation.
+Also, we can determine the start position by monitoring the code of the copy function in OpenSSL.
+ We note that when the computation of scalar multiplication starts, OpenSSL performs the copy function instead of the add function.
+ Thus we can monitor the copy function, and when the copy function is called in the time slot and the add function is called in the next slot, it means that the scalar multiplication starts.
+
+%起始判断
+%对标量乘法代码分析，在对k的最高位处理时，并不是使用的点加，而是copy，因此，可以对copy函数进行监控，当一个时间槽内进行了倍点和copy操作，可以认定标量乘法的开始。
+%如果不监控copy，也可以根据点加倍点的发生，去排除错误的触发；也可以根据NAF编码时点加倍点的特征来判断起始。
+
+\noindent\textbf{Experimental results.}
+Fig.~\ref{fig1} shows a fragment of the output of the spy when OpenSSL performs ECDSA with the secp256k1 curve.
+In this figure, $\square$, $\lozenge$ and $\vartriangle$ represent ``double'', ``add'' and ``invert'' respectively.
+From this fragment, three operations are clearly distinguished,
+ so we succeed to obtain the ``double-add-invert'' chain easily.
+
+
+
+%%10次实验
+%We totally run 10 experiments, i.e. monitoring the ECDSA signature 10 times.
+%The accurate rate is defined as the value of the actual number of bits obtained divided by the ideal number of bits available.
+%Thus, from these experiments the average accurate rate of the data obtained from the Flush+Flush attack is xx\%.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{pic/slot2500.pdf}
+\caption{A fragment of the output of the Flush+Flush attack.} \label{fig1}
+\end{figure}
+
+
+%对这个示例进行解释：
+%什么符号代表哪个操作
+%sample大于阈值xx 表示在这个时间槽内，函数被执行了。
+%然后，for example， 对于时间槽1， 什么被访问了，代表哪个函数被执行了，因此对应于0或者1，
+%然后时间槽x代表1，
+%接着说时间槽x2 代表1，同时invert调用了，说明该位符号和之前相反，
+%时间槽x3，未调用invert，符号位和之前相同。
+%
+%时间槽x4可能是噪声，对噪声的处理
+%
+%和真实的k相比，正确率是x\%
+%
+%用ff攻击一条曲线，得到结果，得到double add invert 链，进行恢复
+%然后恢复成功率是多少？
+%
+%
+%结果
 
 
 
 
-%我还要去做的事情是：确定我能够获取到的bit数具体是多少bit
-%我们攻击使用了多少个签名
 
+
+
+
+
+
+%\section{Attacking ECDSA}
+%\label{sec:attack}
+%This section proposes a new method to recover the private key of ECDSA.
+%First, we analyse the invert function in the scalar multiplication with wNAF representation in the ECDSA algorithm.
+% Then we use the invert function for improving the cache side channel attacks, from which the sign of the non-zero digits of $k$ is determined.
+%
+%After that, we make use of the obtained information to recover the consecutive bits at the position of every non-zero digits of $k$.
+%Finally, we construct an HNP instance by the consecutive bits and transform it to the problem of solving the SVP/CVP in some lattice with the lattice reduction algorithms.
+%Note that the steps in existing works do not work for the signs of the non-zero digits.
+%So we have to first obtain consecutive bits of the ephemeral key by converting the wNAF representation to the binary representation.
+%Then, we use these consecutive bits to construct the HNP instance.
+%
+%\subsection{Attacking wNAF through the Cache Side Channels}
+%\label{data_get}
+%First, recalling the implementation of scalar multiplication in OpenSSL, it uses the invert function to
+%  compute the inverse element of a number.
+%Applying this function, the space of precomputed points is saved by half, only need to store $\{G, 3G, ..., (2^{w} - 1)G\}$.
+%As shown in Algorithm~\ref{alg:smopenssl},
+%it iterates $k$ from the most significant digit to the least significant digit.
+%In each digit, it performs a double function.
+%While if the digit is not zero, it first determines whether the invert function is executed.
+% If the sign of the digit is opposite to the prior one, the invert function is called.
+%Then it indexes from the precomputed points using the absolute value of the digit and performs an addition operation.
+%
+%Originally, the vulnerability comes from the double and add function.
+%The double function is called at every digit, and this reveals the digit sequence.
+%The add function is called just when the digit is non-zero,
+%  which makes it possible to distinguish whether the digit is zero or not.
+%  That reveals the position of all non-zero digits.
+%However,
+% the invert function is also vulnerable, because it is called conditionally.
+%Only when the sign of the non-zero digit is opposite to the previous, the invert function will be performed.
+%Because the first non-zero digit is positive,
+%   the signs of all the non-zero digit are deduced based on the execution of the invert function.
+%
+%
+%We use a spy process to monitor one memory line of the code of the double, add and invert functions during the scalar multiplication.
+%The time is divided into slots, and in each slot,
+%  the spy determines whether the three functions are performed or not by monitoring the cache hits/misses.
+% Then we obtain a ``double-add-invert'' chain.
+%According to the ``double'' and ``add'' in this chain, we determine whether each digit of $k$ is zero or not,
+%    as done in previous works.
+%Also, based on the ``invert'' in this chain, we infer the sign of each non-zero digit.
+%
+%
+%In the OpenSSL library (especially the latest OpenSSL 1.1.1b),
+% the functions of double, add and invert are implemented as \verb+EC_POINT_dbl()+, \verb+EC_POINT_add()+ and \verb+EC_POINT_invert()+.
+% The existing attacks monitor \verb+EC_POINT_dbl()+ and \verb+EC_POINT_add()+.
+%In our attack, we improve the original cache side channel attack by adding a new monitor to the \verb+EC_POINT_invert()+ function.
+% In each time slot
+%  the spy determines whether three functions are performed or not.
+%Then we get a new ``double-add-invert'' chain through the cache side channel attack.
+%
+%%首先回顾标量乘法的实现，原始实现。
+%%然后invert函数在里面是如何使用的，起到了什么作用。
+%%漏洞在哪里，怎么样去利用。
+%%OpenSSL中他们的实现，
+%%我们在攻击中怎么做的
+%%然后得到了什么
+%
+%
+%When we use the ``double-add-invert'' chain to extract the digits of $k$,
+%the ``double'' represents the double function is called,
+%and the ``add'' represents  both double and add are called.
+%The ``invert'' represents the invert function is called.
+%Therefore,
+% the ``double'' appears meaning that $k_i$ is zero
+%and the ``add'' appears meaning that $k_i$ is not zero.
+%We use the ``invert'' to determine the sign of $k_i$.
+%The sign of $k_i$ is related to the previous non-zero digit.
+%First, the ``invert'' comes out together with ``add''.
+%If the ``invert'' appears, it represents that the sign of $k_i$ is opposite to the previous non-zero digit.
+% While, if the ``invert'' does not appear when ``add'' comes out, it represents that
+%the sign of this digit is the same as the previous non-zero one.
+%
+%Because in the wNAF representation of $k$, the most significant digit is always positive.
+% Thus we can determine the sign of all non-zero digits.
+%In this way, we obtain all the positions of the non-zero digits and their signs.
+%
+%
+%% In our work, we implement the Flush+Flush attack to obtain the ''double-add-invert'' chain because it has a better precision.
+%%%这里还需要再多说两句，为什么要精度更高，因为reload时间长，多监控一个函数，在一个slot中花费时间更多， 容易造成失误。 flush的时间短，slot可以更短。
+%
+%
+%%openssl的实现是XXXX，
+%%传统的攻击对double 和add进行监控
+%%我们增加对invert进行监控
+%%然后如何得到digit的正负信息
+%%在我们的实现中，通过对比f_f和f+r 选择f+f进行攻击
+%
+%
+%%问题是：标量乘法运算的起始位置很重要。
+%
+%%符号：sign
+%%这一节用不用一个图来说明add-double链
+%
+%
+%\subsection{Recovering Consecutive Bits}
+%\label{data_proc1}
+%In this section, we introduce how to recover the consecutive bits at the position of every non-zero bits for the ephemeral key $k$, exploiting the information obtained from the side channel.
+%
+%First, we denote the wNAF representation of $k$ as $k = \sum{k_{i}2^{i}}$,
+% and the binary representation as $k = \sum{b_{i}2^{i}}$.
+%From the Algorithm \ref{alg:wnaf} we know that the position of $k_i$ in the wNAF representation is the same as $b_i$ in the binary representation.
+% When we know the information about whether $k_i$ is zero and the sign of the non-zero $k_i$, we can simply determine some bits of $k$.
+% For example, if we obtain the sign of the least non-zero $k_j$, we can infer that $b_j$ is one and $b_i$ is zero for $0\leq i<j$.
+% But for arbitrary non-zero digits, it can not determine whether the bit is zero or one.
+%
+% Let $m$ and $m + n$ be the positions of two consecutive non-zero digits of the wNAF representation, and $w$ be the window size.
+% That is, $k_m, k_{m+n} \neq 0$ and $k_{m+i} = 0$ for all $0 < i < n$.
+% We analyse the transformation method between the binary and wNAF representation, getting the following result:
+%
+% \begin{align}
+% &b_{m+n} = \left\{
+% \begin{aligned}
+% 	&0,\,\;\ \   k_m < 0 \\
+% 	&1,\,\;\ \   k_m > 0
+% \end{aligned}
+% \right.  , \\
+% &b_{m+i} = \left\{
+% \begin{aligned}
+% 	&0,\,\;\ \   k_m > 0 \\
+% 	&1,\,\;\ \   k_m < 0
+% \end{aligned}
+% \right.
+% ,\ \ \ \ \  w \leq i \leq n-1
+% \end{align}
+%%这里的公式有漏洞，需要加上最低位即m最小时的bm
+%
+%And if $m$ is the position of the least non-zero digit of $k$,
+% \begin{align}
+% &b_{i} = \left\{
+% \begin{aligned}
+% 	&1,\,\;\ \   i = m \\
+% 	&0,\,\;\ \   0 \leq i < m
+% \end{aligned}
+% \right.  .
+% \end{align}
+%
+%In this way, at the position of every non-zero digit we can obtain $n - w + 1$ consecutive bits of $k$
+% except at the  position of the least non-zero digit being $m+1$.
+%For the wNAF representation, every non-zero digit (except the least) is followed by at least $w$ zero values.
+% The average number of non-zero digits of $k$ is $(\lfloor\log_{2}{q}\rfloor +1) /(w+2)$.
+% The average distance between consecutive non-zero digits is $w+2$, i.e. on average $n = w + 2$.
+% This means we can obtain $3$ consecutive bits on average at the every non-zero digit (except the least).
+%Based on \cite{Benger2014} on average we can get $2$ least significant bits of the ephemeral key.
+%Thus, on average we can obtain $3(\lfloor\log_{2}{q}\rfloor+1) /(w+2) - 1$ bits of the ephemeral key $k$ in total.
+%Meanwhile, because the minimal value of $n$ is $w + 1$, the minimal length of the consecutive bits is $2$.
+%This illustrates that all the sequences of consecutive bits obtained (except the least) are no less than $2$ bits.
+%
+%For the secp256k1 curve implemented in OpenSSL, $\lfloor\log_{2}{q}\rfloor  + 1= 256$, $w = 3$.
+% Also, as introduced previous, the scalar multiplication uses $k+q$ instead of $k$ in most cases,
+%  so the total number of bits per signature we obtain is $3(\lfloor\log_{2}{q}\rfloor +2)/(w+2)-1 = 153.2$.
+%In theory, two signatures would be enough to recover the 256-bit private key as $2\times 153.2 = 306.4 > 256$.
+%
+%%这里再加一小段，理论上[文献x]说，只要知道连续的2bit信息，就能够用来构造格攻击恢复密钥。
+%%因此，对侧信道得到的数据使用我们的方法恢复出来的连续比特位，全部都可以被用到后续的攻击中
+%
+%%首先，k的二进制表示和k的wnaf表示
+%%他们的位是对应的。
+%%当我们知道了digit的正负消息后，简单的，我们就可以判断出某些二进制位是多少了
+%%然后我们来看，怎么去确定
+%%得到一个公式：
+%%
+%%然后我们就得到了连续的bit信息
+%%通过一个签名，我们能够获得的bit数为：
+%
+%
+%\subsection{Constructing the Lattice Attack}
+%\label{data_proc2}
+%In this section, we transform the problem of recovering the private key to the HNP instance, and further convert to the CVP/SVP instance in a lattice.
+%Our method is based on the analysis from \cite{Nguyen2002}.
+%But we make some improvements to it.
+%First, the length of the consecutive bits used to construct the lattice is variable while the prior work fixes the length, which may lose some information.
+%Second,  in our method the position of consecutive bits is arbitrary in the ephemeral key and does not need to be fixed, while the prior work needs all the consecutive bits at the same position.
+%Finally, from one signature we obtain multiple sequences of consecutive bits, and all of them can be used for constructing the lattice as long as the length of the sequence is satisfied, while the prior work only generates one sequence of consecutive bits for one signature.
+%
+%To construct an HNP instance using arbitrary consecutive bits, we need to use the following theorem\cite{Nguyen2002}:
+%\begin{theorem}
+% \label{theorem1}
+%There exists a polynomial-time algorithm which, given $A$ and $B$ in $[1, q]$, finds $\lambda \in Z^{*}_{q}$ such that
+%$$
+%|\lambda |_q < B  \ \  \text{and} \ \  |\lambda A|_q \leq q/B .
+%$$
+%\end{theorem}
+%The value of $\lambda$ can be computed exploiting the continued fractions.
+%
+%Recall the ECDSA signature, $s = k^{-1} (h(m) + r\cdot\alpha) \bmod q$.
+%We rewrite it as
+%\begin{equation}
+%\label{sig}
+%\alpha rs^{-1} = k - s^{-1}h(m)  \ \  \text{mod} \ \ q.
+%\end{equation}
+%Then assume that we have the $l$ consecutive bits of $k$ with the value of $a$, starting at some known position $j$.
+% So $k$ is represented as $k = 2^{j}a + 2^{l+j}b +c$ for $0 \leq a \leq 2^l -1$, $0\leq b \leq q/2^{l+j}$ and $0 \leq c < 2^j$.
+% We apply the theorem with $A = 2^{j+l}$ and $B = q2^{-j-l/2}$, to obtain $\lambda$ such that
+%$$
+%|\lambda |_q < q2^{-j-l/2}  \ \  \text{and} \ \  |\lambda 2^{j+l}|_q \leq q/2^{j+l/2} .
+%$$
+%
+%Plugging the value of $k$ and multiplying by $\lambda$, Equation \ref{sig} is transformed to
+%$$
+%\alpha r\lambda s^{-1} = (2^{j}a - s^{-1}h(m))\lambda +(c\lambda + 2^{l+j}b\lambda)  \ \  \bmod \ \ q.
+%$$
+%
+% Let
+% \begin{equation}
+% \label{tu}
+% \left\{
+% \begin{aligned}
+% 	&t = \lfloor r\lambda s^{-1} \rfloor_q    \\
+% 	&u = \lfloor (2^{j}a - s^{-1}h(m))\lambda \rfloor_q
+% \end{aligned}
+% \right. ,
+% \end{equation}
+% where $\lfloor \cdot\rfloor_q$ denotes the reduction modulo $q$ into range $[0, ..., q)$.
+%
+%We then have that
+% \begin{equation}
+%\label{lattice}
+%    |\alpha t - u|_q < q/2^{(l/2-1)}.
+%\end{equation}
+%This way, we transform to an HNP instance.
+%
+%In practice, OpenSSL uses $k+q$ as the ephemeral key. So the Equation \ref{tu} remains the same, but the Inequality~\ref{lattice} turns into
+% \begin{equation}
+%\label{lattice2}
+%    |\alpha t - u|_q < q/2^{(l/2-\log_{2}{3})}.
+%\end{equation}
+%
+%Note that, the Equation \ref{lattice2} represents that the $l/2-\log_{2}{3} -1$ most significant bits of $\lfloor\alpha t\rfloor_q$ is $u$, based on the definition of the HNP.
+%So it should satisfy that $l/2-\log_{2}{3} -1 \geq 1$, i.e. $l > 7$.
+%That means the length of the consecutive bits used to  construct the HNP instance should be larger than $7$,
+%although we could use all the sequences of the consecutive bits of the ephemeral key in theory.
+%
+%Next we turn the HNP instance into the lattice problem.
+%We use $d$ triples $(t_i, u_i, l_i)$ to construct a $d+1$ dimensional lattice $L(B)$ spanned by the rows of the following matrix:
+%$$B =
+%\left(
+%  \begin{array}{ccccc}
+%    2^{l_1+1}q & 0 & \cdots & 0 & 0 \\
+%    0 & 2^{l_2+1}q & \ddots & \vdots & \vdots \\
+%    \vdots & \ddots & \ddots & 0 & \vdots \\
+%    0 & \cdots & 0 & 2^{l_d+1}q & 0 \\
+%    2^{l_1+1}t_1 & \cdots & \cdots & 2^{l_d+1}t_d & 1 \\
+%  \end{array}
+%\right).
+%$$
+%Considering the vector $\textbf{x} = (2^{l_1+1}\alpha t_1 \bmod q, ..., 2^{l_d+1}\alpha t_d \bmod q, \alpha)$,
+% it can be obtained by multiplying the last row vector of $B$ by $\alpha$ and then subtracting appropriate multiples of the first $d$ row vectors.
+%Thus the vector $\textbf{x}$ belongs to $L(B)$.
+%Let the vector $\textbf{u} = (2^{l_1+1}u_1, ..., 2^{l_d+1}u_d, 0)$,
+% so the distance between $\textbf{x}$ and $\textbf{u}$ is $\|\textbf{x} - \textbf{u}\| \leq q\sqrt{d+1}$.
+%While the lattice determinant of $L(B)$ is $2^{d + \sum{l_i}}q^d$,
+% thus the vector $\textbf{x}$ is very close to the vector $\textbf{u}$.
+%By solving the CVP problem with the input $B$ and $\textbf{u}$, the vector $\textbf{x}$ is revealed,
+% hence the private key $\alpha$ is recovered as it is the last element of the vector $\textbf{x}$.
+%
+%To solve the CVP problem in polynomial time,
+%we transform it to an SVP instance.
+% We use $d$ triples $(t_i, u_i, l_i)$ to construct a $d+2$ dimensional lattice $L(B')$ spanned by the rows of the matrix
+%$$B' =
+%\left(
+%  \begin{array}{cc}
+%     B\ \  &\  0\ \  \\
+%    \textbf{u}\ \ &\ q \ \  \\
+%  \end{array}
+%\right).
+%$$
+%Similarly, the vector $\textbf{x}' = (2^{l_1+1}(\alpha t_1 - u_1) \bmod q, ..., 2^{l_d+1}(\alpha t_d - u_d) \bmod q, \alpha, -q)$ belongs to the lattice $L(B')$.
+% Its norm satisfies that $\|\textbf{x}'\| \leq q\sqrt{d+2}$,
+%  while the lattice determinant of $L(B')$ is $2^{d + \sum{l_i}}q^{d+1}$.
+%   This indicates that the vector $\textbf{x}'$ is a very short vector.
+%Note that this lattice also contains another vector $(-t_1, ..., -t_d, q, 0)\cdot B = (0, ..., 0, q, 0)$,
+% which is most likely the shortest vector of the lattice.
+%Therefore we expect the second vector in a reduced basis of the lattice is equal to $\textbf{x}'$ with a ``good'' chance for a suitably lattice reduction algorithm.
+%Then we acquire the secret key $\alpha$.
+%
+%%we can use LLL~\cite{Lenstra1982} or BKZ~\cite{Schnorr1994} algorithm to solve the SVP problem, while use Babai~\cite{Babai1986} algorithm or Enumeration technique to solve the CVP problem.
+%
+%
+%%转化为hnp问题，%引理
+%%构造格
+%%cvp/svp求解
+%
+%
+%
+%
+%%我还要去做的事情是：确定我能够获取到的bit数具体是多少bit
+%%我们攻击使用了多少个签名
+%
 
 
 

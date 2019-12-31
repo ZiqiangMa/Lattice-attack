@@ -1,144 +1,193 @@
-\section{Implementation and Experiments}
-\label{sec:impl&exper}
-In this section, we apply our method introduced in Section \ref{sec:attack} to attack the secp256k1 curve in OpenSSL 1.1.1b.
-  We implement the Flush+Flush attack  to obtain
-the cache side channel information.
-The details of the implementation and the result of attacking the elliptic curves are provided.
-Then we implement the lattice attacks and solve them by the BKZ lattice reduction algorithm \cite{Schnorr1994}.
- The experiments demonstrate the results of our attacks with different parameters.
-Finally, we compare our method with some previous attacks.
+%\section{Recover the ECDSA Private Key}
 
-%这一章我们展示攻击的具体实现过程，
-%对secp256k1进行攻击，曲线的window是3
-%实现平台
+\section{Recover the ECDSA Private Key with HNP}
+\subsection{Recovering Consecutive Bits}
+\label{data_proc1}
+In this section, we introduce how to recover the consecutive bits at the position of every non-zero bits for the ephemeral key $k$, exploiting the information obtained from the side channel.
 
-\subsection{The Flush+Flush Attack}
-\label{ffattack}
-We launched the cache side channel attack on an Acer Veriton T830 running Ubuntu 16.04.
-The machine features an Intel Core i7-6700 processor with four execution cores and an $8$ MB LLC.
-The attacking target is the ECDSA implemented in OpenSSL 1.1.1b, which uses wNAF representation in the scalar multiplication.
-For the experiments, we use the Flush+Flush to attack the 256-bit curve secp256k1.
-%Followings are the implementation details for the Flush+Flush attack.
+First, we denote the wNAF representation of $k$ as $k = \sum{k_{i}2^{i}}$,
+ and the binary representation as $k = \sum{b_{i}2^{i}}$.
+From the Algorithm \ref{alg:wnaf} we know that the position of $k_i$ in the wNAF representation is the same as $b_i$ in the binary representation.
+ When we know the information about whether $k_i$ is zero and the sign of the non-zero $k_i$, we can simply determine some bits of $k$.
+ For example, if we obtain the sign of the least non-zero $k_j$, we can infer that $b_j$ is one and $b_i$ is zero for $0\leq i<j$.
+ But for arbitrary non-zero digits, it can not determine whether the bit is zero or one.
 
-%平台
+ Let $m$ and $m + n$ be the positions of two consecutive non-zero digits of the wNAF representation, and $w$ be the window size.
+ That is, $k_m, k_{m+n} \neq 0$ and $k_{m+i} = 0$ for all $0 < i < n$.
+ We analyse the transformation method between the binary and wNAF representation, getting the following result:
 
-\noindent\textbf{Get the virtual address. }
-We use a spy process to monitor the  \verb+EC_POINT_dbl()+,  \verb+EC_POINT_add()+ and \verb+EC_POINT_invert()+ functions in OpenSSL.
-So we need to know the virtual addresses of the three functions.
-First, we get the offsets of the three functions required to monitor in the code of the dynamic library.
-Then, we use the \verb+mmap()+ function to load each page locating the monitored function codes into the virtual address space of the spy process.
-The \verb+mmap()+ function will return the initial address of the page so that we can get the virtual address of the monitored function based on the offset and the address of this page.
-An alternative way is to use the \verb+dl_iterate_phdr()+ function to get the initial address of the dynamic library when loaded into the address space.
+ \begin{align}
+ &b_{m+n} = \left\{
+ \begin{aligned}
+ 	&0,\,\;\ \   k_m < 0 \\
+ 	&1,\,\;\ \   k_m > 0
+ \end{aligned}
+ \right.  , \\
+ &b_{m+i} = \left\{
+ \begin{aligned}
+ 	&0,\,\;\ \   k_m > 0 \\
+ 	&1,\,\;\ \   k_m < 0
+ \end{aligned}
+ \right.
+ ,\ \ \ \ \  w \leq i \leq n-1
+ \end{align}
+%这里的公式有漏洞，需要加上最低位即m最小时的bm
 
-To determine the offsets of the memory lines in the  dynamic library,  we build OpenSSL with debugging symbols.
- These symbols are not loaded at run time and do not affect the performance of the code.
-Typically the debugging symbols are not available for attackers,
- however, they could use reverse engineering [16] to determine the offsets.
+And if $m$ is the position of the least non-zero digit of $k$,
+ \begin{align}
+ &b_{i} = \left\{
+ \begin{aligned}
+ 	&1,\,\;\ \   i = m \\
+ 	&0,\,\;\ \   0 \leq i < m
+ \end{aligned}
+ \right.  .
+ \end{align}
 
+In this way, at the position of every non-zero digit we can obtain $n - w + 1$ consecutive bits of $k$
+ except at the  position of the least non-zero digit being $m+1$.
+For the wNAF representation, every non-zero digit (except the least) is followed by at least $w$ zero values.
+ The average number of non-zero digits of $k$ is $(\lfloor\log_{2}{q}\rfloor +1) /(w+2)$.
+ The average distance between consecutive non-zero digits is $w+2$, i.e. on average $n = w + 2$.
+ This means we can obtain $3$ consecutive bits on average at the every non-zero digit (except the least).
+Based on \cite{Benger2014} on average we can get $2$ least significant bits of the ephemeral key.
+Thus, on average we can obtain $3(\lfloor\log_{2}{q}\rfloor+1) /(w+2) - 1$ bits of the ephemeral key $k$ in total.
+Meanwhile, because the minimal value of $n$ is $w + 1$, the minimal length of the consecutive bits is $2$.
+This illustrates that all the sequences of consecutive bits obtained (except the least) are no less than $2$ bits.
 
+For the secp256k1 curve implemented in OpenSSL, $\lfloor\log_{2}{q}\rfloor  + 1= 256$, $w = 3$.
+ Also, as introduced previous, the scalar multiplication uses $k+q$ instead of $k$ in most cases,
+  so the total number of bits per signature we obtain is $3(\lfloor\log_{2}{q}\rfloor +2)/(w+2)-1 = 153.2$.
+In theory, two signatures would be enough to recover the 256-bit private key as $2\times 153.2 = 306.4 > 256$.
 
-%获取虚拟地址
+%这里再加一小段，理论上[文献x]说，只要知道连续的2bit信息，就能够用来构造格攻击恢复密钥。
+%因此，对侧信道得到的数据使用我们的方法恢复出来的连续比特位，全部都可以被用到后续的攻击中
 
-%首先获取所需监控函数代码在动态库中的偏移量
-%接着获取函数代码虚拟地址，有两种方法
-%使用mmap()函数，将所监控函数代码所在页加载入地址空间中，获取到函数代码的虚拟地址
-%或编译时链接动态库，运行时使用dl_iterate_phdr()函数，获取到动态库加载入地址空间的起始地址，根据偏移量，获得函数代码的虚拟地址
+%首先，k的二进制表示和k的wnaf表示
+%他们的位是对应的。
+%当我们知道了digit的正负消息后，简单的，我们就可以判断出某些二进制位是多少了
+%然后我们来看，怎么去确定
+%得到一个公式：
 %
-%
-%
-%Victim：通过调用OpenSSL的crypto.so库来进行ECDSA签名运算。
-%Attacker：使用和victim相同的crypto库，对victim使用的点加和倍点函数以及EC_POINT_invert()代码所在的cache行进行监控。
+%然后我们就得到了连续的bit信息
+%通过一个签名，我们能够获得的bit数为：
 
 
+\subsection{Constructing the Lattice Attack}
+\label{data_proc2}
+In this section, we transform the problem of recovering the private key to the HNP instance, and further convert to the CVP/SVP instance in a lattice.
+Our method is based on the analysis from \cite{Nguyen2002}.
+But we make some improvements to it.
+First, the length of the consecutive bits used to construct the lattice is variable while the prior work fixes the length, which may lose some information.
+Second,  in our method the position of consecutive bits is arbitrary in the ephemeral key and does not need to be fixed, while the prior work needs all the consecutive bits at the same position.
+Finally, from one signature we obtain multiple sequences of consecutive bits, and all of them can be used for constructing the lattice as long as the length of the sequence is satisfied, while the prior work only generates one sequence of consecutive bits for one signature.
 
-\noindent\textbf{Thresholds.}
-We monitor the execution time of the \verb+clflush+ instruction to flush the monitored functions.
-If the time is larger than the threshold, meaning the memory line is accessed by the victim.
-Otherwise, the memory line is not accessed.
-The thresholds are calculated for every monitored function.
-For each address of the monitored functions, we record the time of flushing the cache 1000 times, and take the time larger than 99 percent samples plus 6 cycles as the threshold of this address.
-The thresholds are recalculated every time before the attack is triggered.
+To construct an HNP instance using arbitrary consecutive bits, we need to use the following theorem\cite{Nguyen2002}:
+\begin{theorem}
+ \label{theorem1}
+There exists a polynomial-time algorithm which, given $A$ and $B$ in $[1, q]$, finds $\lambda \in Z^{*}_{q}$ such that
+$$
+|\lambda |_q < B  \ \  \text{and} \ \  |\lambda A|_q \leq q/B .
+$$
+\end{theorem}
+The value of $\lambda$ can be computed exploiting the continued fractions.
+
+Recall the ECDSA signature, $s = k^{-1} (h(m) + r\cdot\alpha) \bmod q$.
+We rewrite it as
+\begin{equation}
+\label{sig}
+\alpha rs^{-1} = k - s^{-1}h(m)  \ \  \text{mod} \ \ q.
+\end{equation}
+Then assume that we have the $l$ consecutive bits of $k$ with the value of $a$, starting at some known position $j$.
+ So $k$ is represented as $k = 2^{j}a + 2^{l+j}b +c$ for $0 \leq a \leq 2^l -1$, $0\leq b \leq q/2^{l+j}$ and $0 \leq c < 2^j$.
+ We apply the theorem with $A = 2^{j+l}$ and $B = q2^{-j-l/2}$, to obtain $\lambda$ such that
+$$
+|\lambda |_q < q2^{-j-l/2}  \ \  \text{and} \ \  |\lambda 2^{j+l}|_q \leq q/2^{j+l/2} .
+$$
+
+Plugging the value of $k$ and multiplying by $\lambda$, Equation \ref{sig} is transformed to
+$$
+\alpha r\lambda s^{-1} = (2^{j}a - s^{-1}h(m))\lambda +(c\lambda + 2^{l+j}b\lambda)  \ \  \bmod \ \ q.
+$$
+
+ Let
+ \begin{equation}
+ \label{tu}
+ \left\{
+ \begin{aligned}
+ 	&t = \lfloor r\lambda s^{-1} \rfloor_q    \\
+ 	&u = \lfloor (2^{j}a - s^{-1}h(m))\lambda \rfloor_q
+ \end{aligned}
+ \right. ,
+ \end{equation}
+ where $\lfloor \cdot\rfloor_q$ denotes the reduction modulo $q$ into range $[0, ..., q)$.
+
+We then have that
+ \begin{equation}
+\label{lattice}
+    |\alpha t - u|_q < q/2^{(l/2-1)}.
+\end{equation}
+This way, we transform to an HNP instance.
+
+In practice, OpenSSL uses $k+q$ as the ephemeral key. So the Equation \ref{tu} remains the same, but the Inequality~\ref{lattice} turns into
+ \begin{equation}
+\label{lattice2}
+    |\alpha t - u|_q < q/2^{(l/2-\log_{2}{3})}.
+\end{equation}
+
+Note that, the Equation \ref{lattice2} represents that the $l/2-\log_{2}{3} -1$ most significant bits of $\lfloor\alpha t\rfloor_q$ is $u$, based on the definition of the HNP.
+So it should satisfy that $l/2-\log_{2}{3} -1 \geq 1$, i.e. $l > 7$.
+That means the length of the consecutive bits used to  construct the HNP instance should be larger than $7$,
+although we could use all the sequences of the consecutive bits of the ephemeral key in theory.
+
+Next we turn the HNP instance into the lattice problem.
+We use $d$ triples $(t_i, u_i, l_i)$ to construct a $d+1$ dimensional lattice $L(B)$ spanned by the rows of the following matrix:
+$$B =
+\left(
+  \begin{array}{ccccc}
+    2^{l_1+1}q & 0 & \cdots & 0 & 0 \\
+    0 & 2^{l_2+1}q & \ddots & \vdots & \vdots \\
+    \vdots & \ddots & \ddots & 0 & \vdots \\
+    0 & \cdots & 0 & 2^{l_d+1}q & 0 \\
+    2^{l_1+1}t_1 & \cdots & \cdots & 2^{l_d+1}t_d & 1 \\
+  \end{array}
+\right).
+$$
+Considering the vector $\textbf{x} = (2^{l_1+1}\alpha t_1 \bmod q, ..., 2^{l_d+1}\alpha t_d \bmod q, \alpha)$,
+ it can be obtained by multiplying the last row vector of $B$ by $\alpha$ and then subtracting appropriate multiples of the first $d$ row vectors.
+Thus the vector $\textbf{x}$ belongs to $L(B)$.
+Let the vector $\textbf{u} = (2^{l_1+1}u_1, ..., 2^{l_d+1}u_d, 0)$,
+ so the distance between $\textbf{x}$ and $\textbf{u}$ is $\|\textbf{x} - \textbf{u}\| \leq q\sqrt{d+1}$.
+While the lattice determinant of $L(B)$ is $2^{d + \sum{l_i}}q^d$,
+ thus the vector $\textbf{x}$ is very close to the vector $\textbf{u}$.
+By solving the CVP problem with the input $B$ and $\textbf{u}$, the vector $\textbf{x}$ is revealed,
+ hence the private key $\alpha$ is recovered as it is the last element of the vector $\textbf{x}$.
+
+To solve the CVP problem in polynomial time,
+we transform it to an SVP instance.
+ We use $d$ triples $(t_i, u_i, l_i)$ to construct a $d+2$ dimensional lattice $L(B')$ spanned by the rows of the matrix
+$$B' =
+\left(
+  \begin{array}{cc}
+     B\ \  &\  0\ \  \\
+    \textbf{u}\ \ &\ q \ \  \\
+  \end{array}
+\right).
+$$
+Similarly, the vector $\textbf{x}' = (2^{l_1+1}(\alpha t_1 - u_1) \bmod q, ..., 2^{l_d+1}(\alpha t_d - u_d) \bmod q, \alpha, -q)$ belongs to the lattice $L(B')$.
+ Its norm satisfies that $\|\textbf{x}'\| \leq q\sqrt{d+2}$,
+  while the lattice determinant of $L(B')$ is $2^{d + \sum{l_i}}q^{d+1}$.
+   This indicates that the vector $\textbf{x}'$ is a very short vector.
+Note that this lattice also contains another vector $(-t_1, ..., -t_d, q, 0)\cdot B = (0, ..., 0, q, 0)$,
+ which is most likely the shortest vector of the lattice.
+Therefore we expect the second vector in a reduced basis of the lattice is equal to $\textbf{x}'$ with a ``good'' chance for a suitably lattice reduction algorithm.
+Then we acquire the secret key $\alpha$.
+
+%we can use LLL~\cite{Lenstra1982} or BKZ~\cite{Schnorr1994} algorithm to solve the SVP problem, while use Babai~\cite{Babai1986} algorithm or Enumeration technique to solve the CVP problem.
 
 
-%阈值
-%对每个需要监控的地址都计算各自的阈值
-%每次监测都重新计算阈值
-%对每个地址，监控1000次flush花费的时间，取99%以上样本所花的最大时间加上6作为该地址的阈值
-
-
-\noindent\textbf{Trigger the monitoring.}
-We monitor the execution time of the address of the three functions.
-When the time of any one is larger than the corresponding threshold,
- we start to record execution times, meaning that the attack starts.
-The record stops when the number of the consecutive execution time of all the monitored addresses less than the threshold  is larger than 300.
-If the number of record is less than 1000, we re-record the execution time.
-Then we have a valid record.
- Due to the  disturbance of noise,
-  the valid record does not necessarily contain the activities of the monitored functions in the scalar multiplication.
-So we continuously obtain 10 valid records.
-%触发
-%1) 某一个监控地址的flush时间大于阈值以后，开始记录；
-%2）所有地址连续小于阈值的数量大于200后，停止记录；
-%3）如果记录数据量小于1000，重新开始记录；
-%4）连续记录10次。
-
-
-\noindent\textbf{Time slot.}
-For the attack, the spy process divides time into time slots of approximately $2500$ cycles.
-In each slot, the spy flushes the memory lines in the add, double and invert functions (\verb+EC_POINT_dbl()+,  \verb+EC_POINT_add()+ and \verb+EC_POINT_invert()+) out of the caches.
-Also, the length of the time slot is chosen to ensure that the three functions only execute once.
-This allows the spy to correctly distinguish consecutive doubles.
-
-\noindent\textbf{Determine the initial point.}
-In order to precisely recover the sign of the ephemeral key, we need to determine which sample represents the start of the scalar multiplication.
-We can determine the
-start of the scalar multiplication
-by combining the double-add chain and the profiles of the double and add functions with wNAF representation.
-Also, we can determine the start position by monitoring the code of the copy function in OpenSSL.
- We note that when the computation of scalar multiplication starts, OpenSSL performs the copy function instead of the add function.
- Thus we can monitor the copy function, and when the copy function is called in the time slot and the add function is called in the next slot, it means that the scalar multiplication starts.
-
-%起始判断
-%对标量乘法代码分析，在对k的最高位处理时，并不是使用的点加，而是copy，因此，可以对copy函数进行监控，当一个时间槽内进行了倍点和copy操作，可以认定标量乘法的开始。
-%如果不监控copy，也可以根据点加倍点的发生，去排除错误的触发；也可以根据NAF编码时点加倍点的特征来判断起始。
-
-\noindent\textbf{Experimental results.}
-Fig.~\ref{fig1} shows a fragment of the output of the spy when OpenSSL performs ECDSA with the secp256k1 curve.
-In this figure, $\square$, $\lozenge$ and $\vartriangle$ represent ``double'', ``add'' and ``invert'' respectively.
-From this fragment, three operations are clearly distinguished,
- so we succeed to obtain the ``double-add-invert'' chain easily.
-
-
-
-%%10次实验
-%We totally run 10 experiments, i.e. monitoring the ECDSA signature 10 times.
-%The accurate rate is defined as the value of the actual number of bits obtained divided by the ideal number of bits available.
-%Thus, from these experiments the average accurate rate of the data obtained from the Flush+Flush attack is xx\%.
-
-\begin{figure}
-\centering
-\includegraphics[width=\textwidth]{pic/slot2500.pdf}
-\caption{A fragment of the output of the Flush+Flush attack.} \label{fig1}
-\end{figure}
-
-
-%对这个示例进行解释：
-%什么符号代表哪个操作
-%sample大于阈值xx 表示在这个时间槽内，函数被执行了。
-%然后，for example， 对于时间槽1， 什么被访问了，代表哪个函数被执行了，因此对应于0或者1，
-%然后时间槽x代表1，
-%接着说时间槽x2 代表1，同时invert调用了，说明该位符号和之前相反，
-%时间槽x3，未调用invert，符号位和之前相同。
-%
-%时间槽x4可能是噪声，对噪声的处理
-%
-%和真实的k相比，正确率是x\%
-%
-%用ff攻击一条曲线，得到结果，得到double add invert 链，进行恢复
-%然后恢复成功率是多少？
-%
-%
-%结果
+%转化为hnp问题，%引理
+%构造格
+%cvp/svp求解
 
 
 \subsection{Lattice Attack}
@@ -185,7 +234,7 @@ i.e. the dimension of the lattice for the SVP is $d + 2$.
   \centering
   \caption{The success probability of solving SVP with different parameters.}
   \label{svp9}
-    \begin{tabular}{|c|m{0.5in}<{\centering}|m{0.5in}<{\centering}|m{0.5in}<{\centering}|m{0.5in}<{\centering}|m{0.5in}<{\centering}|}
+    \begin{tabular}{|c|m{0.4in}<{\centering}|m{0.4in}<{\centering}|m{0.4in}<{\centering}|m{0.4in}<{\centering}|m{0.4in}<{\centering}|}
     \hline
     \multirow{3}{*}{Dimension}&
     \multicolumn{5}{c|}{Block size}   \\ %
@@ -306,7 +355,203 @@ But the increase of the minimal length would lead to requiring more signatures t
 % as the stronger reduction allows them to isolate the solution vector better.
 %While the minimal length of consecutive bits increases, the the probability of success become higher.
 %Also we see that extensive pre-processing of the basis with more complex lattice reduction techniques provides no real benefit.
-\subsection{Comparison with Other Lattice Attacks}
+
+
+\section{Recover the ECDSA Private Key with EHNP}
+\subsection{ Extracting more Information }
+      Assuming we get a perfect {\bf Double-Add-Invert Chain}. Suppose in  Double-Add-Invert Chain, there are $l$ numbers of $''A''$s, whose positions are separately $\lambda_i$($1\leq i\leq l$) counted from the lower index. So we can easiy have
+ $$k=\sum\limits_{i=0}^{l-1}  k^{'}_i 2^{\lambda_i}$$
+ where $$k^{'}_i\in\{-7,-5,-3,-1,1,3,5,7\}.$$
+
+    On the other hand, from the Invert chain, we can easily know whether the $k^{'}_i$ is a positive integer or a negative integer. Suppose  $k^{'}_i=(-1)^{h_i} k^{*}_i$ , where $(-1)^{h_i}$ is the sign of $k^{'}_i$  which is known, $k^{*}_i\in \{1,3,5,7\}$. Write $ k^{*}_i=2k_i+1$ , where $k_i\in \{0,1,2,3\}$. Then we have
+ \begin{equation}
+  \begin{array}{lll}{\label {KKK}}
+ k&=&\sum\limits_{i=0}^{l-1} (-1)^{h_i} k^{*}_i 2^{\lambda_i}  \\
+ &=& \sum\limits_{i=0}^{l-1} (-1)^{h_i}(2k_i+1)2^{\lambda_i}  \\
+ &=&\bar{k}+\sum\limits_{i=0}^{l-1} (-1)^{h_i}k_i2^{\lambda_i+1}
+  \end{array}
+ \end{equation}
+where $\bar{k}=\sum\limits_{i=0}^{l-1}{(-1)^{h_i}2^{\lambda_i} }$, $h_i$, $\lambda_i$ are known and the only unknowns are $k_i\in\{0,1,2,3\}$.
+
+ %%    As we can know whether the “Invert” operation was  %%done or not ,which means the difference of the sign of %% $k_i$ and $k_{i+1}$ is known($0\leq i\leq l-1$). We %suppose the sign of $k_0$ is $(-1)^{h_0}$. Sequencely %we can easily get  the sign of $k_i$  which can be written %as $(-1)^{h_0+h_i}$, where $h_0\in \{0,1\}$ is unkown %and $h_i\in \{0,1\}$ ($1\leq i\leq l$)are known. So we have
+    % $$k=\sum\limits_{i=0}^{l-1}  (-1)^{h_i} k^{`}_i %2^{\lambda_i}$$
+  %       and the sign of $(-1)^{h_i}$,which can be viewed as %known.
+
+    It is known that there are approximately $(\lceil logq\rceil +1)/(\omega+2)-1=50.4 $ non-zero digits in the Double-Add-Invert Chain when  $\omega=3$. From Eq.(\ref{KKK}), there
+    are approximatley 50.4*2= 100.8 bits being unkown, which means the known bits are about $257-100.8=156.2$ on avarage. In theory, we need at least two signatures to recover the $256$-bit secrete key, as $2$ is the least integer $m$ such that $m\cdot 156.2 >256$.
+
+    From above we can see, with our new Double-Add-Invert Chain, we can extract  on average $156.2$ bits of information per signatuare for the 256-bit elliptic curve, which is about $1.5$ times of the number of bits in \cite{Fan2016} .
+    In the next subsection, we will show that we can recover the secret key with only $2$ signatures which attains the optimal bound.
+
+
+
+\subsection{Find the target vector with new lattice}
+Similar to \cite{Fan2016}, we first translate the problem of recovering ECDSA secret key to the EHNP Problem. Then we further translate it to the problem of solving approximate SVP Problem using lattice reduction algorithm.
+
+     On the othe hand, in order to achieve the optimal bound, i.e., we only need $2$ signatures and the corresponding Double-Add-Invert Chain to recover the secret key. Some new ideas and Techniques are introduced which aims both reducing the attacking time and increasing the success probability.
+
+      First and most importantly, we  observe the components of target vector in \cite{Fan2016} isn't balanced,  so we reconstruct the lattice in \cite{Fan2016} which reduces the length of target vector much, epecially when the number of possible values of unkown $k_i$ is small.
+
+     Then, we guess some $k_{i,j}$ to reduce the dimension of lattice and improve the success probability. Finally, we observe that BKZ will recover different samples with different $\delta$'s, therefore, we provide some plausible reasonable $\delta$'s and use them to improve success probability.
+
+
+     We applied our attack to the secp256K1 curve. 3 signatures is enough to recover the secret key with a high success probablity not less than $73\%$. When we have only two signatures, we can recover the secret key with a success probability no less than $24.3\%$.
+
+       \subsubsection {Reduction to EHNP Problem}
+  Assuming we have a  signature pair $(r,s)$ of messgage $m$. Then we have the equation
+  \begin{equation}\label {SigEqu}
+  \alpha r-sk+H(m)=0\mod q.
+  \end{equation}
+  Substitue (\ref{SigEqu}) with Equation ({\ref{KKK}}), we can have that there exists an $h\in \mathbb{Z}$ such that
+\begin{equation}\label{SigEqu2}
+\alpha r-\sum\limits_{i=1}^l((-1)^{h_i}2^{\lambda_i+1}s)k_i-(s\bar{k}-H(m))+hq=0.
+\end{equation}
+where $\alpha, k_i (1\leq i \leq l)\text{ and } h$ is unknown.
+
+Assuming we got $u$ signature pairs $(r_i,s_i)$ of different messages $m_i$($1\leq i\leq u$) with the same secret key $\alpha$.
+Suppose we get the Double-ADD-Invert Chain of each ephemeral key. From  (\ref{SigEqu2}) we can easliy have
+ \begin{equation}
+\begin{cases}
+\label{SigEqu2}
+\alpha r_1-\sum\limits_{j=0}^{l_1-1}((-1)^{h_{1,j}}2^{\lambda_{1,j}+1}s_1)k_{1,j}-(s_1\bar{k}_1-H(m_1))+h^{'}_1q=0  \\
+\qquad\qquad\qquad\quad\vdots\\
+\alpha r_i-\sum\limits_{j=0}^{l_i-1}((-1)^{h_{i,j}}2^{\lambda_{i,j}+1}s_i)k_{i,j}-(s_i\bar{k}_i-H(m_i))+h^{'}_iq=0  \\
+\qquad\qquad\qquad\quad\vdots\\
+\alpha r_u-\sum\limits_{j=0}^{l_u-1}((-1)^{h_{u,j}}2^{\lambda_{u,j}+1}s_u)k_{u,j}-(s_u\bar{k}_u-H(m_u))+h^{'}_uq=0
+\end{cases}
+\end{equation}
+where $l_i$ is the number of non-zero digits of the $i$-th ephemeral key and $(-1)^{h_{i,j}}k_{i,j}$ is the $j$-th non-zero digit in the $i$-th signature, $\lambda_{i,j}$ is its position, $\bar{k}_i=\sum\limits_{j=0}^{l_i-1}(-1)^{h_{i,j}}2^{\lambda_{i,j}} \mod q$ and $\alpha, h^{'}_i, k_{i,j}$ are unknown elements in the equations.  \\
+
+
+Given Equation (\ref{SigEqu2}), find $0<\alpha<q$ and $0\leq k_{i,j}\leq 2^{w-1}-1$. We denote this problem DSA-EHNP.
+
+  \subsubsection {Balancing the target vector}
+
+     Next we will translate the DSA-EHNP problem to the problem of finding the short vector of a related lattice. Then we can find the secret key from the short vector. Comparing to the constructed lattice \cite{Fan2016},  the determinant of our new lattice is larger, while the target vector is shorter and more balanced, which makes the lattice reduction algorithmn easier to find the target vector.
+
+     Notice that we have $k_{i,j}\in \{0,1,\cdots, 2^{w-1}-1\}$. For $1\leq i \leq u$ and $1\leq j\leq l_i$, denote $\gamma_{i,j}=(-1)^{h_{1,j}}2^{\lambda_{1,j}+1}s_1r_i\mod q$, $c_{i,j}=(-1)^{h_{i,j}+1}2^{\lambda_{i,j}+1}s_ir_1\mod q$, $\beta_i=r_1(H(m_i)-s_i\bar{k}_i)-r_i(H(m_1)-s_1\bar{k}_1) \mod q$. We can construct a lattice $L$ spanned by the lines of the following matrix $B$ in Equation (\ref{SigEqu3}) which is obtained by eliminating $\alpha$ in Equation (\ref{SigEqu2}). The parameter $\delta$ which will be discussed in section \ref{section3.3} is  a proper value.
+
+  \begin{equation}
+    \label{SigEqu3}
+     \textbf{B}=\left(\begin{matrix}
+
+\begin{smallmatrix}
+ q&&&&&&&&&&\\
+&\ddots&&&&&&&&&\\
+&&q&&&&&&& &\\
+\gamma_{2,1}&\cdots&\gamma_{\mu-1,1}&\frac{\delta}{3}&&&&&&\\
+\vdots&&&&\ddots&&&&&\\
+\gamma_{2,l_1}&\cdots&\gamma_{\mu-1,l_1}&&&\frac{\delta}{3}&&&&&\\
+c_{2,1}&&&&&&\frac{\delta}{3}&&&&&&\\
+\vdots&&&&&&&\ddots&&\\
+c_{2,l_2}&&&&&&&&\frac{\delta}{3}&&&&&\\
+&\ddots&&&&&&&&\ddots&&&&\\
+&&c_{\mu,1}&&&&&&&&\frac{\delta}{3}&&&\\
+&&\vdots&&&&&&&&&\ddots&&\\
+&&c_{\mu,l_\mu}&&&&&&&&&&\frac{\delta}{3}&\\
+\beta_2&\cdots&\beta_u&\frac{\delta}{2}&\cdots&\frac{\delta}{2}&\frac{\delta}{2}&\cdots& \frac{\delta}{2}&\cdots&\frac{\delta}{2}&\cdots&\frac{\delta}{2}&\frac{\delta}{2}\\
+
+\end{smallmatrix}&
+
+\end{matrix}\right)
+  \end{equation}
+  Suppose $h_i=r_1h_i^{'}-r_ih_1^{'}$, it is easy to check there exists
+  $$
+  \begin{array}{lll}
+  \textbf{w}&=&(h_2,\cdots,h_{\mu},k_{1,1},\cdots,k_{1,l_1},\cdots,k_{u,1},\cdots,k_{u,l_u},1)\textbf{B}\\
+  &=&(0,\cdots,0,\frac{k_{1,1}}{3}\delta-\frac{\delta}{2},\cdots,\frac{k_{1,l_1}}{3}\delta-\frac{\delta}{2},\cdots, \\
+  &&\frac{k_{u,1}}{3}\delta-\frac{\delta}{2},\cdots,\frac{k_{u,l_u}}{3}\delta-\frac{\delta}{2},\frac{\delta}{2})\in L(\textbf{B}),
+  \end{array}
+  $$
+and the Euclid norm of the vector $\textbf{w}$ satisfys
+$\|\textbf{w}\|\leq \frac{\delta}{2}\sqrt{n-u+1}$, where $n$ is the dimension of the lattice, i.e., $n=\sum\limits_{i=1}^{u}l_i+u$.
+
+The determinant of lattice $L(\textbf{B})$ is $\|L\|=\frac{1}{2}q^{u-1}\cdot {\delta}^{n-u+1}(\frac{1}{3})^{n-u}$. The target vector $\textbf{w}$ may not be the shortest vector, however, if we choose a appropriate value of $\delta$, the target vector $\textbf{w}$ which will be a pretty short vector which can be found by lattice reduction algorithm(\cite{Lenstra1982}, \cite{Schnorr1994}, \cite{bkz2}, \cite{ADHKPS19}), thus, the secret key $\alpha$ can be recovered.
+
+ {\bf Comparing with the constructed lattice in \cite{Fan2016}.}  The constructed lattice is similar to the lattice in \cite{Fan2016} with two refinements. Firstly, we notice that if the diagonal entries of the matrix from line $\mu$ to line $n-1$ are  $\frac{\delta}{7}$ instead of  $\frac{\delta}{8}$ in \cite{Fan2016}, which not only make the  determinant more larger , but also make the target vector more balanced. On the other word, $-\frac{\delta}{2}\leq \frac{k_{i,j}}{8}\delta-\frac{\delta}{2}\leq \frac{3\delta}{8}$ if $0\leq k_{i,j}\leq 7$,which will be slightly reduced. While if we subtititue $\frac{k_{i,j}}{8}$ by $\frac{k_{i,j}}{7}$, we have  $-\frac{\delta}{2}\leq\frac{k_{i,j}}{7}\delta-\frac{\delta}{2}\leq \frac{\delta}{2}$ if $0\leq k_{i,j}\leq 7$. In that case, the determinant of the new lattice is $(\frac{8}{7})^{n-u}$ times as large as the old lattice, while the expected length of the target vector will increase to $\sqrt{\frac{96}{77}}$ times, therefore, $\frac{\|\textbf{w}\|}{(|det(L)|)^{1/n}}$ will decrease.  Secondly, since we can get more information of the emphemeral key, i.e, for the lattice in \cite{Fan2016}, we have $0\leq d_{i,j}\leq 7$, while now we have $0\leq d_{i,j}\leq 3$. We can further change the diagonal entries of the matrix from line $\mu$ to line $n-1$ from $\frac{\delta}{7}$ to  $\frac{\delta}{3}$, Which increase the absolute value of the determinent of the lattice very much, however, slightly increase the length of the target vector. Generally, the smaller $\frac{\|\textbf{w}\|}{(|det(L)|)^{1/n}}$ is, the easier the lattice reduction algorithmn is to find the target vector. Therefore, we can find the target vector more easily when we use the newly constructed lattice.
+
+The following experiments prove the validity of balancing. Firstly, we do tests using the way in \cite{Fan2016} and the above refinements with 3 signatures, we can see the success probability is $73\%$, which is very high. Therefore, we try to recover the secret key with 2 signature in the following section.  Our experiments in line 3 and line 4 and the following sections are based on the skills in \cite{Fan2016} without merging which will drop the probability in experiment with $2$ signatures. The results in Table \ref{table1} shows that balancing can effectively improve the success probability.
+ \begin{table}[!hbp]
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+$\mu$&samples&balance&block&probability&time(s)\\
+\hline
+3&1000&Yes&30&73\%&34.7\\
+\hline
+2&1000&No&30&0\%&126.7\\
+\hline
+2&1000&Yes&30&5.7\%&154.0\\
+\hline
+
+\end{tabular}
+\caption{The advantage of balancing}\label{table1}
+"samples" represents the number of samples, "block" is the blocksize of BKZ and "time(s)" is the time of BKZ on each sample.
+\end{table}
+
+
+
+\subsubsection{Guessing some $k_{i,j}$'s}
+\label{section3.3}
+In this section, we will analyse the way of guessing which can balances the success probability and time complexity of BKZ.
+Considering that the set of $k_{i,j}$ is small, we guess the value of $k_{i,j}$ to improve the success probability. Each $k_{i,j}$ has 2 bits information, thus, the expection of the number of guessing to gain the right $k_{i,j}$ is $\frac{1}{4}(1+2+3+4)=\frac{5}{2}$. Every time we guess $k_{i,j}$, the expected time complexity will increase to $\frac{5}{2}$ times and the dimension will decrease 1.
+
+Guessing will increase the time complexity, however, it can also improve success probability. From experiment results based on the skill of balancing in Table \ref{table2}, we can observe that the time complexity will increase to 3.7/34.2 times when we guess 2/4 $k_{i,j}$'s, while the success probability will expand 2.7/4.4 times respectively.
+Moreover, comparing to the way of not using guessing with larger blocksize(35), the skill of guessing with blocksize(30) will be more efficient. Therefore, in the next section \ref{3.4}, we will further discuss how to improve the success probability based on the technology of balancing and guessing.
+
+\begin{table}[!hbp]
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+$\mu$&samples&guessing&block&$\delta$&probability&time(s)\\
+\hline
+2&1000&2&30&$\delta_0$&15.3\%&566.7\\
+\hline
+2&1000&4&30&$\delta_0$&25.3\%&5260.4\\
+\hline
+2&1000&0&35&$\delta_0$&9\%&3387\\
+\hline
+\end{tabular}
+\caption{Balancing and guessing}\label{table2}
+"guessing" represents the number of $k_{i,j}$ guessed, "$\delta_0$" will be explained in section \ref{3.4}.
+\end{table}
+
+
+\subsubsection{Choosing different $\delta$'s}\label{3.4}
+Finally, based on the experimental phenoenas: 1. the success probability will change with different $\delta$'s, 2. different samples  will be recovered if we select different $\delta$'s, we  analyse how to select the parameter $\delta$ and utilize different $\delta$'s to improve the success probability.
+
+If the target vector can be found by lattice reduction algorithm, the following two conditions need to be satisfied: 1. the target vector is enough short. 2. the BKZ can recover lattice vector as long as the target vector.  Condition 1 can be achieved by balancing and selecting a appropriate $\delta$. When condition 1 is satisfied, condition 2 can be solved by adjusting the BKZ parameter $\beta$.
+
+We observe some situations that lattice can produce vectors set $T$ which are more shorter than target vector. Based on these observations, we expect to reduce the size of $T$ by selecting suitable parameter $\delta$. The followings are some heuristic $\delta$'s.
+
+1. Choose $\delta_0=\frac{2}{\sqrt{n-\mu+1}}$ to guarantee any lattice vector $\textbf{a}$ which exists $\textbf{a}_i\neq0$ for $i\in[0,m-1]$ is much longer than target vector $\textbf{w}$. Beacuse, for $i\in[0,m-1]$, when $\textbf{a}_i\neq0$, $|\textbf{a}_i|\geq1$ then $\|\textbf{a}\|\geq 1\geq\|\textbf{w}\|$. Therefore, by setting $\delta=\frac{2}{\sqrt{n-\mu+1}}$, the size of set $T$ will decrease.
+
+2. We try some other $\delta$'s, just like $2\delta_0,\frac{\delta_0}{2}$ and so on. We notice that different $\delta$'s may recover different samples. Therefore, for a same sample, if we choose several $\delta$'s to construct different lattices, we can improve the success probability.
+
+
+Of course, this method will enlarge the time complexity, however, compared with the improvement of success probability, the incresea of time complexity is acceptable. The related data which is based on the ways of balancing and guessing and different $\delta$'s can be found in Table \ref{table3}. We can see the probability will increase to $24.3\%$ when using 3 different $\delta$'s, however, the time complexity will approximately increase by 2 times. Compared with the experiment using guessing 4 $k_{i,j}$'s in Talbe \ref{table2}, the way of combining guessing 2 $k_{i,j}$'s and different $\delta$'s is more efficient.
+
+\begin{table}[!hbp]
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+$\mu$&samples&guessing&block&$\delta$&probability&time(s)\\
+\hline
+2&1000&2&30&$\delta_0$&15.3\%&566.7\\
+\hline
+2&1000&2&30&$\frac{\delta_0}{2}$&14.6\%&550.0\\
+\hline
+2&1000&2&30&$2\delta_0$&13\%&516.7\\
+\hline
+total&&&&&24.3\%&1633.4\\
+\hline
+
+\end{tabular}
+\caption{Balancing, guessing and different $\delta$'s}\label{table3}
+The last line records the total success probability and the average time using three different $\delta$`s .
+\end{table}
+
+
+
+
+\section{Comparison with Other Lattice Attacks}
 \label{compare}
 
  Generally,  to attack the ECDSA implementation with the wNAF representation,
@@ -392,6 +637,409 @@ One of our future work is to find an efficient lattice construction to solve the
 %2017年，范团队还在science China information sciences 上发了一篇，使用HNP的文章，
 %这是一个b类的期刊。(交叉综合新兴)
 %我们比这个期刊的文章效果要好的。
+
+
+
+
+
+%\section{Implementation and Experiments}
+%\label{sec:impl&exper}
+%In this section, we apply our method introduced in Section \ref{sec:attack} to attack the secp256k1 curve in OpenSSL 1.1.1b.
+%  We implement the Flush+Flush attack  to obtain
+%the cache side channel information.
+%The details of the implementation and the result of attacking the elliptic curves are provided.
+%Then we implement the lattice attacks and solve them by the BKZ lattice reduction algorithm \cite{Schnorr1994}.
+% The experiments demonstrate the results of our attacks with different parameters.
+%Finally, we compare our method with some previous attacks.
+%
+%%这一章我们展示攻击的具体实现过程，
+%%对secp256k1进行攻击，曲线的window是3
+%%实现平台
+%
+%\subsection{The Flush+Flush Attack}
+%\label{ffattack}
+%We launched the cache side channel attack on an Acer Veriton T830 running Ubuntu 16.04.
+%The machine features an Intel Core i7-6700 processor with four execution cores and an $8$ MB LLC.
+%The attacking target is the ECDSA implemented in OpenSSL 1.1.1b, which uses wNAF representation in the scalar multiplication.
+%For the experiments, we use the Flush+Flush to attack the 256-bit curve secp256k1.
+%%Followings are the implementation details for the Flush+Flush attack.
+%
+%%平台
+%
+%\noindent\textbf{Get the virtual address. }
+%We use a spy process to monitor the  \verb+EC_POINT_dbl()+,  \verb+EC_POINT_add()+ and \verb+EC_POINT_invert()+ functions in OpenSSL.
+%So we need to know the virtual addresses of the three functions.
+%First, we get the offsets of the three functions required to monitor in the code of the dynamic library.
+%Then, we use the \verb+mmap()+ function to load each page locating the monitored function codes into the virtual address space of the spy process.
+%The \verb+mmap()+ function will return the initial address of the page so that we can get the virtual address of the monitored function based on the offset and the address of this page.
+%An alternative way is to use the \verb+dl_iterate_phdr()+ function to get the initial address of the dynamic library when loaded into the address space.
+%
+%To determine the offsets of the memory lines in the  dynamic library,  we build OpenSSL with debugging symbols.
+% These symbols are not loaded at run time and do not affect the performance of the code.
+%Typically the debugging symbols are not available for attackers,
+% however, they could use reverse engineering [16] to determine the offsets.
+%
+%
+%
+%%获取虚拟地址
+%
+%%首先获取所需监控函数代码在动态库中的偏移量
+%%接着获取函数代码虚拟地址，有两种方法
+%%使用mmap()函数，将所监控函数代码所在页加载入地址空间中，获取到函数代码的虚拟地址
+%%或编译时链接动态库，运行时使用dl_iterate_phdr()函数，获取到动态库加载入地址空间的起始地址，根据偏移量，获得函数代码的虚拟地址
+%%
+%%
+%%
+%%Victim：通过调用OpenSSL的crypto.so库来进行ECDSA签名运算。
+%%Attacker：使用和victim相同的crypto库，对victim使用的点加和倍点函数以及EC_POINT_invert()代码所在的cache行进行监控。
+%
+%
+%
+%\noindent\textbf{Thresholds.}
+%We monitor the execution time of the \verb+clflush+ instruction to flush the monitored functions.
+%If the time is larger than the threshold, meaning the memory line is accessed by the victim.
+%Otherwise, the memory line is not accessed.
+%The thresholds are calculated for every monitored function.
+%For each address of the monitored functions, we record the time of flushing the cache 1000 times, and take the time larger than 99 percent samples plus 6 cycles as the threshold of this address.
+%The thresholds are recalculated every time before the attack is triggered.
+%
+%
+%%阈值
+%%对每个需要监控的地址都计算各自的阈值
+%%每次监测都重新计算阈值
+%%对每个地址，监控1000次flush花费的时间，取99%以上样本所花的最大时间加上6作为该地址的阈值
+%
+%
+%\noindent\textbf{Trigger the monitoring.}
+%We monitor the execution time of the address of the three functions.
+%When the time of any one is larger than the corresponding threshold,
+% we start to record execution times, meaning that the attack starts.
+%The record stops when the number of the consecutive execution time of all the monitored addresses less than the threshold  is larger than 300.
+%If the number of record is less than 1000, we re-record the execution time.
+%Then we have a valid record.
+% Due to the  disturbance of noise,
+%  the valid record does not necessarily contain the activities of the monitored functions in the scalar multiplication.
+%So we continuously obtain 10 valid records.
+%%触发
+%%1) 某一个监控地址的flush时间大于阈值以后，开始记录；
+%%2）所有地址连续小于阈值的数量大于200后，停止记录；
+%%3）如果记录数据量小于1000，重新开始记录；
+%%4）连续记录10次。
+%
+%
+%\noindent\textbf{Time slot.}
+%For the attack, the spy process divides time into time slots of approximately $2500$ cycles.
+%In each slot, the spy flushes the memory lines in the add, double and invert functions (\verb+EC_POINT_dbl()+,  \verb+EC_POINT_add()+ and \verb+EC_POINT_invert()+) out of the caches.
+%Also, the length of the time slot is chosen to ensure that the three functions only execute once.
+%This allows the spy to correctly distinguish consecutive doubles.
+%
+%\noindent\textbf{Determine the initial point.}
+%In order to precisely recover the sign of the ephemeral key, we need to determine which sample represents the start of the scalar multiplication.
+%We can determine the
+%start of the scalar multiplication
+%by combining the double-add chain and the profiles of the double and add functions with wNAF representation.
+%Also, we can determine the start position by monitoring the code of the copy function in OpenSSL.
+% We note that when the computation of scalar multiplication starts, OpenSSL performs the copy function instead of the add function.
+% Thus we can monitor the copy function, and when the copy function is called in the time slot and the add function is called in the next slot, it means that the scalar multiplication starts.
+%
+%%起始判断
+%%对标量乘法代码分析，在对k的最高位处理时，并不是使用的点加，而是copy，因此，可以对copy函数进行监控，当一个时间槽内进行了倍点和copy操作，可以认定标量乘法的开始。
+%%如果不监控copy，也可以根据点加倍点的发生，去排除错误的触发；也可以根据NAF编码时点加倍点的特征来判断起始。
+%
+%\noindent\textbf{Experimental results.}
+%Fig.~\ref{fig1} shows a fragment of the output of the spy when OpenSSL performs ECDSA with the secp256k1 curve.
+%In this figure, $\square$, $\lozenge$ and $\vartriangle$ represent ``double'', ``add'' and ``invert'' respectively.
+%From this fragment, three operations are clearly distinguished,
+% so we succeed to obtain the ``double-add-invert'' chain easily.
+%
+%
+%
+%%%10次实验
+%%We totally run 10 experiments, i.e. monitoring the ECDSA signature 10 times.
+%%The accurate rate is defined as the value of the actual number of bits obtained divided by the ideal number of bits available.
+%%Thus, from these experiments the average accurate rate of the data obtained from the Flush+Flush attack is xx\%.
+%
+%\begin{figure}
+%\centering
+%\includegraphics[width=\textwidth]{pic/slot2500.pdf}
+%\caption{A fragment of the output of the Flush+Flush attack.} \label{fig1}
+%\end{figure}
+%
+%
+%%对这个示例进行解释：
+%%什么符号代表哪个操作
+%%sample大于阈值xx 表示在这个时间槽内，函数被执行了。
+%%然后，for example， 对于时间槽1， 什么被访问了，代表哪个函数被执行了，因此对应于0或者1，
+%%然后时间槽x代表1，
+%%接着说时间槽x2 代表1，同时invert调用了，说明该位符号和之前相反，
+%%时间槽x3，未调用invert，符号位和之前相同。
+%%
+%%时间槽x4可能是噪声，对噪声的处理
+%%
+%%和真实的k相比，正确率是x\%
+%%
+%%用ff攻击一条曲线，得到结果，得到double add invert 链，进行恢复
+%%然后恢复成功率是多少？
+%%
+%%
+%%结果
+%
+%
+
+
+%
+%
+%\subsection{Lattice Attack}
+%\label{latticeattack}
+%%使用完美的侧信道结果
+%%我们的结果是：
+%%进行分析
+%%分析为什么我们没有利用全部的信息，理论上怎样，实际怎样
+%We apply our lattice attack to the curve secp256k1 in our experiments, and we assume that the Flush+Flush attack is perfect, which means we can correctly obtain the ``double-add-invert'' chain and recover all the information about the digits of the ephemeral key it contains.
+%
+%The HNP problem can be solved by exploiting both the CVP and SVP instances.
+%However, the CVP problem does not have a polynomial time solution while the SVP problem has.
+%So, with the growth of the dimension of the lattice, the time cost of finding the closest vector grows very fast.
+% Actually, the CVP problem can be converted to the SVP problem,
+%  so it is often solved through embedding the CVP into an SVP problem and using the polynomial time solution in practice.
+%Therefore,
+% in our experiments, we only demonstrate the result of using the SVP problem to solve the HNP instance.
+%
+% We use the BKZ algorithm implemented in \verb+fplll+~\cite{fplll} to solve the SVP problem.
+%When solving an SVP instance, there are two outcomes that either we obtain the private key or a wrong answer.
+% So we denote the success probability as the amount of successfully recovering the private key divided by the total number of the lattice attacks.
+%We want to find the optimal strategy for our attack in terms of the following parameters:
+%\begin{itemize}
+%%\item CVP or SVP
+% \item  the minimal value of $l$ (length of the consecutive bits of $k$)
+% \item  the block size of BKZ
+% \item  the lattice dimension
+% %\item  pruning strategy (optional)
+% %\item  total signature number
+%\end{itemize}
+%
+%Thus we perform a number of experiments with different values of the parameters.
+% In each case, we run $200$ experiments and compute the success probability.
+%Because in Section \ref{sec:attack} the HNP problem introduced requires $l/2 - \log_{2}{3} -1 \geq 1$ to contain more than one bit information, the value of $l$ should be larger than $7$.
+% But in our experiments, when $l = 8$, the private key can not be successfully recovered.
+%  The reason is that the HNP instance contains not enough information in this case.
+%So the minimal length of the consecutive bits of $k$ is set ranging from $9$ to $11$ in the experiments.
+%When $l \geq 9$ or $l \geq 10$, the block size in BKZ is set $10$  and $20$.
+%While $l \geq 11$, the block is set only $10$.
+%The number of sequences of the consecutive bits for constructing the lattice denoted as $d$ is ranged from $50$ to $230$,
+%i.e. the dimension of the lattice for the SVP is $d + 2$.
+%
+%\begin{table}[t]
+%  \centering
+%  \caption{The success probability of solving SVP with different parameters.}
+%  \label{svp9}
+%    \begin{tabular}{|c|m{0.5in}<{\centering}|m{0.5in}<{\centering}|m{0.5in}<{\centering}|m{0.5in}<{\centering}|m{0.5in}<{\centering}|}
+%    \hline
+%    \multirow{3}{*}{Dimension}&
+%    \multicolumn{5}{c|}{Block size}   \\ %
+%    \cline{2-6}
+%    ~& \multicolumn{2}{c|}{$l \geq 9$} & \multicolumn{2}{c|}{$l \geq 10$} & $l \geq 11$  \\
+%    \cline{2-6}
+%    ~& 10 & 20 & 10 & 20  & 10 \\
+%    %\hline
+%  \hline
+%  50 & 0  & 0  & 0 & 0 & 0   \\
+%  \hline
+%  60 & 0  & 0 & 0 & 0 &  3.0    \\
+%  \hline
+%  70 & 0  & 0  & 0.5 & 1.0  &  29.5    \\
+%  \hline
+%  80 & 1.0  & 1.5 & 4.0 & 8.5 &  49.0  \\
+%  \hline
+%  90 & 0.5  & 1.0 & 14.5 & 22.5 & 67.0   \\
+%  \hline
+%  100 & 0.5  & 4.0 & 21.0 & 33.5 & 70.5  \\
+%  \hline
+%  110 & 1.5  & 3.0 & 16.0 & 36.5 &  79.5 \\
+%  \hline
+%  120 & 2.0  & 4.5 & 21.5 & 35.0 &  77.5  \\
+%  \hline
+%  130 & 0.5  & 2.5 & 24.0 & 45.5 &  83.0  \\
+%  \hline
+%  140 &  3.0 & 8.0 & 29.0 & 46.0 &  88.5   \\
+%  \hline
+%  150 & 3.0  & 6.0 & 32.0 & 49.0 &  88.0  \\
+%  \hline
+%  160 & 2.5  & 13.0 & 27.5 & 49.0 &  94.0  \\
+%  \hline
+%  170 & 5.0  & 12.5 & 39.0 & 56.5 &  93.0  \\
+%  \hline
+%  180 & 3.5  & 11.5 & 37.0 & 57.0 &  97.0  \\
+%  \hline
+%  190 & 7.0  & 19.5 & 39.0 & 63.5 &  98.0  \\
+%  \hline
+%  200 & 9.5  & 26.0 & 46.0 & 66.0 &  99.0  \\
+%  \hline
+%  210 & 10.5  & 22.0 & 51.5 & 66.0 & 99.5   \\
+%  \hline
+%  220 & 15.0  & 29.0 & 51.0 & 72.5 & 100.0    \\
+%  \hline
+%  230 & 19.0  & 30.0 & 58.5 & 73.5 & 99.0  \\
+%  \hline
+%    \end{tabular}
+%\end{table}
+%
+%Table \ref{svp9} shows the success probability for different dimensions and block sizes of solving the SVP instance in the
+%             cases that the minimal length of the consecutive bits ranges from $9$ to $11$.
+%As shown in the table, we successfully recover the private key of a 256-bit ECDSA only need $60$ sequences of consecutive bits with a success probability of $3.0\%$.
+%These $60$ sequences come from up to $60$ signatures.
+%Therefore we just need at most $60$ signatures to successfully recover the ECDSA private key.
+%
+%  For the fixed  minimal length of consecutive bits,
+% increasing the dimension generally increases the probability of success.
+%In some sense, as the dimension increases,
+%     more information is being added to the lattice, and this makes the desired solution vector stand out more.
+%Also, the higher block sizes perform with a higher success probability,
+% as the stronger reduction allows them to isolate the solution vector better.
+%  We believe that the success probability would be surely higher with the block size $30$ or the BKZ 2.0~\cite{bkz2}.
+%
+%When $l$ is fixed, to get a suitable success probability, attackers can either increase the dimension or use stronger algorithms (increasing the block size).
+%However, increasing the dimension requires more signatures
+% and enlarging the block size increases the computation time.
+%So attackers can balance the two factors according to their resources and needs.
+%
+%The success probability also increases as the minimal length of consecutive bits increases.
+%It is because more information is added to the lattice making it easier to search for the desired solution vector.
+%But the increase of the minimal length would lead to requiring more signatures to obtain enough eligible sequences of consecutive bits.
+% Because with the increase of minimal length, the probability of obtaining  a longer sequence of consecutive bits becomes lower.
+%
+%
+%%\begin{table}[b]
+%%  \centering
+%%\begin{tabular}{|c|c|c|c|}
+%%  \hline
+%%  % after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
+%%  dimension & 10 & 20 & 30 \\
+%%  50 & 0 & 0 & 0 \\
+%%  60 & 0 & 0 & 1.0 \\
+%%  70 & 0.8 & 1.2  & 1.3 \\
+%%  80 & 4.3 & 8.6 &  9.7 \\
+%%  90 & 14.4 & 22.8 &  \\
+%%  100 & 21.0 & 33.6 &  \\
+%%  110 & 16.3 & 36.7 &  \\
+%%  120 & 21.7 & 35.0 &  \\
+%%  130 & 24.0 & 45.7 &  \\
+%%  140 & 29.0 & 46.3 &  \\
+%%  150 & 32.3 & 49.3 &  \\
+%%  160 & 27.7 & 49.3 &  \\
+%%  170 & 39.0 & 56.7 &  \\
+%%  180 & 37.3 & 57.0 &  \\
+%%  190 & 39.3 & 63.5 &  \\
+%%  200 & 46.0 & 66.0 &  \\
+%%  210 & 51.7 & 66.0 &  \\
+%%  220 & 51.3 & 72.5 &  \\
+%%  230 & 58.7 & 73.5 &  \\
+%%  \hline
+%%\end{tabular}
+%%  \caption{the SVP result}\label{svp9}
+%%\end{table}
+%
+%%Table \ref{svp8, svp9, svp10} show the probability of success when solving the CVP instance.
+%%As shown from the table,
+%%  the number of fragments of consecutive bits that we need to retrieve the private key of a 256-bit ECDSA is only $60$, less than the result of the SVP instance with the low block size.
+%% The probability of success also increases as the the dimension or the block size increase.
+%%Moreover, while the minimal length of consecutive bits increases, the probability of success becomes higher.
+%%%再加一段或几句CVP结果和SVP结果进行比较。
+%
+%
+%%The results of the SVP and CVP experiments (Appendix A) show that for fixed  minimal length of consecutive bits,
+%% increasing the dimension generally increases the probability of success.
+%%In some sense, as the dimension increases more information is being added to the lattice and this makes the desired solution vector stand out more.
+%%The higher block sizes perform better,
+%% as the stronger reduction allows them to isolate the solution vector better.
+%%While the minimal length of consecutive bits increases, the the probability of success become higher.
+%%Also we see that extensive pre-processing of the basis with more complex lattice reduction techniques provides no real benefit.
+%\subsection{Comparison with Other Lattice Attacks}
+%\label{compare}
+%
+% Generally,  to attack the ECDSA implementation with the wNAF representation,
+%   the attackers target the scalar multiplication
+%      and use cache side channel attacks to achieve the information about the ephemeral key $k$.
+%Through side channels, attackers extract a ``double-add'' chain for the scalar multiplication.
+%However,
+% it is hard to directly recover the whole ephemeral key only from the ``double-add'' chain.
+%%From the obtained information it can recover partial bits of the ephemeral key.
+%Then, the private key recovery from incomplete information of $k$ is transformed into a problem that can be solved by lattice reduction,
+%     such as an HNP or EHNP problem.
+%Finally, the attackers recover the private key by solving the HNP or EHNP problem through being converted to the CVP/SVP problem in the lattice.
+%
+%
+%
+%\begin{table}[!t]
+%  \centering
+%   \caption{Comparison with previous attack methods}\label{compare1}
+%\begin{tabular}{|c|m{90pt}|c|c|c|}
+%  \hline
+%  % after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
+%  Methods & Exploited information & HNP or EHNP & \# of bits & \# of signatures \\
+%  \hline
+%  Benger et al. \cite{Benger2014} & LSB & HNP & 2 & 200 \\
+%  \hline
+%  Van de Pol et al. \cite{Van2015} & half positions of non-zero digits & HNP & 47.6 & 13 \\
+%  \hline
+%  Fan et al. \cite{Fan2016} & all positions of non-zero digits & EHNP & 105.8 & 4 \\
+%  \hline
+%  Wang et al. \cite{Wang2017} & positions of two non-zero digits and the length of the wNAF representation of $k$ & HNP & $\geq$ 2.99 & 85 \\
+%  \hline
+%  Ours & all positions and signs of non-zero digits & HNP & 153.2  & $\leq$ 60 \\
+%%  \hline
+%%  190 & 39.3 & 63.5 & & \\
+%  \hline
+%\end{tabular}
+%\end{table}
+%
+%We compare the previous attack methods with ours in several aspects, and the result is shown in Table \ref{compare1}.
+%Benger et al. \cite{Benger2014} got the least significant bits (LSBs) of the ephemeral key through the Flush+Reload attack
+%although this is not all the information obtained from the side channel.
+%Then they used the LSBs of many signatures to construct an HNP problem and
+%successfully recovered the private key by solving the CVP/SVP instance of a specific lattice converted from the HNP problem.
+%The number of bits extracted from each signature is very small, only an average of 2 bits information can be obtained,
+%thus making it require more than $200$ signatures to recover a 256-bit private key with the probability being $3.5\%$.
+%%In our work, we exploit information from the cache side channel to extract the consecutive bits at the position of every non-zero bits for the ephemeral key.
+%%All the consecutive bits can be used to construct the lattice attack.
+%%Therefore, we can get much more bits per signature and the number of signatures is decreased to recover the private key.
+%% 因为这个结果是200，实在太大，没有必要比较了。
+%
+%Van de Pol et al. \cite{Van2015} improved Benger's attack  relying on the property of some specific elliptic curves, that is the order $q$ of the base point is a pseudo-Mersenne prime which can be expressed as $2^n - \epsilon$, where $|\epsilon| < 2^p $, $p \approx n/2$ and $n$ is the length of $q$.
+%With this property, this attack uses the information from the consecutive non-zero digits whose positions are between $p+1$ and $n$ extracted from the Flush+Reload attack, not only the LSBs.
+%It is able to extract $47.6$ bits per signature on average for the secp256k1 curve and recover the private key with 13 signatures.
+%Then they constructed an HNP instance using this information and
+%successfully recovered the private key.
+%Although this work greatly reduced the number of signatures needed to recover the private key,
+%the information from the cache side channel is not fully utilized.
+%But our work can use all the information from the cache side channel.
+%Moreover, their work is only effective to some special curves,
+% but ours can be applied to all the curves without any restriction.
+%%This means that they can use about half of the information they got from the side channel.
+%
+%
+%Fan et al.\cite{Fan2016} extracted all positions of digits from the Flush+Reload attack and took advantage of them to construct an EHNP instance.
+%They managed to obtain on average 105.8 bits per signature for the secp256k1 curve
+% and only need 4 signatures to recover the private key with the probability being $8\%$.
+% Compared with their work, ours obtains more information about the ephemeral key, i.e. the sign of all non-zero digits, from the side channel by analysing the OpenSSL implementation.
+%We can extract 153.2 bits information per signature.
+%Although it uses more signatures to recover the private key in our lattice attack,
+%theoretically, the number of signatures needed is less than Fan's if a more suitable lattice is constructed.
+%
+%Wang et al. \cite{Wang2017} obtained the positions of two non-zero digits and the length of the wNAF representation of $k$ from the Flush+Reload attack.
+%They could obtain no less than 2.99 bits information per signature and exploit the HNP to recover the private key for the 256-bit curve using $85$ signatures.
+%Obviously, our method obtains more information and uses fewer signatures to recover the private key.
+%
+%In summary, our method exploits both the signs and the positions  of the non-zero digits of the ephemeral key $k$ achieved from the Flush+Flush attack.
+%It extracts the largest amount of information, on average $153.2$ bits per signature.
+%In theory, the number of signatures needed to recover the private key is only $2$.
+%However, due to the limit of our method of lattice construction,
+% we need at most $60$ signatures, which is more than Fan's and Van de Pol's.
+%One of our future work is to find an efficient lattice construction to solve the problem (e.g., an EHNP-based solution).
+%
+%%2017年，范团队还在science China information sciences 上发了一篇，使用HNP的文章，
+%%这是一个b类的期刊。(交叉综合新兴)
+%%我们比这个期刊的文章效果要好的。
 
 
 
