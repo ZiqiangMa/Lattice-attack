@@ -1,6 +1,7 @@
 %\section{Recover the ECDSA Private Key}
 
 \section{Recover the ECDSA Private Key with HNP}
+\label{sec:recoverHNP}
 \subsection{Recovering Consecutive Bits}
 \label{data_proc1}
 In this section, we introduce how to recover the consecutive bits at the position of every non-zero bits for the ephemeral key $k$, exploiting the information obtained from the side channel.
@@ -358,6 +359,7 @@ But the increase of the minimal length would lead to requiring more signatures t
 
 
 \section{Recover the ECDSA Private Key with EHNP}
+\label{sec:recoverEHNP}
 \subsection{ Extracting more Information }
       Assuming we get a perfect {\bf Double-Add-Invert Chain}. Suppose in  Double-Add-Invert Chain, there are $l$ numbers of $''A''$s, whose positions are separately $\lambda_i$($1\leq i\leq l$) counted from the lower index. So we can easiy have
  $$k=\sum\limits_{i=0}^{l-1}  k^{'}_i 2^{\lambda_i}$$
@@ -552,7 +554,7 @@ The last line records the total success probability and the average time using t
 
 
 \section{Comparison with Other Lattice Attacks}
-\label{compare}
+\label{sec:compare}
 
  Generally,  to attack the ECDSA implementation with the wNAF representation,
    the attackers target the scalar multiplication
