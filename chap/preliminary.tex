@@ -3,12 +3,12 @@
 In this section, we present the background knowledge about the attack.
 First we describe the ECDSA and its implementation using the wNAF representation in OpenSSL.
 Then we explain the attack method of the cache side channels.
-Also, the hidden number problem and its  lattice attack are introduced
+Also, the hidden number problem and the extended hidden number problem are introduced
  to dispose the data obtained from cache side channels.
 
 \subsection{The Elliptic Curve Digital Signature Algorithm}
 \label{intro_ecdsa}
-ECDSA \cite{Johnson2001, ansi2005} is the adaption of one step of the Digital Signature Algorithm (DSA) \cite{DSS186} from the multiplicative group of a finite field to the group of points on an elliptic curve.
+ECDSA \cite{Johnson2001, ansi2005} is the migration of the Digital Signature Algorithm (DSA) \cite{DSS186} from the multiplicative group of a finite field to the group of points on an elliptic curve.
 
 Let $E$ be an elliptic curve defined over a finite field $\mathbb{F}_{p}$ where $p$ is prime.
 $G \in E$ is a fixed point of a large prime order $q$, that is $G$ is the generator of the group of points of order $q$.
@@ -44,9 +44,10 @@ Therefore, the target of most attackers is the scalar multiplication $kG$ expect
 \label{intro_wnaf}
 %wnaf 是什么
 %K 是有限域， P 是定义在域 K上的椭圆曲线 E(K)上的点，k是一个大整数,根据椭圆曲线上点的加法公式将点P与自身相加 k次, k 称为标量， kP称为椭圆曲线点乘，或标量乘法
-$G$ is a point defined on the elliptic curve over the finite field,
+
+Scalar multiplication $kG$ on the elliptic curve means that the point $G$ is added to itself $k$ times,
+where $G$ is a point defined on the elliptic curve over the finite field,
  and the scalar $k$ is a big integer.
-Scalar multiplication $kG$ on the elliptic curve means that the point $G$ is added to itself $k$ times.
 There are several algorithms to implement the scalar multiplication.
 In OpenSSL, scalar multiplication in the prime field is implemented using the wNAF representation \cite{GORDON1998129,Miyaji1997,Koyama1002,Solinas2000} of the scalar $k$.
 In wNAF, a number $k$ is represented by a sequence of digits which value is either zero or an odd number satisfying $-2^{w} < k_{i} < 2^{w}$,
@@ -110,14 +111,14 @@ After converting $k$ to the wNAF form, the multiplication $kG$ is executed as de
     \end{algorithm}
 
 
-From the algorithm, we can find that the if-then block (Line 4) is vulnerable to side channel attacks.
+From the Algorithm~\ref{alg:kg}, we can find that the if-then block (Line 4) is vulnerable to side channel attacks.
 An attacker can use a spy process to monitor the conditional branches through side channels.
 Then he can get a ``double-add'' chain, and through it, whether the value of $k_i$ is zero can be inferred.
 The attacker can use this information to recover the private key.
 
 In OpenSSL, the bit length of $k$ is set to a fixed value$\lfloor\log_{2}{q}\rfloor + 1$ of by adding itself $q$
 or $2q$, which can resist the remote timing side channel attack \cite{Brumley2011}.
-In most cases, the multiplication is done as $(k + q)G$, but it is still vulnerable in lattice attacks \cite{Dahmun2016}.
+In most cases, the multiplication is done as $(k + q)G$, but it can still be vulnerable in lattice attacks \cite{Dahmun2016}.
 
 Also, OpenSSL uses the modified wNAF representation instead of the generalized one as stated in Algorithm~\ref{alg:wnaf} to avoid length expansion in some cases and to make more efficient exponentiation.
 The representation of modified wNAF is very similar to the wNAF.
@@ -223,22 +224,22 @@ The execution of such an attack consists of three phases:
 \begin{itemize}
   \item
     \textbf{Flush:}
-    In this phase, the attacker uses the \verb+clflush+ instruction to flush the desired memory lines out from the caches.
+    The attacker uses the \verb+clflush+ instruction to flush the desired memory lines out from the caches.
     This ensures that these lines are accessed from the memory instead of the caches for the next time.
   \item
     \textbf{Wait:}
-    In this phase, the attacker waits a moment while the victim is running.
+    the attacker waits a moment while the victim is running.
   \item
     \textbf{Reload:}
     This phase detects whether the victim accesses the memory lines flushed in the first phase during the waiting time.
     The attacker accesses the desired memory lines to reload them into caches, and measures the time.
-From the reload time, the attacker determines whether the memory lines are accessed by the victim.
-    If it is longer, it means that the attacker reloads the data from the memory and the victim does not access the data.
+%From the reload time, the attacker determines whether the memory lines are accessed by the victim.
+    The longer reload time means that the attacker reloads the data from the memory and the victim does not access the data.
     Otherwise, it means that the victim accesses the data.
 %    So these memory lines are accessed by the victim during the waiting time.%需要精简
 \end{itemize}
 
-The Flush+Flush attack \cite{gruss2016flush} also assumes shared memory.
+The Flush+Flush attack \cite{gruss2016flush} also assumes the shared memory.
 %Unlike measuring the reload time directly affected by the cache access,
 It relies on the execution time of the \verb+clflush+ instruction,
   which is affected by whether the to-be-flushed data are cached or not.
@@ -253,9 +254,9 @@ As the third phase flushes the caches, it doubles as the first phase for subsequ
 
 %再一段F+F 和 F+R进行对比：更加高效，精度更高，F阶段可以当成是下一循环的F，
 The execution time of \verb+clflush+ is less than the reload time on average,
-    and the first phase and the third phase of the next round are merged together in the Flush+Flush attack.
-  Therefore the Flush+Flush attack is more efficient than the Flush+Reload attack.
-Thus, the Flush+Flush attack has a better accuracy.
+    and the first and the third phase are merged together in the Flush+Flush attack.
+  Therefore the Flush+Flush attack is more accurate than the Flush+Reload attack.
+%Thus, the Flush+Flush attack has a better accuracy.
 %Furthermore, compared with the Flush+Reload attack,
 %the Flush+Flush attack does not trigger prefetches when monitoring consecutive memory lines, otherwise, it may affect the validity of the attack.
 
@@ -268,7 +269,7 @@ Thus, the Flush+Flush attack has a better accuracy.
 \label{intro_hnp}
 
 For the wNAF algorithm,
- the if-statement block (Line 4 in Algorithm\ref{alg:kg}) is vulnerable to side channel attacks.
+ the if-then block (Line 4 in Algorithm~\ref{alg:kg}) is vulnerable to side channel attacks.
 An attacker can use a spy process to monitor the conditional branches through side channels.
 Then he can get a ``double-add'' chain, and through it, whether the value of $k_i$ is zero can be inferred.
 But this is not enough to determine the complete ephemeral key,
@@ -277,18 +278,18 @@ The attacker then use this information to launch a lattice attack to recover the
 
 
 The Hidden Number Problem (HNP) is first presented by Boneh and Venkatesan~\cite{boneh1996} in 1996.
-It is used to recover the secret key of Diffie-Hellman key exchange, DSA and ECDSA, given some leaked consecutive bits of the ephemeral key.
+It is used to recover the secret key of Diffie-Hellman key exchange~\cite{boneh1996}, DSA~\cite{HG2001} and ECDSA~\cite{Nguyen2003}, given some leaked consecutive bits of the ephemeral key.
 Given a prime number $q$ and a positive $l$,
  and let $t_1, t_2, ..., t_d$ be randomly chosen, which are uniformly and independently in $\mathbb{F}_q$.
 The HNP can be stated as follows:
-  recovering an unknown number $\alpha \in \mathbb{F}_q$ such that the known number pairs $(t_i, u_i)$ satisfy 
+  recovering an unknown number $\alpha \in \mathbb{F}_q$ such that the known number pairs $(t_i, u_i)$ satisfy
   $$v_i = |\alpha t_i - u_i|_{q} \leq q/2^{l+1}, \ \ \ \ 1 \leq i \leq d,$$
    where $|\cdot|_q$ denotes the reduction modulo $q$ into range $[-q/2, ..., q/2)$.
 If $|\alpha t - u|_{q} \leq q/2^{l+1}$ is satisfied,
 the integer $u$ represents the $l$ most significant bits of $\alpha t$ which is defined as ${MSB}_l(\alpha t)$.
 
 
-The Extended Hidden Number Problem (EHNP) introduced in~\cite{ehnp} is stated as follows.
+The Extended Hidden Number Problem (EHNP) introduced in~\cite{ehnp} is stated as follows, which also can be used to recover the ECDSA private key~\cite{Fan2016}.
 Let $N$ be a prime number. Given $u$ congruences
 $$
 \beta_{i}x + \sum_{j=1}^{l_i}{a_{i,j}k_{i,j}} \equiv c_i \ \ \ \bmod N, \ \ \ 1 \leq i \leq u \ ,
