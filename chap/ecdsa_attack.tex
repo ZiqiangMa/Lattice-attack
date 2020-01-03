@@ -1,14 +1,18 @@
 \section{Improving Cache Side Channel Attack on wNAF Representation}
 \label{sec:attack}
-This section proposes a new method to recover the private key of ECDSA.
-First, we analyse the invert function in the scalar multiplication with wNAF representation in the ECDSA algorithm.
- Then we use the invert function for improving the cache side channel attacks, from which the sign of the non-zero digits of $k$ is determined.
+This section proposes how to achieve more information about the ephemeral key with the wNAF representation through the cache side channel.
+First, we analyse the invert function in the scalar multiplication with wNAF representation in the ECDSA algorithm 
+and show how to use the Double-Add-Invert chain from the cache side channel to extract the information about the ephemeral key.
+ Then we implemented the Flush+Flush attack to the secp256k1 curve in OpenSSL 1.1.1b to obtain
+the cache side channel information.
+The details of the implementation and the result of attacking the elliptic curves are provided.
 
-After that, we make use of the obtained information to recover the consecutive bits at the position of every non-zero digits of $k$.
-Finally, we construct an HNP instance by the consecutive bits and transform it to the problem of solving the SVP/CVP in some lattice with the lattice reduction algorithms.
-Note that the steps in existing works do not work for the signs of the non-zero digits.
-So we have to first obtain consecutive bits of the ephemeral key by converting the wNAF representation to the binary representation.
-Then, we use these consecutive bits to construct the HNP instance.
+
+%After that, we make use of the obtained information to recover the consecutive bits at the position of every non-zero digits of $k$.
+%Finally, we construct an HNP instance by the consecutive bits and transform it to the problem of solving the SVP/CVP in some lattice with the lattice reduction algorithms.
+%Note that the steps in existing works do not work for the signs of the non-zero digits.
+%So we have to first obtain consecutive bits of the ephemeral key by converting the wNAF representation to the binary representation.
+%Then, we use these consecutive bits to construct the HNP instance.
 
 \subsection{Attacking wNAF through the Cache Side Channels}
 \label{data_get}
@@ -37,7 +41,7 @@ Because the first non-zero digit is positive,
 We use a spy process to monitor one memory line of the code of the double, add and invert functions during the scalar multiplication.
 The time is divided into slots, and in each slot,
   the spy determines whether the three functions are performed or not by monitoring the cache hits/misses.
- Then we obtain a ``double-add-invert'' chain.
+ Then we obtain a Double-Add-Invert chain.
 According to the ``double'' and ``add'' in this chain, we determine whether each digit of $k$ is zero or not,
     as done in previous works.
 Also, based on the ``invert'' in this chain, we infer the sign of each non-zero digit.
@@ -49,7 +53,7 @@ In the OpenSSL library (especially the latest OpenSSL 1.1.1b),
 In our attack, we improve the original cache side channel attack by adding a new monitor to the \verb+EC_POINT_invert()+ function.
  In each time slot
   the spy determines whether three functions are performed or not.
-Then we get a new ``double-add-invert'' chain through the cache side channel attack.
+Then we get a new Double-Add-Invert chain through the cache side channel attack.
 
 %首先回顾标量乘法的实现，原始实现。
 %然后invert函数在里面是如何使用的，起到了什么作用。
@@ -59,7 +63,7 @@ Then we get a new ``double-add-invert'' chain through the cache side channel att
 %然后得到了什么
 
 
-When we use the ``double-add-invert'' chain to extract the digits of $k$,
+When we use the Double-Add-Invert chain to extract the digits of $k$,
 the ``double'' represents the double function is called,
 and the ``add'' represents  both double and add are called.
 The ``invert'' represents the invert function is called.
@@ -93,13 +97,13 @@ In this way, we obtain all the positions of the non-zero digits and their signs.
 
 
 
-\subsection{The Flush+Flush Attack}
+\subsection{The Implementation of Flush+Flush Attack}
 \label{ffattack}
-We launched the cache side channel attack on an Acer Veriton T830 running Ubuntu 16.04.
+We launched the cache side channel attack to obtain the partial information of the ECDSA on an Acer Veriton T830 running Ubuntu 16.04.
 The machine features an Intel Core i7-6700 processor with four execution cores and an $8$ MB LLC.
 The attacking target is the ECDSA implemented in OpenSSL 1.1.1b, which uses wNAF representation in the scalar multiplication.
-For the experiments, we use the Flush+Flush to attack the 256-bit curve secp256k1.
-%Followings are the implementation details for the Flush+Flush attack.
+Both the Flush+Reload and Flush+Flush attacks can be used, but we choose
+the Flush+Flush to attack the 256-bit curve secp256k1 for the experiments due to the accuracy as described in Section~\ref{intro_cacheattack}.
 
 %平台
 
@@ -132,7 +136,7 @@ Typically the debugging symbols are not available for attackers,
 
 
 
-\noindent\textbf{Thresholds.}
+\noindent\textbf{Threshold.}
 We monitor the execution time of the \verb+clflush+ instruction to flush the monitored functions.
 If the time is larger than the threshold, meaning the memory line is accessed by the victim.
 Otherwise, the memory line is not accessed.
@@ -187,7 +191,7 @@ Also, we can determine the start position by monitoring the code of the copy fun
 Fig.~\ref{fig1} shows a fragment of the output of the spy when OpenSSL performs ECDSA with the secp256k1 curve.
 In this figure, $\square$, $\lozenge$ and $\vartriangle$ represent ``double'', ``add'' and ``invert'' respectively.
 From this fragment, three operations are clearly distinguished,
- so we succeed to obtain the ``double-add-invert'' chain easily.
+ so we succeed to obtain the Double-Add-Invert chain easily.
 
 
 
