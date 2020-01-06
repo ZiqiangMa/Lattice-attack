@@ -7,7 +7,7 @@ Then we translate the problem of recovering the ECDSA private key to the HNP pro
  and work it out by solving the approximate CVP/SVP Problem with the lattice reduction algorithm.
 
 We applied our attack to the secp256k1 curve.
-We measured the success probability of recovering the ECDSA private key in different minimal values of $l$ (length of the consecutive bits of k), 
+We measured the success probability of recovering the ECDSA private key in different minimal values of $l$ (length of the consecutive bits of k),
 block sizes of BKZ and lattice dimensions.
 Due to the limitation of $l$, we need at least 247.45 signatures to recover the ECDSA private key using the HNP problem.
 
@@ -369,55 +369,55 @@ But the increase of the minimal length would lead to requiring more signatures t
 \label{sec:recoverEHNP}
 \subsection{ Extracting more Information }
 
-      Assuming we get a perfect {\bf Double-Add-Invert Chain}. Suppose in  Double-Add-Invert Chain, the numbers of $A$ is $l$, whose positions are separately $\lambda_i$($1\leq i\leq l$). So we can easiy have 
- $$k=\sum\limits_{i=0}^{l-1}  k^{'}_i 2^{\lambda_i}$$     
+      Assuming we get a perfect {\bf Double-Add-Invert Chain}. Suppose in  Double-Add-Invert Chain, the numbers of $A$ is $l$, whose positions are separately $\lambda_i$($1\leq i\leq l$). So we can easiy have
+ $$k=\sum\limits_{i=0}^{l-1}  k^{'}_i 2^{\lambda_i}$$
  where $$k^{'}_i\in\{-7,-5,-3,-1,1,3,5,7\}.$$
- 
+
     On the other hand, from the Invert chain, we can easily know that the $k^{'}_i$ is a positive integer or a negative integer. Suppose  $k^{'}_i=(-1)^{h_i} k^{*}_i$ , where $(-1)^{h_i}$ is the sign of $k^{'}_i$  which is known, $k^{*}_i\in \{1,3,5,7\}$. Write $ k^{*}_i=2k_i+1$ , where $k_i\in \{0,1,2,3\}$. Then we have
  \begin{equation}
   \begin{array}{lll}{\label {KKK}}
  k&=&\sum\limits_{i=0}^{l-1} (-1)^{h_i} k^{*}_i 2^{\lambda_i}  \\
  &=& \sum\limits_{i=0}^{l-1} (-1)^{h_i}(2k_i+1)2^{\lambda_i}  \\
- &=&\bar{k}+\sum\limits_{i=0}^{l-1} (-1)^{h_i}k_i2^{\lambda_i+1} 
+ &=&\bar{k}+\sum\limits_{i=0}^{l-1} (-1)^{h_i}k_i2^{\lambda_i+1}
   \end{array}
- \end{equation}    
-where $\bar{k}=\sum\limits_{i=0}^{l-1}{(-1)^{h_i}2^{\lambda_i} }$, $h_i$, $\lambda_i$ are known and the only unknowns are $k_i\in\{0,1,2,3\}$. 
+ \end{equation}
+where $\bar{k}=\sum\limits_{i=0}^{l-1}{(-1)^{h_i}2^{\lambda_i} }$, $h_i$, $\lambda_i$ are known and the only unknowns are $k_i\in\{0,1,2,3\}$.
 
  %%    As we can know whether the ¡°Invert¡± operation was  %%done or not ,which means the difference of the sign of %% $k_i$ and $k_{i+1}$ is known($0\leq i\leq l-1$). We %suppose the sign of $k_0$ is $(-1)^{h_0}$. Sequencely %we can easily get  the sign of $k_i$  which can be written %as $(-1)^{h_0+h_i}$, where $h_0\in \{0,1\}$ is unkown %and $h_i\in \{0,1\}$ ($1\leq i\leq l$)are known. So we have
     % $$k=\sum\limits_{i=0}^{l-1}  (-1)^{h_i} k^{`}_i %2^{\lambda_i}$$
   %       and the sign of $(-1)^{h_i}$,which can be viewed as %known.
 
-    It is known that there are approximately $(\lceil logq\rceil +1)/(\omega+2)-1=50.4 $ non-zero digits in the Double-Add-Invert Chain when  $\omega=3$. From Eq.(\ref{KKK}), there 
-    are approximatley 50.4*2= 100.8 bits being unkown, which means the number of the known bits is about $257-100.8=156.2$ on avarage. In theory, we need at least two signatures to recover the $256$-bit secrete key, as $2$ is the least integer $m$ such that $m\cdot 156.2 >256$. 
-    
-    From above we can see, with our new Double-Add-Invert Chain, we can extract  on average $156.2$ bits of information per signatuare for the 256-bit elliptic curve which is about $1.5$ times of the number of bits in \cite{Fan2016} . 
-    In the next subsection, we will show that we can recover the secret key with only $2$ signatures, which attains the optimal bound. 
+    It is known that there are approximately $(\lceil logq\rceil +1)/(\omega+2)-1=50.4 $ non-zero digits in the Double-Add-Invert Chain when  $\omega=3$. From Eq.(\ref{KKK}), there
+    are approximately 50.4*2= 100.8 bits being unknown, which means the number of the known bits is about $257-100.8=156.2$ on average. In theory, we need at least two signatures to recover the $256$-bit secrete key, as $2$ is the least integer $m$ such that $m\cdot 156.2 >256$.
+
+    From above we can see, with our new Double-Add-Invert Chain, we can extract  on average $156.2$ bits of information per signature for the 256-bit elliptic curve which is about $1.5$ times of the number of bits in \cite{Fan2016} .
+    In the next subsection, we will show that we can recover the secret key with only $2$ signatures, which attains the optimal bound.
 
 
 \subsection{Find the target vector with new lattice}
-  Similar to \cite{Fan2016}, we first translate the problem of recovering ECDSA secret key to the problem of EHNP. Then we further translate it to the problem of solving approximate SVP using lattice reduction algorithm. 
-  
-     On the othe hand, in order to achieve the optimal bound, i.e., we only need $2$ signatures and the corresponding Double-Add-Invert chain to recover the secret key. Some new ideas and techniques are introduced, which aims to reduce the attacking time or increase the success probability. 
-     
-      First and most importantly, we  observe the components of target vector in \cite{Fan2016} isn't balanced,  so we reconstruct the lattice in \cite{Fan2016}, which reduces the length of target vector much, epecially when the number of possible values of unkown $k_i$ is small.
-      
-     Then, we reduce the dimension of lattice and improve the success probability by guessing $k_{i}$. Finally, we observe that lattice reduction algorithm will recover different samples with different $\delta$'s, therefore, we provide some plausible reasonable $\delta$'s and use them to improve success probability. 
-     
-     
-     In this sectionm, we applies our attack to the secp256K1 curve. Three signatures are enough to recover the secret key with a high success probablity no less than $73\%$. If we have only two signatures, we can recover the secret key with a success probability no less than $24.3\%$.   
+  Similar to \cite{Fan2016}, we first translate the problem of recovering ECDSA secret key to the problem of EHNP. Then we further translate it to the problem of solving approximate SVP using lattice reduction algorithm.
 
-       \subsubsection {Reduction to EHNP Problem}  Assuming we have a  signature pair $(r,s)$ of messgage $m$. Then we have the equation 
+     On the other hand, in order to achieve the optimal bound, i.e., we only need $2$ signatures and the corresponding Double-Add-Invert chain to recover the secret key. Some new ideas and techniques are introduced, which aims to reduce the attacking time or increase the success probability.
+
+      First and most importantly, we  observe the components of target vector in \cite{Fan2016} isn't balanced,  so we reconstruct the lattice in \cite{Fan2016}, which reduces the length of target vector much, especially when the number of possible values of unknown $k_i$ is small.
+
+     Then, we reduce the dimension of lattice and improve the success probability by guessing $k_{i}$. Finally, we observe that lattice reduction algorithm will recover different samples with different $\delta$'s, therefore, we provide some plausible reasonable $\delta$'s and use them to improve success probability.
+
+
+     In this section, we applies our attack to the secp256K1 curve. Three signatures are enough to recover the secret key with a high success probability no less than $73\%$. If we have only two signatures, we can recover the secret key with a success probability no less than $24.3\%$.
+
+       \subsubsection {Reduction to EHNP Problem}  Assuming we have a  signature pair $(r,s)$ of message $m$. Then we have the equation
   \begin{equation}\label {SigEqu}
   \alpha r-sk+H(m)=0\mod q.
   \end{equation}
-  Substitue (\ref{SigEqu}) with Equation ({\ref{KKK}}), we can have that there exists an $h\in \mathbb{Z}$ such that 
+  Substitue (\ref{SigEqu}) with Equation ({\ref{KKK}}), we can have that there exists an $h\in \mathbb{Z}$ such that
 \begin{equation}\label{SigEqu2}
 \alpha r-\sum\limits_{i=1}^l((-1)^{h_i}2^{\lambda_i+1}s)k_i-(s\bar{k}-H(m))+hq=0.
 \end{equation}
-where $\alpha, k_i (1\leq i \leq l)\text{ and } h$ is unknown. 
+where $\alpha, k_i (1\leq i \leq l)\text{ and } h$ is unknown.
 
 Assuming we got $u$ signature pairs $(r_i,s_i)$ of different messages $m_i$($1\leq i\leq u$) with the same secret key $\alpha$.
-Suppose we get the Double-ADD-Invert Chain of each ephemeral key. From  (\ref{SigEqu2}) we can easliy have 
+Suppose we get the Double-ADD-Invert Chain of each ephemeral key. From  (\ref{SigEqu2}) we can easily have
  \begin{equation}
 \begin{cases}
 \label{SigEqu2}
@@ -425,20 +425,20 @@ Suppose we get the Double-ADD-Invert Chain of each ephemeral key. From  (\ref{Si
 \qquad\qquad\qquad\quad\vdots\\
 \alpha r_i-\sum\limits_{j=0}^{l_i-1}((-1)^{h_{i,j}}2^{\lambda_{i,j}+1}s_i)k_{i,j}-(s_i\bar{k}_i-H(m_i))+h^{'}_iq=0  \\
 \qquad\qquad\qquad\quad\vdots\\
-\alpha r_u-\sum\limits_{j=0}^{l_u-1}((-1)^{h_{u,j}}2^{\lambda_{u,j}+1}s_u)k_{u,j}-(s_u\bar{k}_u-H(m_u))+h^{'}_uq=0  
+\alpha r_u-\sum\limits_{j=0}^{l_u-1}((-1)^{h_{u,j}}2^{\lambda_{u,j}+1}s_u)k_{u,j}-(s_u\bar{k}_u-H(m_u))+h^{'}_uq=0
 \end{cases}
 \end{equation}
 where $l_i$ is the number of non-zero digits of the $i$-th ephemeral key and $(-1)^{h_{i,j}}k_{i,j}$ is the $j$-th non-zero digit in the $i$-th signature, $\lambda_{i,j}$ is its position, $\bar{k}_i=\sum\limits_{j=0}^{l_i-1}(-1)^{h_{i,j}}2^{\lambda_{i,j}} \mod q$ and $\alpha, h^{'}_i, k_{i,j}$ are unknown elements in the equations.  \\
 
 
-Given Equation (\ref{SigEqu2}), find $0<\alpha<q$ and $0\leq k_{i,j}\leq 2^{w-1}-1$. We denote this problem DSA-EHNP. 
+Given Equation (\ref{SigEqu2}), find $0<\alpha<q$ and $0\leq k_{i,j}\leq 2^{w-1}-1$. We denote this problem DSA-EHNP.
 
   \subsubsection {Balancing the target vector}
 
-     Next we will translate the DSA-EHNP problem to the problem of finding the short vector of a related lattice. Then we can find the secret key from the short vector. Comparing to the constructed lattice \cite{Fan2016},  the determinant of our new lattice is larger, while the target vector is shorter and more balanced, which makes the lattice reduction algorithmn easier to find the target vector. 
-     
-     Notice that we have $k_{i,j}\in \{0,1,\cdots, 2^{w-1}-1\}$. For $1\leq i \leq u$ and $1\leq j\leq l_i$, denote $\gamma_{i,j}=(-1)^{h_{1,j}}2^{\lambda_{1,j}+1}s_1r_i\mod q$, $c_{i,j}=(-1)^{h_{i,j}+1}2^{\lambda_{i,j}+1}s_ir_1\mod q$, $\beta_i=r_1(H(m_i)-s_i\bar{k}_i)-r_i(H(m_1)-s_1\bar{k}_1) \mod q$. We can construct a lattice $L$ spanned by the lines of the following matrix $B$ in Equation (\ref{SigEqu3}) which is obtained by eliminating $\alpha$ in Equation (\ref{SigEqu2}). The parameter $\delta$ which will be discussed in section \ref{section3.3} is  a proper value.  
-    
+     Next we will translate the DSA-EHNP problem to the problem of finding the short vector of a related lattice. Then we can find the secret key from the short vector. Comparing to the constructed lattice \cite{Fan2016},  the determinant of our new lattice is larger, while the target vector is shorter and more balanced, which makes the lattice reduction algorithm easier to find the target vector.
+
+     Notice that we have $k_{i,j}\in \{0,1,\cdots, 2^{w-1}-1\}$. For $1\leq i \leq u$ and $1\leq j\leq l_i$, denote $\gamma_{i,j}=(-1)^{h_{1,j}}2^{\lambda_{1,j}+1}s_1r_i\mod q$, $c_{i,j}=(-1)^{h_{i,j}+1}2^{\lambda_{i,j}+1}s_ir_1\mod q$, $\beta_i=r_1(H(m_i)-s_i\bar{k}_i)-r_i(H(m_1)-s_1\bar{k}_1) \mod q$. We can construct a lattice $L$ spanned by the lines of the following matrix $B$ in Equation (\ref{SigEqu3}) which is obtained by eliminating $\alpha$ in Equation (\ref{SigEqu2}). The parameter $\delta$ which will be discussed in section \ref{section3.3} is  a proper value.
+
   \begin{equation}
     \label{SigEqu3}
      \textbf{B}=\left(\begin{matrix}
@@ -463,22 +463,22 @@ c_{2,l_2}&&&&&&&&\frac{\delta}{3}&&&&&\\
 
 \end{matrix}\right)
   \end{equation}
-  Suppose $h_i=r_1h_i^{'}-r_ih_1^{'}$, it is easy to check there exists 
+  Suppose $h_i=r_1h_i^{'}-r_ih_1^{'}$, it is easy to check there exists
   $$
   \begin{array}{lll}
   \textbf{w}&=&(h_2,\cdots,h_{\mu},k_{1,1},\cdots,k_{1,l_1},\cdots,k_{u,1},\cdots,k_{u,l_u},1)\textbf{B}\\
-  &=&(0,\cdots,0,\frac{k_{1,1}}{3}\delta-\frac{\delta}{2},\cdots,\frac{k_{1,l_1}}{3}\delta-\frac{\delta}{2},\cdots, \\ 
+  &=&(0,\cdots,0,\frac{k_{1,1}}{3}\delta-\frac{\delta}{2},\cdots,\frac{k_{1,l_1}}{3}\delta-\frac{\delta}{2},\cdots, \\
   &&\frac{k_{u,1}}{3}\delta-\frac{\delta}{2},\cdots,\frac{k_{u,l_u}}{3}\delta-\frac{\delta}{2},\frac{\delta}{2})\in L(\textbf{B}),
   \end{array}
   $$
-and the Euclid norm of the vector $\textbf{w}$ satisfys
-$\|\textbf{w}\|\leq \frac{\delta}{2}\sqrt{n-u+1}$, where $n$ is the dimension of the lattice, i.e., $n=\sum\limits_{i=1}^{u}l_i+u$. 
+and the Euclid norm of the vector $\textbf{w}$ satisfies
+$\|\textbf{w}\|\leq \frac{\delta}{2}\sqrt{n-u+1}$, where $n$ is the dimension of the lattice, i.e., $n=\sum\limits_{i=1}^{u}l_i+u$.
 
-The determinant of lattice $L(\textbf{B})$ is $\|L\|=\frac{1}{2}q^{u-1}\cdot {\delta}^{n-u+1}(\frac{1}{3})^{n-u}$. The target vector $\textbf{w}$ may not be the shortest vector, however, if we choose a appropriate value of $\delta$, the target vector $\textbf{w}$ which will be a pretty short vector which can be found by lattice reduction algorithm(\cite{Lenstra1982}, \cite{Schnorr1994}, \cite{bkz2}, \cite{ADHKPS19}), thus, the secret key $\alpha$ can be recovered.  
- 
- {\bf Comparing with the constructed lattice in \cite{Fan2016}.}  Generally, the smaller $\frac{\|\textbf{w}\|}{(|det(L)|)^{1/n}}$ is, the easier the lattice reduction algorithmn is to find the target vector. Next, we will compare the value of $\frac{\|\textbf{w}\|}{(det(L))^\frac{1}{n}}$ in the new lattice and \cite{Fan2016}. The constructed lattice is similar to the lattice in \cite{Fan2016} with two refinements. Firstly, we notice that if the diagonal entries of the matrix from line $\mu$ to line $n-1$ are  $\frac{\delta}{7}$ instead of  $\frac{\delta}{8}$ in \cite{Fan2016}, which not only make the  determinant more larger , but also make the target vector more balanced and shorter. On the other word, $-\frac{\delta}{2}\leq \frac{k_{i,j}}{8}\delta-\frac{\delta}{2}\leq \frac{3\delta}{8}$ if $0\leq k_{i,j}\leq 7$, while if we subtititue $\frac{k_{i,j}}{8}$ by $\frac{k_{i,j}}{7}$, we have  $-\frac{\delta}{2}\leq\frac{k_{i,j}}{7}\delta-\frac{\delta}{2}\leq \frac{\delta}{2}$($0\leq k_{i,j}\leq 7$). In that case, the determinant of the new lattice is $(\frac{8}{7})^{n-u}$ times as large as the old lattice, while the expected length of the target vector will increase to $\sqrt{\frac{96}{77}}$ times, therefore, $\frac{\|\textbf{w}\|}{(|det(L)|)^{1/n}}$ will decrease.  Secondly, since we can get more information of the emphemeral key, i.e, for the lattice in \cite{Fan2016}, we have $0\leq d_{i,j}\leq 7$, while now we have $0\leq d_{i,j}\leq 3$. We can further change the diagonal entries of the matrix from line $\mu$ to line $n-1$ from $\frac{\delta}{7}$ to  $\frac{\delta}{3}$, which increase the absolute value of the determinent of the lattice very much, however, slightly increase the length of the target vector. Therefore, we can find the target vector more easily when we use the newly constructed lattice. 
+The determinant of lattice $L(\textbf{B})$ is $\|L\|=\frac{1}{2}q^{u-1}\cdot {\delta}^{n-u+1}(\frac{1}{3})^{n-u}$. The target vector $\textbf{w}$ may not be the shortest vector, however, if we choose a appropriate value of $\delta$, the target vector $\textbf{w}$ which will be a pretty short vector which can be found by lattice reduction algorithm(\cite{Lenstra1982}, \cite{Schnorr1994}, \cite{bkz2}, \cite{ADHKPS19}), thus, the secret key $\alpha$ can be recovered.
 
-The following experiments prove the validity of balancing. Firstly, we do tests using the way in \cite{Fan2016} and the above refinements with 3 signatures, we can see the success probability is $73\%$, which is very high. Therefore, we try to recove the secret key with 2 signature in the following section.  Our experiments in line 3 and line 4 and the following sections are based on the skills in \cite{Fan2016} without merging which will drop the probability in experiment with $2$ signatures. The results in Table \ref{table1} shows that balancing can effectively improve the success probability. 
+ {\bf Comparing with the constructed lattice in \cite{Fan2016}.}  Generally, the smaller $\frac{\|\textbf{w}\|}{(|det(L)|)^{1/n}}$ is, the easier the lattice reduction algorithm is to find the target vector. Next, we will compare the value of $\frac{\|\textbf{w}\|}{(det(L))^\frac{1}{n}}$ in the new lattice and \cite{Fan2016}. The constructed lattice is similar to the lattice in \cite{Fan2016} with two refinements. Firstly, we notice that if the diagonal entries of the matrix from line $\mu$ to line $n-1$ are  $\frac{\delta}{7}$ instead of  $\frac{\delta}{8}$ in \cite{Fan2016}, which not only make the  determinant more larger , but also make the target vector more balanced and shorter. On the other word, $-\frac{\delta}{2}\leq \frac{k_{i,j}}{8}\delta-\frac{\delta}{2}\leq \frac{3\delta}{8}$ if $0\leq k_{i,j}\leq 7$, while if we substitute $\frac{k_{i,j}}{8}$ by $\frac{k_{i,j}}{7}$, we have  $-\frac{\delta}{2}\leq\frac{k_{i,j}}{7}\delta-\frac{\delta}{2}\leq \frac{\delta}{2}$($0\leq k_{i,j}\leq 7$). In that case, the determinant of the new lattice is $(\frac{8}{7})^{n-u}$ times as large as the old lattice, while the expected length of the target vector will increase to $\sqrt{\frac{96}{77}}$ times, therefore, $\frac{\|\textbf{w}\|}{(|det(L)|)^{1/n}}$ will decrease.  Secondly, since we can get more information of the ephemeral key, i.e, for the lattice in \cite{Fan2016}, we have $0\leq d_{i,j}\leq 7$, while now we have $0\leq d_{i,j}\leq 3$. We can further change the diagonal entries of the matrix from line $\mu$ to line $n-1$ from $\frac{\delta}{7}$ to  $\frac{\delta}{3}$, which increase the absolute value of the determinant of the lattice very much, however, slightly increase the length of the target vector. Therefore, we can find the target vector more easily when we use the newly constructed lattice.
+
+The following experiments prove the validity of balancing. Firstly, we do tests using the way in \cite{Fan2016} and the above refinements with 3 signatures, we can see the success probability is $73\%$, which is very high. Therefore, we try to recover the secret key with 2 signature in the following section.  Our experiments in line 3 and line 4 and the following sections are based on the skills in \cite{Fan2016} without merging which will drop the probability in experiment with $2$ signatures. The results in Table \ref{table1} shows that balancing can effectively improve the success probability.
  \begin{table}[!hbp]
 \begin{tabular}{|c|c|c|c|c|c|c|}
 \hline
@@ -500,11 +500,11 @@ $\mu$&samples&balance&block&probability&time(s)\\
 
 \subsubsection{Guessing some $k_{i,j}$'s}
 \label{section3.3}
-In this section, we will analyse the way of guessing which can balance the success probability and time complexity of BKZ. 
-Considering that the set of $k_{i,j}$ is small, we guess the value of $k_{i,j}$ to improve the success probability. Each $k_{i,j}$ has 2 bits information, thus, the expection of the number of guessing to gain the right $k_{i,j}$ is $\frac{1}{4}(1+2+3+4)=\frac{5}{2}$. Every time we guess $k_{i,j}$, the expected time complexity will increase to $\frac{5}{2}$ times and the dimension will decrease 1. 
+In this section, we will analyse the way of guessing which can balance the success probability and time complexity of BKZ.
+Considering that the set of $k_{i,j}$ is small, we guess the value of $k_{i,j}$ to improve the success probability. Each $k_{i,j}$ has 2 bits information, thus, the expectation of the number of guessing to gain the right $k_{i,j}$ is $\frac{1}{4}(1+2+3+4)=\frac{5}{2}$. Every time we guess $k_{i,j}$, the expected time complexity will increase to $\frac{5}{2}$ times and the dimension will decrease 1.
 
-Guessing will increase the time complexity, however, it can also improve success probability. From experiment results based on the skill of balancing in Table \ref{table2}, we can observe that the time complexity will increase to 3.7/34.2 times when we guess 2/4 $k_{i,j}$'s, while the success probability will expand 2.7/4.4 times respectively. 
-Moreover, comparing to the way of not using guessing with larger blocksize(35), the skill of guessing with blocksize(30) will be more efficient. Therefore, in the next section \ref{3.4}, we will further discuss how to improve the success probability based on the technology of balancing and guessing.
+Guessing will increase the time complexity, however, it can also improve success probability. From experiment results based on the skill of balancing in Table \ref{table2}, we can observe that the time complexity will increase to 3.7/34.2 times when we guess 2/4 $k_{i,j}$'s, while the success probability will expand 2.7/4.4 times respectively.
+Moreover, comparing to the way of not using guessing with larger block size(35), the skill of guessing with block size(30) will be more efficient. Therefore, in the next section \ref{3.4}, we will further discuss how to improve the success probability based on the technology of balancing and guessing.
 
 \begin{table}[!hbp]
 \begin{tabular}{|c|c|c|c|c|c|c|}
@@ -529,12 +529,12 @@ Finally, based on the experimental phenomena: 1. the success probability will ch
 
 We observe some situations that lattice can produce vector set $T$ consisting of shorter vectors than target vector. Based on these observations, we expect to reduce the size of $T$ by selecting suitable parameter $\delta$ to improve success probability. The followings are some heuristic $\delta$'s.
 
-1. If the target vector is enough short, we can recover it with high success probability. Therefore, we choose $\delta_0=\frac{2}{\sqrt{n-\mu+1}}$ to guarantee any lattice vector $\textbf{a}$ which exists $\textbf{a}_i\neq0$, for $i\in[0,m-1]$, is much longer than target vector $\textbf{w}$. Beacuse, for $i\in[0,m-1]$, when $\textbf{a}_i\neq0$, $|\textbf{a}_i|\geq1$ then $\|\textbf{a}\|\geq 1\geq\|\textbf{w}\|$. Therefore, by setting $\delta=\frac{2}{\sqrt{n-\mu+1}}$, the size of set $T$ will decrease, which will improve the probability of lattice reduction algorithm. 
+1. If the target vector is enough short, we can recover it with high success probability. Therefore, we choose $\delta_0=\frac{2}{\sqrt{n-\mu+1}}$ to guarantee any lattice vector $\textbf{a}$ which exists $\textbf{a}_i\neq0$, for $i\in[0,m-1]$, is much longer than target vector $\textbf{w}$. Because, for $i\in[0,m-1]$, when $\textbf{a}_i\neq0$, $|\textbf{a}_i|\geq1$ then $\|\textbf{a}\|\geq 1\geq\|\textbf{w}\|$. Therefore, by setting $\delta=\frac{2}{\sqrt{n-\mu+1}}$, the size of set $T$ will decrease, which will improve the probability of lattice reduction algorithm.
 
 2. We try some other $\delta$'s, just like $2\delta_0,\frac{\delta_0}{2}$ and so on because we notice that different $\delta$'s may recover different samples. For example, for 5 examples, setting $\delta=\delta_0$ will recover the secret key of 1-th, 3-th and 4-th samples, however, the samples recovered will be 1, 2 if we let $\delta=\frac{\delta_0}{2}$. Therefore, for the same samples, if we choose several $\delta$'s to construct different lattices, we can improve the success probability.
 
 
-Of course, this method will enlarge the time complexity, however, comparing with the improvement of success probability, the increment of time complexity is acceptable. The related data basing on the ways of balancing and guessing and different $\delta$'s can be found in Table \ref{table3}. We can see the probability will increase to $24.3\%$ when using 3 different $\delta$'s, however, the time complexity will approximately increase by 2 times. Compared with the experiment using guessing 4 $k_{i,j}$'s in Talbe \ref{table2}, the way of combining guessing 2 $k_{i,j}$'s and different $\delta$'s is more efficient.
+Of course, this method will enlarge the time complexity, however, comparing with the improvement of success probability, the increment of time complexity is acceptable. The related data basing on the ways of balancing and guessing and different $\delta$'s can be found in Table \ref{table3}. We can see the probability will increase to $24.3\%$ when using 3 different $\delta$'s, however, the time complexity will approximately increase by 2 times. Compared with the experiment using guessing 4 $k_{i,j}$'s in Table \ref{table2}, the way of combining guessing 2 $k_{i,j}$'s and different $\delta$'s is more efficient.
 
 \begin{table}[!hbp]
 \begin{tabular}{|c|c|c|c|c|c|c|}
