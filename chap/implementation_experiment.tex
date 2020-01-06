@@ -2,16 +2,24 @@
 
 \section{Recover the ECDSA Private Key with HNP}
 \label{sec:recoverHNP}
+We first recover the consecutive bits at the position of every non-zero digits for the ephemeral key $k$, exploiting the information obtained from the side channel.
+Then we translate the problem of recovering the ECDSA private key to the HNP problem
+ and work it out by solving the approximate CVP/SVP Problem with the lattice reduction algorithm.
+
+We applied our attack to the secp256k1 curve.
+We measured the success probability of recovering the ECDSA private key in different minimal values of $l$ (length of the consecutive bits of k), 
+block sizes of BKZ and lattice dimensions.
+Due to the limitation of $l$, we need at least 247.45 signatures to recover the ECDSA private key using the HNP problem.
+
+
 \subsection{Recovering Consecutive Bits}
 \label{data_proc1}
-In this section, we introduce how to recover the consecutive bits at the position of every non-zero bits for the ephemeral key $k$, exploiting the information obtained from the side channel.
 
 First, we denote the wNAF representation of $k$ as $k = \sum{k_{i}2^{i}}$,
  and the binary representation as $k = \sum{b_{i}2^{i}}$.
-From the Algorithm \ref{alg:wnaf} we know that the position of $k_i$ in the wNAF representation is the same as $b_i$ in the binary representation.
  When we know the information about whether $k_i$ is zero and the sign of the non-zero $k_i$, we can simply determine some bits of $k$.
  For example, if we obtain the sign of the least non-zero $k_j$, we can infer that $b_j$ is one and $b_i$ is zero for $0\leq i<j$.
- But for arbitrary non-zero digits, it can not determine whether the bit is zero or one.
+ But for arbitrary non-zero digits, it can not directly determine whether the bit is zero or one.
 
  Let $m$ and $m + n$ be the positions of two consecutive non-zero digits of the wNAF representation, and $w$ be the window size.
  That is, $k_m, k_{m+n} \neq 0$ and $k_{m+i} = 0$ for all $0 < i < n$.
@@ -49,7 +57,7 @@ In this way, at the position of every non-zero digit we can obtain $n - w + 1$ c
 For the wNAF representation, every non-zero digit (except the least) is followed by at least $w$ zero values.
  The average number of non-zero digits of $k$ is $(\lfloor\log_{2}{q}\rfloor +1) /(w+2)$.
  The average distance between consecutive non-zero digits is $w+2$, i.e. on average $n = w + 2$.
- This means we can obtain $3$ consecutive bits on average at the every non-zero digit (except the least).
+ This means we can obtain $3$ consecutive bits on average at the every non-zero digit (except the least one).
 Based on \cite{Benger2014} on average we can get $2$ least significant bits of the ephemeral key.
 Thus, on average we can obtain $3(\lfloor\log_{2}{q}\rfloor+1) /(w+2) - 1$ bits of the ephemeral key $k$ in total.
 Meanwhile, because the minimal value of $n$ is $w + 1$, the minimal length of the consecutive bits is $2$.
@@ -73,7 +81,7 @@ In theory, two signatures would be enough to recover the 256-bit private key as 
 %通过一个签名，我们能够获得的bit数为：
 
 
-\subsection{Constructing the Lattice Attack}
+\subsection{Constructing the Lattice Attack with HNP}
 \label{data_proc2}
 In this section, we transform the problem of recovering the private key to the HNP instance, and further convert to the CVP/SVP instance in a lattice.
 Our method is based on the analysis from \cite{Nguyen2002}.
@@ -191,25 +199,24 @@ Then we acquire the secret key $\alpha$.
 %cvp/svp求解
 
 
-\subsection{Lattice Attack}
+\subsection{Lattice Attack on Secp256k1}
 \label{latticeattack}
 %使用完美的侧信道结果
 %我们的结果是：
 %进行分析
 %分析为什么我们没有利用全部的信息，理论上怎样，实际怎样
-We apply our lattice attack to the curve secp256k1 in our experiments, and we assume that the Flush+Flush attack is perfect, which means we can correctly obtain the ``double-add-invert'' chain and recover all the information about the digits of the ephemeral key it contains.
+We apply this lattice attack to the curve secp256k1 and assume that the Flush+Flush attack is perfect, which means we correctly obtain the Double-Add-Invert chain and recover all the information about the digits of the ephemeral key it contains.
 
 The HNP problem can be solved by exploiting both the CVP and SVP instances.
 However, the CVP problem does not have a polynomial time solution while the SVP problem has.
 So, with the growth of the dimension of the lattice, the time cost of finding the closest vector grows very fast.
- Actually, the CVP problem can be converted to the SVP problem,
-  so it is often solved through embedding the CVP into an SVP problem and using the polynomial time solution in practice.
-Therefore,
- in our experiments, we only demonstrate the result of using the SVP problem to solve the HNP instance.
+ Actually, the CVP problem is often solved through embedding itself into an SVP problem and using the polynomial time solution in practice.
+Therefore, we only demonstrate the result of using the SVP problem to solve the HNP instance.
 
  We use the BKZ algorithm implemented in \verb+fplll+~\cite{fplll} to solve the SVP problem.
-When solving an SVP instance, there are two outcomes that either we obtain the private key or a wrong answer.
- So we denote the success probability as the amount of successfully recovering the private key divided by the total number of the lattice attacks.
+%When solving an SVP instance, there are two outcomes that either we obtain the private key or a wrong answer.
+ %So w
+ We denote the success probability as the amount of successfully recovering the private key divided by the total number of the lattice attacks.
 We want to find the optimal strategy for our attack in terms of the following parameters:
 \begin{itemize}
 %\item CVP or SVP
@@ -290,7 +297,7 @@ Table \ref{svp9} shows the success probability for different dimensions and bloc
              cases that the minimal length of the consecutive bits ranges from $9$ to $11$.
 As shown in the table, we successfully recover the private key of a 256-bit ECDSA only need $60$ sequences of consecutive bits with a success probability of $3.0\%$.
 These $60$ sequences come from up to $60$ signatures.
-Therefore we just need at most $60$ signatures to successfully recover the ECDSA private key.
+Therefore we just need about $60$ signatures to successfully recover the ECDSA private key.
 
   For the fixed  minimal length of consecutive bits,
  increasing the dimension generally increases the probability of success.
