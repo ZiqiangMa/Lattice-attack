@@ -571,10 +571,10 @@ Finally, through being converted to the CVP/SVP problem in the lattice, the ECDS
 
 
 
-\begin{table}[!t]
+\begin{table*}[!t]
   \centering
    \caption{Comparison with previous attack methods}\label{compare1}
-\begin{tabular}{|c|m{90pt}|c|c|c|}
+\begin{tabular}{|c|m{120pt}|c|c|c|}
   \hline
   % after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
   Methods & Exploited information & HNP or EHNP & \# of bits & \# of signatures \\
@@ -592,17 +592,17 @@ Finally, through being converted to the CVP/SVP problem in the lattice, the ECDS
 %  190 & 39.3 & 63.5 & & \\
   \hline
 \end{tabular}
-\end{table}
+\end{table*}
 
 Benger et al. \cite{Benger2014} got the least significant bits (LSBs) of the ephemeral key through the Flush+Reload attack
 although this is not all the information obtained from the side channel.
 Then they constructed an HNP problem and successfully recovered the private key by solving the CVP/SVP problem converted from the HNP problem.
-The number of bits extracted is only an average of 2, 
+The number of bits extracted is only an average of 2,
 thus making it require more than $200$ signatures to recover a 256-bit private key with the probability being $3.5\%$.
 
 Van de Pol et al. \cite{Van2015} improved Benger's attack
   %relying on the property of some specific elliptic curves, that is the order $q$ of the base point is a pseudo-Mersenne prime which can be expressed as $2^n - \epsilon$, where $|\epsilon| < 2^p $, $p \approx n/2$ and $n$ is the length of $q$.
-%With this property, this attack 
+%With this property, this attack
 and used the information from the consecutive non-zero digits whose positions are larger than the half of the length of the Double-Add chain extracted from the Flush+Reload attack.
 Then they constructed an HNP instance using this information and
 successfully recovered the private key.

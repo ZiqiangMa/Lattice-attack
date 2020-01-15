@@ -97,7 +97,7 @@ After converting $k$ to the wNAF form, the multiplication $kG$ is executed as de
         \caption{Implementation of $kG$ Using wNAF}
         \label{alg:kg}
         \begin{algorithmic}[1]
-            \Require Scalar $k$ in wNAF: $k_0$, $k_1$, ..., $k_{l-1}$ and precomputed points $\{\pm G, \pm 3G, ..., \pm(2^{w - 1})G\}$
+            \Require Scalar $k$ in wNAF: $k_0$, $k_1$, ..., $k_{l-1}$ and precomputed points $\{\pm G, \pm 3G, ..., \pm(2^{w} - 1)G\}$
             \Ensure $kG$
 
             \State $Q \gets G$
