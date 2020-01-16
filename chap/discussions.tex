@@ -68,6 +68,17 @@ Our lattice attack analysis is based on the assumption of the perfect Double-Add
 But in practical, achieving the perfect chain is almost impossible from the cache side channels.
 Van de Pol et al.~\cite{Van2015} analysed the actual cache side channel data obtained from the Flush+Reload attack.
 Their statistical results show that $57.7\%$ of all the obtained Double-Add Chains are perfect.
+We also can monitor the functions using the same methods within the Flush+Reload attack,
+ so the probability of the perfect Double-Add-Invert Chain is also $57.7\%$, the same as Van de Pol's.
+Thus, the actual number of signatures needed to recover the 256-bit ECDSA private key is $4$. 
+
+While in our experiments, we use the Flush+Flush attack to obtain the Double-Add-Invert Chain. 
+Compared with Flush+Reload, the Flush+Flush is more easily to have errors, because the distributions of the execution time of the \verb+clflush+ instruction on cached and non-cached memory have some overlapping and the 
+difference in timing of this instruction is less.
+So the probability to obtain the perfect chain is less than $57.7\%$. 
+We can re-measure the probability of obtaining the perfect chain using the same method with Van de Pol
+ and achieve the actual number of signatures needed. 
+
 
 
 
