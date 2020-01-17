@@ -132,14 +132,14 @@
 \renewcommand{\shortauthors}{Trovato and Tobin, et al.}
 
 \begin{abstract}
-This paper presents a practical lattice attack on ECDSA implementations which use
+This paper presents a practical lattice attack on ECDSA which uses
  the windowed Non-Adjacent-Form (wNAF) representation to compute the scalar multiplication over elliptic curves.
 Compared with the existing lattice attacks in the literature,
     our method recovers the private key  from side channels
             by extracting more information per signature.
 In particular, in the scalar multiplications,
  we monitor the invert function through cache side channels,
-    in addition to the functions of double and add which are the only ones exploited in the literature.
+    in addition to the functions of double and add which are only exploited in the literature.
 By monitoring the invert function,
     we obtain the signs of the wNAF representation of an ephemeral key.
 % Through this improvement, we obtain the extra information about the sign of the wNAF representations the ephemeral key.
@@ -149,16 +149,16 @@ Theoretically, $153.2$ bits of the ephemeral key will be extracted per signature
     for 256-bit ECDSA,
     much more than existing methods.
 Then,
-    we convert the problem of recovering the private key based on the extracted bits, to the Hidden Number Problem (HNP) and Extended Hidden Number Problem (EHNP) respectively,
- which are solved by lattice reduction algorithms.
+    we convert the problem of recovering the private key based on the extracted bits, to the Hidden Number Problem (HNP)
+ which is solved by lattice reduction algorithms.
 We implemented the Flush+Flush cache-based side channel and applied it to ECDSA with the secp256k1 curve in OpenSSL 1.1.1b,
     to monitor the functions of double, add and invert.
-In the experiments, the BKZ lattice reduction algorithm is used to solve the Shortest Vector Problem (SVP) of HNP and EHNP instances.
-The experimental results show that the private key is successfully recovered from $2$ signatures,
+In the experiments, the BKZ lattice reduction algorithm is used to solve the Shortest Vector Problem (SVP) of HNP instances.
+The experimental results show that the private key is successfully recovered from $60$ signatures,
     if the Flush+Flush side channel is built without any error.
 To the best of our knowledge, this is the first time to obtain and exploit the signs of the wNAF representations
-    in the side channel attacks against ECDSA, and the least number of signatures required for ECDSA private key recovery. 
-%    and we demonstrate the potential to recover the private key from fewer signatures.
+    in the side channel attacks against ECDSA,
+    and we demonstrate the potential to recover the private key from fewer signatures.
 %This is better than some prior methods of only using partial information gained from the cache side channel.
 \end{abstract}
 
