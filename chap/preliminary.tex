@@ -1,4 +1,4 @@
-\section{Preliminaries}
+\section{Preliminaries and Related Works}
 \label{sec:background}
 In this section, we present the background knowledge about the attack.
 First we describe the ECDSA and its implementation using the wNAF representation in OpenSSL.
@@ -86,7 +86,7 @@ Algorithm \ref{alg:wnaf} introduces the concrete method for converting a scalar 
 %转化后如何计算标量乘法
 When computing the scalar multiplication $kG$,
 first, a window size $w$ is chosen.
-Then precomputation and storage of the points $\{\pm G, \pm 3G, ..., \pm(2^{w - 1})G\}$ are executed.
+Then precomputation and storage of the points $\{\pm G, \pm 3G, ..., \pm(2^{w}-1)G\}$ are executed.
 After converting $k$ to the wNAF form, the multiplication $kG$ is executed as described in Algorithm \ref{alg:kg}.
 
 
@@ -125,7 +125,7 @@ The representation of modified wNAF is very similar to the wNAF.
 Each non-zero coefficient is followed by at least $w$ zero coefficients,
  except for the most significant digit which is allowed to violate this condition in some cases.
 As the use of modified wNAF affects the attack results little,
- we only consider the case of the wNAF for simplification. %最后一段需要修改，且这一节需要和多篇文章对比完善, 还有需要在合适的位置加上我们使用256的曲线，window大小为3
+ we only consider the case of the wNAF for simplification. %最后一段需要修改，且这一节需要和多篇文章对比完善, 还有需要在合适的位置加上我们使用256的曲线，window 大小为3
 
 
 %对其进行一些分析，有条件判断 可以通过侧信道获取信息。
@@ -179,7 +179,7 @@ In this function, it iterates the $k$ from the most significant digit to the lea
    The invert function is to compute the inverse of a number.
 If the sign of the non-zero digit $k_i$ is opposite to the previous  non-zero digit,
  the invert operation (\verb+EC_POINT_invert()+) is performed (Line 13),
-which makes it only need the precomputation and storage of the points $\{G, 3G, ..., (2^{w - 1})G\}$ and saves a half of storage space.
+which makes it only need the precomputation and storage of the points $\{G, 3G, ..., (2^{w} - 1)G\}$ and saves a half of storage space.
 Then it performs an addition operation (the \verb+EC_POINT_add()+ function) with  indexing from the precomputed points using the
 absolute value of the digit.
 
@@ -260,6 +260,38 @@ The execution time of \verb+clflush+ is less than the reload time on average,
 %Furthermore, compared with the Flush+Reload attack,
 %the Flush+Flush attack does not trigger prefetches when monitoring consecutive memory lines, otherwise, it may affect the validity of the attack.
 
+
+\subsection{Cache Side Channel Attacks}
+In 2002, Page \cite{Page2002} first described a theoretical cache based side channel attack on the collection of cache profiles for a large amount of chosen plaintexts.
+Later Tsunoo et al. \cite{Tsunoo2003Cryptanalysis} proposed the first practical implementation of the cache attack on the DES cryptographic algorithm.
+The first practical cache side-channel attack on AES was appeared in 2005 by Bernstein \cite{Bernstein2005Cache},
+ and it statically analyzed the relation between the overall execution time and lookup table indexes affected by the cache behavior.
+Bonneau and Mironov \cite{Bonneau2006} showed how to exploit cache collisions when indexing the AES lookup tables to recover the  AES secret key.
+In 2006, Osvik et al. \cite{Osvik2006} presented two access-driven attacks: Evict+Prime and Prime+Probe.
+Although the latter one proved to be significantly more efficient, both of them recovered the AES encryption key used by an OpenSSL server.
+ Ac{\i}i{\c{c}}mez and Koc \cite{ac2006} presented a trace-driven attack targeting AES that exploited internal table lookup collisions in the cache during the first round.
+In 2011, Gullasch et al. \cite{cachegame2011} first presented a new attack which was later called the Flush+Reload is used to attack AES encryption by blocking the execution of AES after each memory access using the process scheduling algorithm.
+In 2014, Irazoqui \cite{Irazoqui2014} exploit the Flush+Reload technique to attack the AES.
+
+Percival~\cite{Percival2005CACHEMF} presented the first cache attack on RSA using the data cache collision.
+Ac{\i}i{\c{c}}mez in \cite{Onur2007Yet} first exploited that the instruction cache leaked information when performing RSA encryption.
+Brumley and Hakala \cite{Brumley2009} mounted an L1 data cache-timing attack to recover the LSBs of ECDSA ephemeral keys from the \verb+dgst+ command line tool in OpenSSL 0.9.8k and then used a lattice attack to recover a 160-bit ECDSA private key.
+ While Ac{\i}i{\c{c}}mez et al. \cite{Brumley2010} used an L1 instruction cache-timing attack to recover the LSBs of DSA ephemeral keys from the same tool in OpenSSL 0.9.8l to recover a 160-bit DSA private key.
+ In 2014 Yarom et al. proposed the Flush+Reload attack on RSA using the L3 cache \cite{flushreload}.
+  Then, again Yarom et al. used the Flush+Reload technique to recover the secret key from an ECDSA signature algorithm \cite{yarom2014recovering}.
+
+Cloud computing systems also can be attacked using the cache side channel attacks.
+In 2009, Ristenpart et al. \cite{get-off-my-cloud} presented the methods to co-locate an attacker's virtual machine (VM) with a potential victim's VM with a success probability of 40\% in the Amazon EC2 cloud.
+ Also, the authors  showed that the cache side-channel attacks are both practical and applicable to real world scenarios by successfully recovering keystrokes from the co-resident victim's VM.
+This work provided a practical method to find the co-resident VMs, which was the basis of the cache attacks cross VMs because the caches were only shared with co-resident VMs.
+For instance, Flush+Reload was used to attack AES \cite{Irazoqui2014} and RSA\cite{flushreload} in the cross-VM scenario.
+Also, the Prime+Probe method was also
+adapted to work in virtualized environments by Zhang et al. \cite{YinqianZhang2012-cross-vm} and Liu \cite{liu2015last} to recover ElGamal encryption keys.
+Irazoqui et al. \cite{fine2014} recovered AES keys in virtualized environments with Bernstein's attack.
+Benger et al. \cite{Benger2014} and Van de Pol et al. \cite{Van2015} demonstrated the viability of the Flush+Reload technique to recover ECDSA encryption keys.
+Fan et al. \cite{Fan2016} proposed a new way of extracting and utilizing information from the Flush+Reload attack.
+Flush+Flush \cite{gruss2016flush} and Prime+Abort \cite{disselkoen2017prime+abort} are variants of Flush+Reload.
+They exploited different methods to observe the cache access patterns to recover the private key and could be used in both local and virtualized environments.
 
 %这一节要和多篇文章进行对比改进，f+r攻击需要精简。
 %f+r的算法伪代码考虑需不需要添加。
@@ -378,6 +410,46 @@ Based on the partial information about the ephemeral key obtained by the attacke
 %So we expect the second vector in a reduced basis of the lattice is equal to $\mathbf{h}'$ with a ``good'' chance for a suitably strong lattice reduction algorithm.
 %Then we can acquire the hidden number $\alpha$ by solving the SVP problem.
 
+
+\subsection{Partial Nonce Disclosure Attacks on DSA/ECDSA}
+Several works have proposed different attacks that exploit partial nonce disclosure to recover long-term private keys
+ of the algorithms based on the discrete logarithm problem.
+Some of them focus on how to exploit the partial information efficiently to construct some appropriate lattice attacks to recover the private key.
+ And others pay more attention to how to efficiently obtain the information about the ephemeral key.
+
+% first
+Boneh and Venkatesan \cite{boneh1996} initially investigated to use the partial information of the ephemeral key to construct an HNP problem and recovered the private key of Diffie-Hellman by solving it using the lattice reduction algorithm.
+Howgrave-Graham and Smart \cite{HG2001} extended the work of Boneh and Venkatesan \cite{boneh1996} and  showed how to recover the DSA private key by  constructing an HNP instance from leaked LSBs and MSBs of the ephemeral key.
+Nguyen and Shparlinski \cite{Nguyen2002} improved their method  and gave a provable polynomial-time attack that
+      knowing the $l \geq 3$ LSBs, the $l+1$ MSBs  or any $2l$ consecutive bits of a certain number of ephemeral keys was enough for recovering the DSA private key.
+ They recovered  a $160$-bit DSA key only using the $3$ LSBs of a certain number of ephemeral keys.
+ Further, they extended these results to ECDSA~\cite{Nguyen2003}.
+Liu and Nguyen \cite{Liu2013} improved the results that only 2 LSBs were required for breaking a 160-bit DSA key.
+In 2014, Benger et al. \cite{Benger2014} extended the technique in \cite{Nguyen2002} to use a different length of leaked LSBs for each signature.
+ They recovered the secret key of OpenSSL's ECDSA implementation for the curve secp256k1 using about $200$ signatures.
+Van de Pol et al. \cite{Van2015} exploited the property of the modulus in some elliptic curves so that they could use all of the information leaked in the top half of the ephemeral keys to construct the HNP instance, allowing them to recover the secret key after observing only $14$ signatures.
+Fan et al. \cite{Fan2016} transformed the problem of recovering the secret key to the extended hidden number problem (EHNP)
+  which was solved by the lattice reduction algorithm.
+   Then the number of signatures needed was reduced to $4$.
+
+%second
+Brumley and Hakala \cite{Brumley2009} used an L1 data cache-timing attack to recover the LSBs of ECDSA ephemeral keys in OpenSSL 0.9.8k.
+ They recovered a 160-bit ECDSA private key using the attack in \cite{HG2001} with collecting $2,600$ signatures ($8K$ with noise).
+Analogously, Ac{\i}i{\c{c}}mez et al. \cite{Brumley2010} used an L1 instruction cache-timing attack to recover the LSBs of DSA ephemeral keys in OpenSSL 0.9.8l.
+ It required $2,400$ signatures ($17K$ with noise) to recover a 160-bit DSA private key.
+ Besides, both attacks required HyperThreading architectures.
+In 2011, Brumley and Tuveri \cite{Brumley2011} mounted a remote timing attack on the implementation of ECDSA with binary curves in OpenSSL 0.9.8o.
+ They obtained the MSBs of the ephemeral keys through the timing attack and recovered the private key after collecting information over 8,000 TLS handshakes.
+In 2013, Mulder et al. \cite{Mulder2013} took advantage of a template attack to recover some LSBs of the ephemeral key.
+They improved the Bleichenbacher's FFT-based (Fast Fourier Transform) attack by using BKZ for range reduction to solve the HNP problem.
+Their attack could extract the entire private key using a 5-bit leak of the ephemeral key from 4 000 signatures.
+Benger et al. \cite{Benger2014} and Van de Pol et al. \cite{Van2015} used the Flush+Reload technique to acquire the information of the ephemeral key.
+Allan et al. \cite{Allan2016} improved the  results in \cite{Van2015} by using a performance-degradation attack to amplify the side-channel. The amplification allowed them to recover a 256-bit private key in OpenSSL 1.0.2a after observing only 6 signatures.
+Genkin et al. \cite{Genkin2016} performed electromagnetic and power analysis attacks on mobile phones.
+ They showed how to construct HNP triples when the signature uses the low $s$-value.
+Pereida et al. \cite{Pereida2016} showed that the DSA implementation in OpenSSL is vulnerable to cache-timing attacks due to a programming error,
+ and exploited the vulnerability to attack against SSH (via OpenSSH) and TLS (via stunnel).
+In 2017 Zhang et al. \cite{Zhang2017} extended  the attack in ~\cite{Nguyen2003} to SM2 Digital Signature Algorithm (SM2-DSA), which is a Chinese version of ECDSA.
 
 
 
