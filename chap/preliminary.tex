@@ -196,18 +196,47 @@ Also,  the execution sequence of the invert operation can be used to determine t
 
 \subsection{Cache Side Channel Attacks}
 \label{intro_cacheattack}
-Cache side-channel attacks take advantage of the characteristic of cache activity
+Cache side-channel attacks is first proposed in 2002, which take advantage of the characteristic of cache activity
  that accessing data from caches is much faster than from memory.
 Attackers exploit these time variations to deduce the operations of the target process and then infer the key information.
-%Cache side-channel attacks are roughly divided into three categories: trace-driven, time-driven and access-driven attacks.
-%The trace-driven attackers probe the variation of electromagnetic fields or power, to capture the profile of cache activities and deduce cache hits and misses \cite{ac2006}.
-%In time-driven attacks \cite{Bonneau2006, Bernstein2005Cache}, the adversary passively measures the execution time to disclose the secret keys.
-%In these two categories of attacks, the cache states are changed by the victim cryptographic engine (and the system activities),
-% while an access-driven attacker \cite{Osvik2006, cachegame2011, flushreload} actively manipulates the cache states by running a malicious process that shares caches with the victim.
-%
-%In recent years, access-driven attacks have been favored by researchers,
-% because it has higher attack accuracy which means it has the ability to accurately obtain the cache access of the target process.
-%Also it has a wider application scenarios, such as the attacks in the virtualization environments and cloud environments.
+
+For the symmetric cryptography, 
+ Page~\cite{Page2002} first described a theoretical cache side channel attack on the collection of cache profiles for a large amount of chosen plaintexts in 2002.
+Then
+Tsunoo et al. \cite{Tsunoo2003Cryptanalysis} and Bernstein \cite{Bernstein2005Cache} proposed the first practical implementation of the cache attack on the DES and AES cryptographic algorithm, respectively.
+ The methods are to statically analyze the relation between the overall execution time and lookup table indexes affected by the cache behavior.
+Bonneau and Mironov \cite{Bonneau2006} showed how to exploit cache collisions when indexing the AES lookup tables to recover the  AES secret key.
+In 2006, Osvik et al. \cite{Osvik2006} presented two access-driven attacks: Evict+Prime and Prime+Probe.
+Although the latter one proved to be significantly more efficient, both of them recovered the AES encryption key used by an OpenSSL server.
+ Ac{\i}i{\c{c}}mez and Koc \cite{ac2006} presented a trace-driven attack targeting AES that exploited internal table lookup collisions in the cache during the first round.
+In 2011, Gullasch et al. \cite{cachegame2011} first presented a new attack which was later called the Flush+Reload is used to attack AES encryption by blocking the execution of AES after each memory access using the process scheduling algorithm.
+In 2014, Irazoqui \cite{Irazoqui2014} exploit the Flush+Reload technique to attack the AES.
+
+For the asymmetric cryptography,
+Percival~\cite{Percival2005CACHEMF} and 
+Ac{\i}i{\c{c}}mez~\cite{Onur2007Yet} attacked RSA, respectively exploiting the data cache and the instruction cache to leak information.
+Then 
+Brumley and Hakala \cite{Brumley2009} mounted an L1 data cache-timing attack to recover the LSBs of ECDSA ephemeral keys from the \verb+dgst+ command line tool in OpenSSL 0.9.8k and then used a lattice attack to recover a 160-bit ECDSA private key.
+ While Ac{\i}i{\c{c}}mez et al. \cite{Brumley2010} used an L1 instruction cache-timing attack to recover the LSBs of DSA ephemeral keys from the same tool in OpenSSL 0.9.8l to recover a 160-bit DSA private key.
+ In 2014 Yarom et al. proposed the Flush+Reload attack on RSA using the L3 cache \cite{flushreload}.
+  Then, again Yarom et al. used the Flush+Reload technique to recover the secret key from an ECDSA signature algorithm \cite{yarom2014recovering}.
+
+Cloud computing systems also can be attacked using the cache side channel attacks.
+In 2009, Ristenpart et al. \cite{get-off-my-cloud} presented the methods to co-locate an attacker's virtual machine (VM) with a potential victim's VM with a success probability of 40\% in the Amazon EC2 cloud.
+ Also, the authors  showed that the cache side-channel attacks are both practical and applicable to real world scenarios by successfully recovering keystrokes from the co-resident victim's VM.
+This work provided a practical method to find the co-resident VMs, which was the basis of the cache attacks cross VMs because the caches were only shared with co-resident VMs.
+For instance, Flush+Reload was used to attack AES \cite{Irazoqui2014} and RSA\cite{flushreload} in the cross-VM scenario.
+Also, the Prime+Probe method was also
+adapted to work in virtualized environments by Zhang et al. \cite{YinqianZhang2012-cross-vm} and Liu \cite{liu2015last} to recover ElGamal encryption keys.
+Irazoqui et al. \cite{fine2014} recovered AES keys in virtualized environments with Bernstein's attack.
+Benger et al. \cite{Benger2014} and Van de Pol et al. \cite{Van2015} demonstrated the viability of the Flush+Reload technique to recover ECDSA encryption keys.
+Fan et al. \cite{Fan2016} proposed a new way of extracting and utilizing information from the Flush+Reload attack.
+Flush+Flush \cite{gruss2016flush} and Prime+Abort \cite{disselkoen2017prime+abort} are variants of Flush+Reload.
+They exploited different methods to observe the cache access patterns to recover the private key and could be used in both local and virtualized environments.
+
+
+
+
 Many attack methods are proposed \cite{Bonneau2006, Bernstein2005Cache, Osvik2006, cachegame2011, flushreload}
  since it is demonstrated feasible in theory \cite{Page2002}.
 We introduce two typical access-driven attacks called Flush+Reload \cite{flushreload} and Flush+Flush \cite{gruss2016flush}
@@ -261,41 +290,8 @@ The execution time of \verb+clflush+ is less than the reload time on average,
 %the Flush+Flush attack does not trigger prefetches when monitoring consecutive memory lines, otherwise, it may affect the validity of the attack.
 
 
-\subsection{Cache Side Channel Attacks}
-In 2002, Page \cite{Page2002} first described a theoretical cache based side channel attack on the collection of cache profiles for a large amount of chosen plaintexts.
-Later Tsunoo et al. \cite{Tsunoo2003Cryptanalysis} proposed the first practical implementation of the cache attack on the DES cryptographic algorithm.
-The first practical cache side-channel attack on AES was appeared in 2005 by Bernstein \cite{Bernstein2005Cache},
- and it statically analyzed the relation between the overall execution time and lookup table indexes affected by the cache behavior.
-Bonneau and Mironov \cite{Bonneau2006} showed how to exploit cache collisions when indexing the AES lookup tables to recover the  AES secret key.
-In 2006, Osvik et al. \cite{Osvik2006} presented two access-driven attacks: Evict+Prime and Prime+Probe.
-Although the latter one proved to be significantly more efficient, both of them recovered the AES encryption key used by an OpenSSL server.
- Ac{\i}i{\c{c}}mez and Koc \cite{ac2006} presented a trace-driven attack targeting AES that exploited internal table lookup collisions in the cache during the first round.
-In 2011, Gullasch et al. \cite{cachegame2011} first presented a new attack which was later called the Flush+Reload is used to attack AES encryption by blocking the execution of AES after each memory access using the process scheduling algorithm.
-In 2014, Irazoqui \cite{Irazoqui2014} exploit the Flush+Reload technique to attack the AES.
-
-Percival~\cite{Percival2005CACHEMF} presented the first cache attack on RSA using the data cache collision.
-Ac{\i}i{\c{c}}mez in \cite{Onur2007Yet} first exploited that the instruction cache leaked information when performing RSA encryption.
-Brumley and Hakala \cite{Brumley2009} mounted an L1 data cache-timing attack to recover the LSBs of ECDSA ephemeral keys from the \verb+dgst+ command line tool in OpenSSL 0.9.8k and then used a lattice attack to recover a 160-bit ECDSA private key.
- While Ac{\i}i{\c{c}}mez et al. \cite{Brumley2010} used an L1 instruction cache-timing attack to recover the LSBs of DSA ephemeral keys from the same tool in OpenSSL 0.9.8l to recover a 160-bit DSA private key.
- In 2014 Yarom et al. proposed the Flush+Reload attack on RSA using the L3 cache \cite{flushreload}.
-  Then, again Yarom et al. used the Flush+Reload technique to recover the secret key from an ECDSA signature algorithm \cite{yarom2014recovering}.
-
-Cloud computing systems also can be attacked using the cache side channel attacks.
-In 2009, Ristenpart et al. \cite{get-off-my-cloud} presented the methods to co-locate an attacker's virtual machine (VM) with a potential victim's VM with a success probability of 40\% in the Amazon EC2 cloud.
- Also, the authors  showed that the cache side-channel attacks are both practical and applicable to real world scenarios by successfully recovering keystrokes from the co-resident victim's VM.
-This work provided a practical method to find the co-resident VMs, which was the basis of the cache attacks cross VMs because the caches were only shared with co-resident VMs.
-For instance, Flush+Reload was used to attack AES \cite{Irazoqui2014} and RSA\cite{flushreload} in the cross-VM scenario.
-Also, the Prime+Probe method was also
-adapted to work in virtualized environments by Zhang et al. \cite{YinqianZhang2012-cross-vm} and Liu \cite{liu2015last} to recover ElGamal encryption keys.
-Irazoqui et al. \cite{fine2014} recovered AES keys in virtualized environments with Bernstein's attack.
-Benger et al. \cite{Benger2014} and Van de Pol et al. \cite{Van2015} demonstrated the viability of the Flush+Reload technique to recover ECDSA encryption keys.
-Fan et al. \cite{Fan2016} proposed a new way of extracting and utilizing information from the Flush+Reload attack.
-Flush+Flush \cite{gruss2016flush} and Prime+Abort \cite{disselkoen2017prime+abort} are variants of Flush+Reload.
-They exploited different methods to observe the cache access patterns to recover the private key and could be used in both local and virtualized environments.
-
 %这一节要和多篇文章进行对比改进，f+r攻击需要精简。
 %f+r的算法伪代码考虑需不需要添加。
-
 
 \subsection{The Hidden Number Problem and Lattice Attack}
 \label{intro_hnp}
