@@ -1,14 +1,22 @@
-\section{Conclusion and Future Work}
+\section{Conclusion}
 \label{sec:conclusion}
 In this paper, we demonstrate a practical attack on the ECDSA algorithm implemented in OpenSSL with the scalar multiplication using the wNAF representation.
 We improve the original cache side channel attack
  by adding an extra monitor to the invert function and get the extra information about the signs of all non-zero digits of the ephemeral key.
-Then we exploit a new method to get the consecutive bits of the ephemeral key at each position of the non-zero digits through the ``double-add-invert'' chain obtained by the cache side channel attack.
-From the side channel, we obtain $153.2$ bits of information per signature for the 256-bit ECDSA secp256k1 curve.
-We construct a lattice attack using the HNP problem to recover the ECDSA private key.
+Then we get the consecutive bits of the ephemeral key at each position of the non-zero digits through the Double-Add-Invert chain obtained by the cache side channel attack and
+construct a lattice attack using the HNP problem to recover the ECDSA private key.
+Finally, we propose a novel method different from \cite{Fan2016} to construct an EHNP instance to recover the ECDSA private
+key by converting it to the SVP problem and solving it with lattice reduction algorithms.
+%From the side channel, we obtain $153.2$ bits of information per signature for the 256-bit ECDSA secp256k1 curve.
+
 This is the first work to obtain the information about the signs of the non-zero digits of the ephemeral key and make use of it to recover the ECDSA private key.
-We implement our method to attack the secp256k1 curve.
-The experiments show that we successfully recover the private key from only $60$ signatures.
+We applied our attack methods to the secp256k1 curve in OpenSSL 1.1.1b.
+We extract on average 156.2 bits of information from the Double-Add-Invert Chain per signature for the 256-bit elliptic curve. We use the Flush+Flush attack to verify the availability of monitoring the invert function in OpenSSL. 
+If the obtained Double-Add-Invert chain is perfect, 
+2 signatures are enough to recover the ECDSA private by using the EHNP problem with a success probability no less than $24.3\%$.
+This result attains the optimal bound and is the best one as ever known.
+
+
 
 %In the future,
 %we will optimize this work to use fewer signatures and achieve higher success probability by finding ways to decrease the length of consecutive bits required and using more efficient lattice reduction algorithms such as the BKZ2.0.
