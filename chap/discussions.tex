@@ -80,9 +80,29 @@ We can re-measure the probability of obtaining the perfect chain using the same 
  and achieve the actual number of signatures needed. 
 
 
-
-
 \subsection{The Precision Of The Cache Side Channel Attacks}
-aaaa
+
+Compared with Flush+Reload, the Flush+Flush can run in a higher frequency, 
+ because the execution time of the \verb+clflush+ instruction is less than the access time of the reloading operation and it can merge the two Flush stages into one to save the execution time.
+So it obtains the Double-Add-Invert chain with less missing slots.
+But the distributions of the execution time of the \verb+clflush+ instruction on cached and non-cached memory have
+ some overlapping and the difference in timing of this instruction is less, 
+  so that it may make some wrong judgements on the Double-Add-Invert chain.
+Therefore, for the obtained Double-Add-Invert chain, 
+ Flush+Flush and Flush+Reload produce different errors: Flush+Reload is more likely to produce the missing time slots, while Flush+Flush is more likely to produce the wrong observations.
+ 
+We can choose the suitable time slot and monitoring addresses to reduce the wrong observations and 
+ using some optimisations to improve the Double-Add-Invert chain.
+ In this way, the chain from Flush+Flush can be more accurate. 
+So in our paper, we use the Flush+Flush attack to show the availability of monitoring the invert function and obtain the Double-Add-Invert Chain.
+ 
+%For the Flush+Flush, we can eliminate the through careful configuration. 
+  
+
+
+
+
+
+
 
 
