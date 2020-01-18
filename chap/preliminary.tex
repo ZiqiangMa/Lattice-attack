@@ -196,50 +196,46 @@ Also,  the execution sequence of the invert operation can be used to determine t
 
 \subsection{Cache Side Channel Attacks}
 \label{intro_cacheattack}
-Cache side-channel attacks is first proposed in 2002, which take advantage of the characteristic of cache activity
+Cache side-channel attacks is first proposed in 2002~\cite{Page2002}, which take advantage of the characteristic of cache activity
  that accessing data from caches is much faster than from memory.
 Attackers exploit these time variations to deduce the operations of the target process and then infer the key information.
 
 For the symmetric cryptography, 
- Page~\cite{Page2002} first described a theoretical cache side channel attack on the collection of cache profiles for a large amount of chosen plaintexts in 2002.
-Then
-Tsunoo et al. \cite{Tsunoo2003Cryptanalysis} and Bernstein \cite{Bernstein2005Cache} proposed the first practical implementation of the cache attack on the DES and AES cryptographic algorithm, respectively.
+Tsunoo et al. \cite{Tsunoo2003Cryptanalysis} and Bernstein \cite{Bernstein2005Cache} proposed the first practical cache attacks on DES and AES, respectively.
  The methods are to statically analyze the relation between the overall execution time and lookup table indexes affected by the cache behavior.
-Bonneau and Mironov \cite{Bonneau2006} showed how to exploit cache collisions when indexing the AES lookup tables to recover the  AES secret key.
-In 2006, Osvik et al. \cite{Osvik2006} presented two access-driven attacks: Evict+Prime and Prime+Probe.
-Although the latter one proved to be significantly more efficient, both of them recovered the AES encryption key used by an OpenSSL server.
- Ac{\i}i{\c{c}}mez and Koc \cite{ac2006} presented a trace-driven attack targeting AES that exploited internal table lookup collisions in the cache during the first round.
-In 2011, Gullasch et al. \cite{cachegame2011} first presented a new attack which was later called the Flush+Reload is used to attack AES encryption by blocking the execution of AES after each memory access using the process scheduling algorithm.
-In 2014, Irazoqui \cite{Irazoqui2014} exploit the Flush+Reload technique to attack the AES.
+Bonneau and Mironov \cite{Bonneau2006} showed how to exploit cache collisions to recover the  AES secret key.
+In 2006, Osvik et al. \cite{Osvik2006} presented two access-driven attacks: Evict+Prime and Prime+Probe, 
+%Although the latter one proved to be significantly more efficient, both of them 
+to recover the AES encryption key used by an OpenSSL server.
+ Ac{\i}i{\c{c}}mez et al.~\cite{ac2006} presented a trace-driven attack targeting AES that exploited the cache collision during the first round.
+In 2011, Gullasch et al.~\cite{cachegame2011} first presented the access-driven attack which was later called the Flush+Reload to attack AES encryption by blocking the AES execution after each memory access using the process scheduling algorithm.
+In 2014, Irazoqui \cite{Irazoqui2014} exploited the Flush+Reload technique to attack the AES.
 
 For the asymmetric cryptography,
-Percival~\cite{Percival2005CACHEMF} and 
+Percival~\cite{Percival2005CACHEMF} and
 Ac{\i}i{\c{c}}mez~\cite{Onur2007Yet} attacked RSA, respectively exploiting the data cache and the instruction cache to leak information.
-Then 
-Brumley and Hakala \cite{Brumley2009} mounted an L1 data cache-timing attack to recover the LSBs of ECDSA ephemeral keys from the \verb+dgst+ command line tool in OpenSSL 0.9.8k and then used a lattice attack to recover a 160-bit ECDSA private key.
- While Ac{\i}i{\c{c}}mez et al. \cite{Brumley2010} used an L1 instruction cache-timing attack to recover the LSBs of DSA ephemeral keys from the same tool in OpenSSL 0.9.8l to recover a 160-bit DSA private key.
- In 2014 Yarom et al. proposed the Flush+Reload attack on RSA using the L3 cache \cite{flushreload}.
-  Then, again Yarom et al. used the Flush+Reload technique to recover the secret key from an ECDSA signature algorithm \cite{yarom2014recovering}.
+Then
+Brumley and Hakala \cite{Brumley2009} mounted an L1 data cache-timing attack to recover the 160-bit ECDSA private key by obtaining the LSBs of ECDSA ephemeral keys from the \verb+dgst+ command line tool in OpenSSL 0.9.8k.
+ While Ac{\i}i{\c{c}}mez et al. \cite{Brumley2010} used an L1 instruction cache-timing attack to recover a 160-bit DSA private key in OpenSSL 0.9.8l from the same tool.
+ In 2014 Yarom et al. proposed the Flush+Reload method using the L3 cache to attack RSA \cite{flushreload} and ECDSA~\cite{yarom2014recovering} private key.
+Also, this method is improved to attack the ECDSA with wNAF representation in \cite{Benger2014,Van2015,Fan2016}.
+%Benger et al.~\cite{Benger2014} and Van de Pol et al. \cite{Van2015} demonstrated the viability of the Flush+Reload technique to recover ECDSA encryption keys.
+%Fan et al. \cite{Fan2016} proposed a new way of extracting and utilizing information from the Flush+Reload attack.
+In 2006, the variants of Flush+Reload are presented such as Flush+Flush \cite{gruss2016flush} and Prime+Abort \cite{disselkoen2017prime+abort}.
+They exploited different methods to observe the cache access patterns to recover the private key.
+ %and could be used in both local and virtualized environments.
 
 Cloud computing systems also can be attacked using the cache side channel attacks.
-In 2009, Ristenpart et al. \cite{get-off-my-cloud} presented the methods to co-locate an attacker's virtual machine (VM) with a potential victim's VM with a success probability of 40\% in the Amazon EC2 cloud.
- Also, the authors  showed that the cache side-channel attacks are both practical and applicable to real world scenarios by successfully recovering keystrokes from the co-resident victim's VM.
-This work provided a practical method to find the co-resident VMs, which was the basis of the cache attacks cross VMs because the caches were only shared with co-resident VMs.
+In 2009, Ristenpart et al.~\cite{get-off-my-cloud} presented methods to co-locate two virtual machines (VMs) and successfully recovered keystrokes from the co-resident victim's VM by the cache side-channel attacks.
+This work was the basis of the cache attacks cross VMs because the caches were only shared with co-resident VMs.
 For instance, Flush+Reload was used to attack AES \cite{Irazoqui2014} and RSA\cite{flushreload} in the cross-VM scenario.
-Also, the Prime+Probe method was also
-adapted to work in virtualized environments by Zhang et al. \cite{YinqianZhang2012-cross-vm} and Liu \cite{liu2015last} to recover ElGamal encryption keys.
-Irazoqui et al. \cite{fine2014} recovered AES keys in virtualized environments with Bernstein's attack.
-Benger et al. \cite{Benger2014} and Van de Pol et al. \cite{Van2015} demonstrated the viability of the Flush+Reload technique to recover ECDSA encryption keys.
-Fan et al. \cite{Fan2016} proposed a new way of extracting and utilizing information from the Flush+Reload attack.
-Flush+Flush \cite{gruss2016flush} and Prime+Abort \cite{disselkoen2017prime+abort} are variants of Flush+Reload.
-They exploited different methods to observe the cache access patterns to recover the private key and could be used in both local and virtualized environments.
+Also, the Prime+Probe method was
+adapted to work in virtualized environments by Zhang et al.~\cite{YinqianZhang2012-cross-vm} and Liu~\cite{liu2015last} to recover ElGamal encryption keys.
+Irazoqui et al.~\cite{fine2014} recovered AES keys in virtualized environments with Bernstein's attack.
 
-
-
-
-Many attack methods are proposed \cite{Bonneau2006, Bernstein2005Cache, Osvik2006, cachegame2011, flushreload}
- since it is demonstrated feasible in theory \cite{Page2002}.
-We introduce two typical access-driven attacks called Flush+Reload \cite{flushreload} and Flush+Flush \cite{gruss2016flush}
+%Many attack methods are proposed \cite{Bonneau2006, Bernstein2005Cache, Osvik2006, cachegame2011, flushreload}
+% since it is demonstrated feasible in theory \cite{Page2002}.
+Then we introduce two typical attacks called Flush+Reload \cite{flushreload} and Flush+Flush \cite{gruss2016flush}
  that can be used to monitor the functions of the implementation of ECDSA.
 %在近些年的研究中，访问驱动的攻击受到研究者们的青睐，因为其具有更高的攻击精度，能够很准确的获取到目标进程对cache的访问情况，以及更广的使用场景，例如对虚拟化云环境进行攻击。接下来，我们对两种典型的访问驱动攻击进行介绍，这两种攻击和本文相关。
 
