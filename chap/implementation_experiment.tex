@@ -589,7 +589,7 @@ Finally, through being converted to the CVP/SVP problem in the lattice, the ECDS
   \hline
   \multirow{2}{1.1in}{\centering Ours}&\multirow{2}{120pt}{all positions and signs of non-zero digits} & HNP & 153.2  & $\leq$ 60 \\ %
     \cline{3-5}  
-  ~& ~& EHNP & 156.2  & 2  \\
+  ~& ~& EHNP & 153.2  & 2  \\
 %  \hline
 %  190 & 39.3 & 63.5 & & \\
   \hline
@@ -629,7 +629,9 @@ They could obtain no less than 2.99 bits information per signature and exploit t
 We compare these attacks with ours in several aspects, and the result is shown in Table \ref{compare1}.
 Our method exploits both the signs and the positions  of the non-zero digits of the ephemeral key $k$ achieved from the Flush+Flush attack.
 It extracts the largest amount of information, on average $156.2$ bits per signature for the secp256k1 curve.
-The number of signatures needed to recover the private key is only $2$.
+We use the HNP and EHNP problems to recover the ECDSA private key.
+Although the using HNP problem needs 240 signatures,
+using EHNP problem the number of signatures needed to recover the private key is only $2$.
 
 %2017年，范团队还在science China information sciences 上发了一篇，使用HNP的文章，
 %这是一个b类的期刊。(交叉综合新兴)
