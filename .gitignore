@@ -1,6 +1,11 @@
 acmart.pdf
 acmguide.pdf
 mainbody.pdf
+mainbody.synctex
+submission.pdf
+submission1.pdf
+submission2.pdf
+submission3.pdf
 samples/sample-*.pdf
 *.log
 *.aux
