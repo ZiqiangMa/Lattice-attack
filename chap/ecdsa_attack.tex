@@ -1,7 +1,7 @@
 \section{Improving Cache Side Channel Attack on wNAF Representation}
 \label{sec:attack}
 This section proposes how to achieve more information about the ephemeral key with the wNAF representation through the cache side channel.
-First, we analyse the invert function in the scalar multiplication with wNAF representation in the ECDSA algorithm 
+First, we analyse the invert function in the scalar multiplication with wNAF representation in the ECDSA algorithm
 and show how to use the Double-Add-Invert chain from the cache side channel to extract the information about the ephemeral key.
  Then we implemented the Flush+Flush attack to the secp256k1 curve in OpenSSL 1.1.1b to obtain
 the cache side channel information.
@@ -200,11 +200,11 @@ From this fragment, three operations are clearly distinguished,
 %The accurate rate is defined as the value of the actual number of bits obtained divided by the ideal number of bits available.
 %Thus, from these experiments the average accurate rate of the data obtained from the Flush+Flush attack is xx\%.
 
-\begin{figure}
+\begin{figure*}
 \centering
-\includegraphics[width=0.5\textwidth]{pic/slot2500.pdf}
+\includegraphics[width=0.9\textwidth]{pic/slot2500.pdf}
 \caption{A fragment of the output of the Flush+Flush attack.} \label{fig1}
-\end{figure}
+\end{figure*}
 
 
 %对这个示例进行解释：
