@@ -23,17 +23,15 @@ to ECDSA \cite{Nguyen2003}.
 The basic idea is to reduce the problem of private key recovery to  an instance of  Hidden Number Problem (HNP) with the partial knowledge of the ephemeral keys,
  and then reduce it to the Closest Vector Problem (CVP) or the Shortest Vector Problem (SVP) in a lattice.
 Instead of HNP, Fan~\cite{Fan2016} translated the problem of private key recovery to the Extended Hidden Number Problem (EHNP)~\cite{ehnp},
-and constructed a more efficient attack.
-%which only needs $4$ signatures for extracting the information of the ephemeral key.
+and constructed a more efficient lattice attack.
+%The Extended Hidden Number Problem (EHNP)~\cite{ehnp}. was introduced as another way to construct the problem to be solved in the lattice to recover the private key using the partial ephemeral key information.
 
-
-%the problem of private key recovery is reduced to an instance of 
-%the Extended Hidden Number Problem (EHNP)~\cite{ehnp}. %was introduced as another way to construct the problem to be solved in the lattice to recover the private key using the partial ephemeral key information.
+%Bodo Moeller 30-Jul-2002: Beta 3 of OpenSSL 0.9.7 is now available 开始支持OpenSSL 0.9.7
 
 %The cache side channel attack is an efficient way to obtain the partial information of the ephemeral key,
 % and various practical attacks are proposed to recover the ECDSA private key with these information.
-With the Flush+Reload cache side channels \cite{flushreload},
- attackers can get a ``double-add" chain and extract some information about the ephemeral key.
+With the Flush+Reload cache side channels \cite{flushreload}, various practical attacks~\cite{Benger2014,Van2015,Fan2016,Wang2017} are proposed to attack OpenSSL implementation~\cite{openssl} of ECDSA, in which the windowed Non-Adjacent Form (wNAF) implementation is adopted as the default one for scalar multiplication between  version 0.9.7 and 1.1.0h.
+In~\cite{Benger2014,Van2015,Fan2016,Wang2017}, the attackers construct a Double-Add chain from the side channel, and extract some information about the ephemeral key.
 	Benger et al. \cite{Benger2014} extracted the LSBs of the ephemeral keys from the chain and constructed an HNP instance to recover the ECDSA private key from about 200 signatures.
 In 2015, Van de Pol et al.~\cite{Van2015} improved Benger's attack,
  which exploited the positions of higher half non-zero digits of the wNAF representations of the ephemeral key extracted from the ``double-add" chain.
@@ -137,7 +135,7 @@ And our contributions are summarized as follows:
    We propose a novel method to construct an EHNP instance to recover the ECDSA private key which is better than \cite{Fan2016}.
 
   \item
-    We apply our methods to attack the secp256k1 curve in OpenSSL 1.1.1b.
+    We apply our methods to attack the secp256k1 curve in OpenSSL 1.1.0h. %2018-Mar-27 
      Through the cache side channel, $156.2$ bits of information per signature are obtained on average.
     The experiments show that only $2$ signatures are enough to recover the private key with a success probability no less than $24.3\%$.
 \end{itemize}
