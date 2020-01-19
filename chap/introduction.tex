@@ -31,8 +31,8 @@ and constructed a more efficient lattice attack.
 %The cache side channel attack is an efficient way to obtain the partial information of the ephemeral key,
 % and various practical attacks are proposed to recover the ECDSA private key with these information.
 With the Flush+Reload cache side channels \cite{flushreload}, various practical attacks~\cite{Benger2014,Van2015,Fan2016,Wang2017} are proposed to attack OpenSSL implementation~\cite{openssl} of ECDSA, in which the windowed Non-Adjacent Form (wNAF) implementation is adopted as the default one for scalar multiplication between  version 0.9.7 and 1.1.0h.
-In~\cite{Benger2014,Van2015,Fan2016,Wang2017}, the attackers construct a Double-Add chain from the side channel, and extract some information about the ephemeral key.
-	Benger et al. \cite{Benger2014} extracted the LSBs of the ephemeral keys from the chain and constructed an HNP instance to recover the ECDSA private key from about 200 signatures.
+In these attacks~\cite{Benger2014,Van2015,Fan2016,Wang2017}, the attackers get a Double-Add chain from the side channel,  extract and exploit the different information of the ephemeral key from this chain to construct an instance of HNP or EHNP for the lattice attack.
+In details,	Benger et al. \cite{Benger2014} extracted the LSBs of the ephemeral keys from the chain and constructed an HNP instance to recover the ECDSA private key from about 200 signatures.
 In 2015, Van de Pol et al.~\cite{Van2015} improved Benger's attack,
  which exploited the positions of higher half non-zero digits of the wNAF representations of the ephemeral key extracted from the ``double-add" chain.
 In 2016,
