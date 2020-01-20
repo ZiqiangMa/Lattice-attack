@@ -33,12 +33,12 @@ The add function is called just when the digit is non-zero,
   That reveals the position of all non-zero digits.
 However,
  the invert function is also vulnerable, because it is called conditionally.
-Only when the sign of the non-zero digit is opposite to the previous, the invert function will be performed.
+Only when the sign of the non-zero digit is opposite to the previous one, the invert function will be performed.
 Because the first non-zero digit is positive,
-   the signs of all the non-zero digit are deduced based on the execution of the invert function.
+   then the signs of all the non-zero digit are deduced based on the execution of the invert function.
 
 
-We use a spy process to monitor one memory line of the code of the double, add and invert functions during the scalar multiplication.
+We use a spy process to monitor one memory line of the code of the double, add and invert functions during computing the scalar multiplication.
 The time is divided into slots, and in each slot,
   the spy determines whether the three functions are performed or not by monitoring the cache hits/misses.
  Then we obtain a Double-Add-Invert chain.
@@ -76,7 +76,6 @@ First, the ``invert'' comes out together with ``add''.
 If the ``invert'' appears, it represents that the sign of $k_i$ is opposite to the previous non-zero digit.
  While, if the ``invert'' does not appear when ``add'' comes out, it represents that
 the sign of this digit is the same as the previous non-zero one.
-
 Because in the wNAF representation of $k$, the most significant digit is always positive.
  Thus we can determine the sign of all non-zero digits.
 In this way, we obtain all the positions of the non-zero digits and their signs.
@@ -101,16 +100,15 @@ In this way, we obtain all the positions of the non-zero digits and their signs.
 \label{ffattack}
 We launched the cache side channel attack to obtain the partial information of the ECDSA on an Acer Veriton T830 running Ubuntu 16.04.
 The machine features an Intel Core i7-6700 processor with four execution cores and an $8$ MB LLC.
-The attacking target is the ECDSA implemented in OpenSSL 1.1.1b, which uses wNAF representation in the scalar multiplication.
+The attacking target is the ECDSA implemented in OpenSSL 1.1.0h, which uses wNAF representation in the scalar multiplication.
 Both the Flush+Reload and Flush+Flush attacks can be used, but we choose
 the Flush+Flush to attack the 256-bit curve secp256k1 for the experiments due to the accuracy as described in Section~\ref{intro_cacheattack}.
 
 %ƽ̨
 
 \noindent\textbf{Get the virtual address. }
-We use a spy process to monitor the  \verb+EC_POINT_dbl()+,  \verb+EC_POINT_add()+ and \verb+EC_POINT_invert()+ functions in OpenSSL.
-So we need to know the virtual addresses of the three functions.
-First, we get the offsets of the three functions required to monitor in the code of the dynamic library.
+We need to know the virtual addresses of the three monitored functions.
+First, we get the offsets of the three functions in the code of the dynamic library.
 Then, we use the \verb+mmap()+ function to load each page locating the monitored function codes into the virtual address space of the spy process.
 The \verb+mmap()+ function will return the initial address of the page so that we can get the virtual address of the monitored function based on the offset and the address of this page.
 An alternative way is to use the \verb+dl_iterate_phdr()+ function to get the initial address of the dynamic library when loaded into the address space.
