@@ -173,12 +173,12 @@ The core computation of the function is shown in Algorithm  \ref{alg:smopenssl}.
 
 In this function, it iterates the $k$ from the most significant digit to the least significant digit in its wNAF representation.
  In each digit, it performs a double operation (the \verb+EC_POINT_dbl()+ function).
-  If the digit is not zero, it runs into the if-then block in Line 6, and first determines whether an invert function is needed.% to execute.
-   The invert function is to compute the inverse of a number.
+  If the digit is not zero, it runs into the if-then block in Line 6, and first determines whether an invert function is needed. % to execute.
+   The invert function is to compute the inverse of a point (the internal value of $kG$ here).
 If the sign of the non-zero digit $k_i$ is opposite to the previous  non-zero digit,
  the invert operation (\verb+EC_POINT_invert()+) is performed (Line 13),
 which makes it only need to precompute and store the points $\{G, 3G, ..., (2^{w} - 1)G\}$, and saves a half of storage space.
-Then it performs an addition operation (the \verb+EC_POINT_add()+ function) with   the precomputed point indexed by  the
+Then, an addition operation (the \verb+EC_POINT_add()+ function) is invoked to add the internal value of $kG$  with  a precomputed point indexed by  the
 absolute value of the digit.
 
 
@@ -401,11 +401,14 @@ Based on the partial information about the ephemeral key obtained by the attacke
 
 
 \subsection{Partial Nonce Disclosure Attacks on DSA/ECDSA}
-Various attacks are proposed to exploit partial nonce disclosure to recover long-term private keys
- of the algorithms based on the discrete logarithm problem.
-Some of them focus on
-proving that exploiting the partial information can recover the whole private key.
- And others pay more attention on how to obtain the partial information and construct appropriate lattice attacks to recover the private key.
+Various works are proposed to exploit partial nonce disclosure to recover long-term private keys
+ of the algorithms based on the discrete logarithm problem. 
+In this section, we provide a brief description of these works.
+%They can be classified into (1) ones proving that exploiting the partial information can recover the whole private key,
+% and (2) ones that focus on how to obtain the partial information and construct appropriate lattice attacks to recover the private key.
+%Some of them focus on
+%proving that exploiting the partial information can recover the whole private key.
+% And others pay more attention on how to obtain the partial information and construct appropriate lattice attacks to recover the private key.
 
 % first
 Boneh and Venkatesan \cite{boneh1996} initially investigated to use the partial information of the ephemeral key to construct an HNP problem and recovered the private key of Diffie-Hellman by solving it using the lattice reduction algorithm.
@@ -425,7 +428,7 @@ Liu and Nguyen \cite{Liu2013} improved the results that only 2 LSBs were require
 
 %second
 Brumley and Hakala \cite{Brumley2009} used an L1 data cache-timing attack to recover the LSBs of ECDSA ephemeral keys in OpenSSL 0.9.8k.
- They recovered a 160-bit ECDSA private key using the attack in \cite{HG2001} with collecting $2,600$ signatures ($8K$ with noise).
+ They recovered a 160-bit ECDSA private key using the attack in \cite{HG2001} with  $2,600$ signatures ($8K$ with noise).
 Analogously, Ac{\i}i{\c{c}}mez et al. \cite{Brumley2010} used an L1 instruction cache-timing attack to recover the LSBs of DSA ephemeral keys in OpenSSL 0.9.8l.
  It required $2,400$ signatures ($17K$ with noise) to recover a 160-bit DSA private key.
  Besides, both attacks required HyperThreading architectures.

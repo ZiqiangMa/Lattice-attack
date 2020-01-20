@@ -1,11 +1,11 @@
 \section{Improving Cache Side Channel Attack on wNAF Representation}
 \label{sec:attack}
-This section proposes how to achieve more information about the ephemeral key with the wNAF representation through the cache side channel.
-First, we analyse the invert function in the scalar multiplication with wNAF representation in the ECDSA algorithm
+This section proposes how to get more information about the ephemeral key with the wNAF representation through the cache side channel.
+First, we analyse the invert function in the scalar multiplication with wNAF representation in the ECDSA implementation
 and show how to use the Double-Add-Invert chain from the cache side channel to extract the information about the ephemeral key.
- Then we implemented the Flush+Flush attack to the secp256k1 curve in OpenSSL 1.1.1b to obtain
+ Then we implemented the Flush+Flush attack to the secp256k1 curve in OpenSSL 1.1.0h to obtain
 the cache side channel information.
-The details of the implementation and the result of attacking the elliptic curves are provided.
+The details of the implementation and the attack result are provided.
 
 
 %After that, we make use of the obtained information to recover the consecutive bits at the position of every non-zero digits of $k$.
@@ -16,15 +16,14 @@ The details of the implementation and the result of attacking the elliptic curve
 
 \subsection{Attacking wNAF through the Cache Side Channels}
 \label{data_get}
-First, recalling the implementation of scalar multiplication in OpenSSL, it uses the invert function to
-  compute the inverse element of a number.
-Applying this function, the space of precomputed points is saved by half, only need to store $\{G, 3G, ..., (2^{w} - 1)G\}$.
+As described in Section~\ref{intro_smulinssl}, the implementation of scalar multiplication in OpenSSL uses the invert function to
+  compute the inverse element of a point.
+With this function, the storage of precomputed points is saved by half, as only $\{G, 3G, ..., (2^{w} - 1)G\}$ are needed to be stored.
 As shown in Algorithm~\ref{alg:smopenssl},
-it iterates $k$ from the most significant digit to the least significant digit.
+the $kG$ computation iterates $k$ from the most significant digit to the least significant digit.
 In each digit, it performs a double function.
-While if the digit is not zero, it first determines whether the invert function is executed.
- If the sign of the digit is opposite to the prior one, the invert function is called.
-Then it indexes from the precomputed points using the absolute value of the digit and performs an addition operation.
+If the digit is not zero and the sign of the digit is opposite to the prior one, the invert function is called.
+Finally,  the addition function is called to add the internal value of $kG$ with a precomputed point indexed by  the absolute value of the digit. % and performs an addition operation.
 
 Originally, the vulnerability comes from the double and add function.
 The double function is called at every digit, and this reveals the digit sequence.
@@ -38,20 +37,20 @@ Because the first non-zero digit is positive,
    then the signs of all the non-zero digit are deduced based on the execution of the invert function.
 
 
-We use a spy process to monitor one memory line of the code of the double, add and invert functions during computing the scalar multiplication.
+We use a spy process to monitor  the double, add and invert functions during computing the scalar multiplication.
 The time is divided into slots, and in each slot,
   the spy determines whether the three functions are performed or not by monitoring the cache hits/misses.
  Then we obtain a Double-Add-Invert chain.
-According to the ``double'' and ``add'' in this chain, we determine whether each digit of $k$ is zero or not,
+According to the Double and Add in this chain, we determine whether each digit of $k$ is zero or not,
     as done in previous works.
-Also, based on the ``invert'' in this chain, we infer the sign of each non-zero digit.
+Then, based on the Invert in this chain, we infer the sign of each non-zero digit.
 
 
-In the OpenSSL library (especially the latest OpenSSL 1.1.1b),
+In the OpenSSL versions between 0.9.7 and 1.1.0h,
  the functions of double, add and invert are implemented as \verb+EC_POINT_dbl()+, \verb+EC_POINT_add()+ and \verb+EC_POINT_invert()+.
- The existing attacks monitor \verb+EC_POINT_dbl()+ and \verb+EC_POINT_add()+.
-In our attack, we improve the original cache side channel attack by adding a new monitor to the \verb+EC_POINT_invert()+ function.
- In each time slot
+ Existing attacks only monitor the functions \verb+EC_POINT_dbl()+ and \verb+EC_POINT_add()+.
+In our attack, we improve the cache side channel attacks by adding an extra monitor to the \verb+EC_POINT_invert()+ function.
+ In each time slot,
   the spy determines whether three functions are performed or not.
 Then we get a new Double-Add-Invert chain through the cache side channel attack.
 
@@ -64,21 +63,21 @@ Then we get a new Double-Add-Invert chain through the cache side channel attack.
 
 
 When we use the Double-Add-Invert chain to extract the digits of $k$,
-the ``double'' represents the double function is called,
-and the ``add'' represents  both double and add are called.
-The ``invert'' represents the invert function is called.
+the Double represents the double function is called,
+and the Add represents  both double and add are called.
+The Invert represents the invert function is called.
 Therefore,
- the ``double'' appears meaning that $k_i$ is zero
-and the ``add'' appears meaning that $k_i$ is not zero.
-We use the ``invert'' to determine the sign of $k_i$.
+ the appearance of Double  means that $k_i$ is zero
+and the Add  means that $k_i$ is not zero.
+We use the Invert to determine the sign of $k_i$.
 The sign of $k_i$ is related to the previous non-zero digit.
-First, the ``invert'' comes out together with ``add''.
-If the ``invert'' appears, it represents that the sign of $k_i$ is opposite to the previous non-zero digit.
- While, if the ``invert'' does not appear when ``add'' comes out, it represents that
+First, the Invert comes out together with Add.
+If the Invert appears, it represents that the sign of $k_i$ is opposite to the previous non-zero digit.
+ While, if the Invert does not appear when Add comes out, it represents that
 the sign of this digit is the same as the previous non-zero one.
-Because in the wNAF representation of $k$, the most significant digit is always positive.
- Thus we can determine the sign of all non-zero digits.
-In this way, we obtain all the positions of the non-zero digits and their signs.
+In the wNAF representation of $k$, the most significant digit is always positive.
+ Thus, we can determine the sign of all non-zero digits.
+In this way, we obtain both the positions and signs of all non-zero digits.
 
 
 % In our work, we implement the Flush+Flush attack to obtain the ''double-add-invert'' chain because it has a better precision.
@@ -111,7 +110,7 @@ We need to know the virtual addresses of the three monitored functions.
 First, we get the offsets of the three functions in the code of the dynamic library.
 Then, we use the \verb+mmap()+ function to load each page locating the monitored function codes into the virtual address space of the spy process.
 The \verb+mmap()+ function will return the initial address of the page so that we can get the virtual address of the monitored function based on the offset and the address of this page.
-An alternative way is to use the \verb+dl_iterate_phdr()+ function to get the initial address of the dynamic library when loaded into the address space.
+An alternative way is to use the \verb+dl_iterate_phdr()+ function to get the initial address of the dynamic library when it is loaded. % into the address space.
 
 To determine the offsets of the memory lines in the  dynamic library,  we build OpenSSL with debugging symbols.
  These symbols are not loaded at run time and do not affect the performance of the code.

@@ -64,40 +64,40 @@
 %
 %而我们在实验时选择了使用ff攻击，它和fr攻击类似，因此也可以用同样的方法来对其进行分析。
 
-Our lattice attack analysis is based on the assumption of the perfect Double-Add-Invert Chain, which means no errors exist in the chain.
-But in practical, achieving the perfect chain is almost impossible from the cache side channels.
-Van de Pol et al.~\cite{Van2015} analysed the actual cache side channel data obtained from the Flush+Reload attack.
-Their statistical results show that $57.7\%$ of all the obtained Double-Add Chains are perfect.
-We also can monitor the functions using the same methods within the Flush+Reload attack,
- so the probability of the perfect Double-Add-Invert Chain is also $57.7\%$, the same as Van de Pol's.
-Thus, the actual number of signatures needed to recover the 256-bit ECDSA private key is $4$. 
+Our lattice attack analysis is based on the perfect Double-Add-Invert chain, which means no errors exist in the chain.
+But, achieving the perfect chain is almost impossible from the practical cache side channels.
+Van de Pol et al.~\cite{Van2015} analysed the actual data obtained from the Flush+Reload attack.
+Their statistical results show that $57.7\%$ of the obtained Double-Add chains are perfect.
+We also can monitor the functions using the Flush+Reload attack,
+ so the probability of the perfect Double-Add-Invert chain is also $57.7\%$, the same as Van de Pol's.
+Thus, the actual number of signatures needed to recover the 256-bit ECDSA private key is $4$.
 
-While in our experiments, we use the Flush+Flush attack to obtain the Double-Add-Invert Chain. 
-Compared with Flush+Reload, the Flush+Flush is more easily to have errors, because the distributions of the execution time of the \verb+clflush+ instruction on cached and non-cached memory have some overlapping and the 
+While in our experiments, we use the Flush+Flush attack to obtain the Double-Add-Invert chain.
+Compared with Flush+Reload, the Flush+Flush is more easily to have errors, because the distributions of the execution time of the \verb+clflush+ instruction on cached and non-cached memory have some overlapping and the
 difference in timing of this instruction is less.
-So the probability to obtain the perfect chain is less than $57.7\%$. 
+So the probability to obtain the perfect chain is less than $57.7\%$.
 We can re-measure the probability of obtaining the perfect chain using the same method with Van de Pol
- and achieve the actual number of signatures needed. 
+ and achieve the actual number of needed signatures.
 
 
-\subsection{The Precision Of The Cache Side Channel Attacks}
+\subsection{The Precision of the Cache Side Channel Attacks}
 
-Compared with Flush+Reload, the Flush+Flush can run in a higher frequency, 
+Compared with Flush+Reload, the Flush+Flush can run in a higher frequency,
  because the execution time of the \verb+clflush+ instruction is less than the access time of the reloading operation and it can merge the two Flush stages into one to save the execution time.
 So it obtains the Double-Add-Invert chain with less missing slots.
 But the distributions of the execution time of the \verb+clflush+ instruction on cached and non-cached memory have
- some overlapping and the difference in timing of this instruction is less, 
+ some overlapping and the difference in timing of this instruction is less,
   so that it may make some wrong judgements on the Double-Add-Invert chain.
-Therefore, for the obtained Double-Add-Invert chain, 
+Therefore, for the obtained Double-Add-Invert chain,
  Flush+Flush and Flush+Reload produce different errors: Flush+Reload is more likely to produce the missing time slots, while Flush+Flush is more likely to produce the wrong observations.
- 
-We can choose the suitable time slot and monitoring addresses to reduce the wrong observations and 
+
+We can choose the suitable time slot and monitoring addresses to reduce the wrong observations and
  using some optimisations to improve the Double-Add-Invert chain.
- In this way, the chain from Flush+Flush can be more accurate. 
-So in our paper, we use the Flush+Flush attack to show the availability of monitoring the invert function and obtain the Double-Add-Invert Chain.
- 
-%For the Flush+Flush, we can eliminate the through careful configuration. 
-  
+ In this way, the chain from Flush+Flush can be more accurate.
+So in our paper, we use the Flush+Flush attack to show the availability of monitoring the invert function and obtain the Double-Add-Invert chain.
+
+%For the Flush+Flush, we can eliminate the through careful configuration.
+
 
 
 
