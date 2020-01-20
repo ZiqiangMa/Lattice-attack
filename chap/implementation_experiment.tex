@@ -54,19 +54,18 @@ And if $m$ is the position of the least non-zero digit of $k$,
 
 In this way, at the position of every non-zero digit we can obtain $n - w + 1$ consecutive bits of $k$
  except at the  position of the least non-zero digit being $m+1$.
-For the wNAF representation, every non-zero digit (except the least) is followed by at least $w$ zero values.
- The average number of non-zero digits of $k$ is $(\lfloor\log_{2}{q}\rfloor +1) /(w+2)$.
- The average distance between consecutive non-zero digits is $w+2$, i.e. on average $n = w + 2$.
- This means we can obtain $3$ consecutive bits on average at the every non-zero digit (except the least one).
-Based on \cite{Benger2014} on average we can get $2$ least significant bits of the ephemeral key.
-Thus, on average we can obtain $3(\lfloor\log_{2}{q}\rfloor+1) /(w+2) - 1$ bits of the ephemeral key $k$ in total.
-Meanwhile, because the minimal value of $n$ is $w + 1$, the minimal length of the consecutive bits is $2$.
+For the wNAF representation, %every non-zero digit (except the least) is followed by at least $w$ zero values.
+ the average number of non-zero digits of $k$ is approximately $(\lceil \log_{2}{q}\rceil +1) /(w+2)$.
+ While the average distance between consecutive non-zero digits is $w+2$, i.e. on average $n = w + 2$,
+ meaning that we can obtain $3$ consecutive bits on average at every non-zero digit (except the least one).
+%Based on \cite{Benger2014} on average we can get $2$ least significant bits of the ephemeral key.
+Thus, on average we can obtain approximately $3(\lceil\log_{2}{q}\rceil+1) /(w+2)$ bits of the ephemeral key $k$ in total.
+Meanwhile, the minimal value of $n$ is $w + 1$, so the minimal length of the consecutive bits is $2$.
 This illustrates that all the sequences of consecutive bits obtained (except the least) are no less than $2$ bits.
 
-For the secp256k1 curve implemented in OpenSSL, $\lfloor\log_{2}{q}\rfloor  + 1= 256$, $w = 3$.
- Also, as introduced previous, the scalar multiplication uses $k+q$ instead of $k$ in most cases,
-  so the total number of bits per signature we obtain is $3(\lfloor\log_{2}{q}\rfloor +2)/(w+2)-1 = 153.2$.
-In theory, two signatures would be enough to recover the 256-bit private key as $2\times 153.2 = 306.4 > 256$.
+For the secp256k1 curve implemented in OpenSSL, $\lceil\log_{2}{q}\rceil  + 1= 257$, $w = 3$.
+  So the total number of bits per signature we obtain is $3(\lceil\log_{2}{q}\rceil +1)/(w+2) = 154.2$.
+In theory, two signatures would be enough to recover the 256-bit private key as $2\times 154.2 = 308.4 > 256$.
 
 %这里再加一小段，理论上[文献x]说，只要知道连续的2bit信息，就能够用来构造格攻击恢复密钥。
 %因此，对侧信道得到的数据使用我们的方法恢复出来的连续比特位，全部都可以被用到后续的攻击中
@@ -387,10 +386,10 @@ where $\bar{k}=\sum\limits_{i=1}^{l}{(-1)^{h_i}2^{\lambda_i} }$, $h_i$, $\lambda
     % $$k=\sum\limits_{i=0}^{l-1}  (-1)^{h_i} k^{`}_i %2^{\lambda_i}$$
   %       and the sign of $(-1)^{h_i}$,which can be viewed as %known.
 
-    It is known that there are approximately $(\lceil logq\rceil +1)/(\omega+2)-1=50.4 $ non-zero digits in the Double-Add-Invert Chain when  $\omega=3$. From Eq.(\ref{KKK}), there
-    are approximately 50.4*2= 100.8 bits being unknown, which means the number of the known bits is about $257-100.8=156.2$ on average. In theory, we need at least two signatures to recover the $256$-bit secrete key, as $2$ is the least integer $m$ such that $m\cdot 156.2 >256$.
+    It is known that there are approximately $(\lceil \log_{2}{q}\rceil +1)/(\omega+2)=51.4 $ non-zero digits in the Double-Add-Invert Chain when  $\omega=3$. From Eq.(\ref{KKK}), there
+    are approximately 51.4*2= 102.8 bits being unknown, which means the number of the known bits is about $257-102.8=154.2$ on average. In theory, we need at least two signatures to recover the $256$-bit secrete key, as $2$ is the least integer $m$ such that $m\cdot 154.2 >256$.
 
-    From above we can see, with our new Double-Add-Invert Chain, we can extract  on average $156.2$ bits of information per signature for the 256-bit elliptic curve which is about $1.5$ times of the number of bits in \cite{Fan2016} .
+    From above we can see, with our new Double-Add-Invert Chain, we can extract  on average $154.2$ bits of information per signature for the 256-bit elliptic curve which is about $1.5$ times of the number of bits in \cite{Fan2016} .
     In the next subsection, we will show that we can recover the secret key with only $2$ signatures, which attains the optimal bound.
 
 
