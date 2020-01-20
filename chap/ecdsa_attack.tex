@@ -139,8 +139,8 @@ We monitor the execution time of the \verb+clflush+ instruction to flush the mon
 If the time is larger than the threshold, meaning the memory line is accessed by the victim.
 Otherwise, the memory line is not accessed.
 The thresholds are calculated for every monitored function.
-For each address of the monitored functions, we record the time of flushing the cache 1000 times, and take the time larger than 99 percent samples plus 6 cycles as the threshold of this address.
-The thresholds are recalculated every time before the attack is triggered.
+For each address of the monitored functions, we record the time of flushing the cache 1000 times, and take the time larger than 99 percent samples plus 6 cycles as the threshold for this address.
+The thresholds are recalculated every time before the attack is mounted.
 
 
 %阈值
@@ -150,14 +150,14 @@ The thresholds are recalculated every time before the attack is triggered.
 
 
 \noindent\textbf{Trigger the monitoring.}
-We monitor the execution time of the address of the three functions.
+We monitor the flushing time of the address of the three functions.
 When the time of any one is larger than the corresponding threshold,
- we start to record execution times, meaning that the attack starts.
-The record stops when the number of the consecutive execution time of all the monitored addresses less than the threshold  is larger than 300.
+ we start to record the flushing times.
+The record stops when the number of the consecutive flushing time of all the monitored addresses less than the threshold  is larger than 300.
 If the number of record is less than 1000, we re-record the execution time.
 Then we have a valid record.
  Due to the  disturbance of noise,
-  the valid record does not necessarily contain the activities of the monitored functions in the scalar multiplication.
+  the valid record does not necessarily contain the activities in the scalar multiplication.
 So we continuously obtain 10 valid records.
 %触发
 %1) 某一个监控地址的flush时间大于阈值以后，开始记录；
@@ -169,17 +169,17 @@ So we continuously obtain 10 valid records.
 \noindent\textbf{Time slot.}
 For the attack, the spy process divides time into time slots of approximately $2500$ cycles.
 In each slot, the spy flushes the memory lines in the add, double and invert functions (\verb+EC_POINT_dbl()+,  \verb+EC_POINT_add()+ and \verb+EC_POINT_invert()+) out of the caches.
-Also, the length of the time slot is chosen to ensure that the three functions only execute once.
-This allows the spy to correctly distinguish consecutive doubles.
+%Also, the length of the time slot is chosen to ensure that the three functions only execute once.
+%This allows the spy to correctly distinguish consecutive doubles.
 
-\noindent\textbf{Determine the initial point.}
-In order to precisely recover the sign of the ephemeral key, we need to determine which sample represents the start of the scalar multiplication.
-We can determine the
-start of the scalar multiplication
-by combining the double-add chain and the profiles of the double and add functions with wNAF representation.
-Also, we can determine the start position by monitoring the code of the copy function in OpenSSL.
- We note that when the computation of scalar multiplication starts, OpenSSL performs the copy function instead of the add function.
- Thus we can monitor the copy function, and when the copy function is called in the time slot and the add function is called in the next slot, it means that the scalar multiplication starts.
+%\noindent\textbf{Determine the initial point.}
+%In order to precisely recover the sign of the ephemeral key, we need to determine which sample represents the start of the scalar multiplication.
+%We can determine the
+%start of the scalar multiplication
+%by combining the double-add chain and the profiles of the double and add functions with wNAF representation.
+%Also, we can determine the start position by monitoring the code of the copy function in OpenSSL.
+% We note that when the computation of scalar multiplication starts, OpenSSL performs the copy function instead of the add function.
+% Thus we can monitor the copy function, and when the copy function is called in the time slot and the add function is called in the next slot, it means that the scalar multiplication starts.
 
 %起始判断
 %对标量乘法代码分析，在对k的最高位处理时，并不是使用的点加，而是copy，因此，可以对copy函数进行监控，当一个时间槽内进行了倍点和copy操作，可以认定标量乘法的开始。
@@ -189,7 +189,7 @@ Also, we can determine the start position by monitoring the code of the copy fun
 Fig.~\ref{fig1} shows a fragment of the output of the spy when OpenSSL performs ECDSA with the secp256k1 curve.
 In this figure, $\square$, $\lozenge$ and $\vartriangle$ represent ``double'', ``add'' and ``invert'' respectively.
 From this fragment, three operations are clearly distinguished,
- so we succeed to obtain the Double-Add-Invert chain easily.
+ so we can easily obtain the Double-Add-Invert chain.
 
 
 
