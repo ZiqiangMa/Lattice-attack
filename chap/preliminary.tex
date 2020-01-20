@@ -194,13 +194,13 @@ Also,  the execution sequence of the invert operation can be used to determine t
 
 \subsection{Cache Side Channel Attacks}
 \label{intro_cacheattack}
-Cache side-channel attacks is first proposed in 2002~\cite{Page2002}, which take advantage of the characteristic of cache activity
+Cache side-channel attacks, firstly proposed in 2002~\cite{Page2002},  take advantage of the characteristic of cache activity
  that accessing data from caches is much faster than from memory.
 Attackers exploit these time variations to deduce the operations of the target process and then infer the key information.
 
 For the symmetric cryptography,
 Tsunoo et al. \cite{Tsunoo2003Cryptanalysis} and Bernstein \cite{Bernstein2005Cache} proposed the first practical cache attacks on DES and AES, respectively.
- The methods are to statically analyze the relation between the overall execution time and lookup table indexes affected by the cache behavior.
+ These methods statically analyze the relation between the overall execution time and lookup table indexes which are affected by the cache behavior.
 Bonneau and Mironov \cite{Bonneau2006} showed how to exploit cache collisions to recover the  AES secret key.
 In 2006, Osvik et al. \cite{Osvik2006} presented two access-driven attacks: Evict+Prime and Prime+Probe,
 %Although the latter one proved to be significantly more efficient, both of them
@@ -210,10 +210,9 @@ In 2011, Gullasch et al.~\cite{cachegame2011} first presented the access-driven 
 In 2014, Irazoqui \cite{Irazoqui2014} exploited the Flush+Reload technique to attack the AES.
 
 For the asymmetric cryptography,
-Percival~\cite{Percival2005CACHEMF} and
-Ac{\i}i{\c{c}}mez~\cite{Onur2007Yet} attacked RSA, respectively exploiting the data cache and the instruction cache to leak information.
+The works~\cite{Percival2005CACHEMF,Onur2007Yet} attacked RSA, by exploiting the data cache and the instruction cache respectively. % to obtain the leaked information.
 Then
-Brumley and Hakala \cite{Brumley2009} mounted an L1 data cache-timing attack to recover the 160-bit ECDSA private key by obtaining the LSBs of ECDSA ephemeral keys from the \verb+dgst+ command line tool in OpenSSL 0.9.8k.
+Brumley and Hakala \cite{Brumley2009} mounted an L1 data cache-timing attack to recover the 160-bit ECDSA private key by obtaining the LSBs of ECDSA ephemeral keys from the \verb+dgst+ tool in OpenSSL 0.9.8k.
  While Ac{\i}i{\c{c}}mez et al. \cite{Brumley2010} used an L1 instruction cache-timing attack to recover a 160-bit DSA private key in OpenSSL 0.9.8l from the same tool.
  In 2014 Yarom et al. proposed the Flush+Reload method using the L3 cache to attack RSA \cite{flushreload} and ECDSA~\cite{yarom2014recovering} private key.
 Also, this method is improved to attack the ECDSA with wNAF representation in \cite{Benger2014,Van2015,Fan2016}.
