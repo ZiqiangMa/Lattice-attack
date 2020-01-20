@@ -206,7 +206,7 @@ In 2006, Osvik et al. \cite{Osvik2006} presented two access-driven attacks: Evic
 %Although the latter one proved to be significantly more efficient, both of them
 to recover the AES encryption key used by an OpenSSL server.
  Ac{\i}i{\c{c}}mez et al.~\cite{ac2006} presented a trace-driven attack targeting AES that exploited the cache collision during the first round.
-In 2011, Gullasch et al.~\cite{cachegame2011} first presented the access-driven attack which was later called the Flush+Reload to attack AES encryption by blocking the AES execution after each memory access using the process scheduling algorithm.
+In 2011, Gullasch et al.~\cite{cachegame2011} first presented the access-driven attack on AES encryption by blocking the AES execution after each memory access using the process scheduling algorithm.
 In 2014, Irazoqui \cite{Irazoqui2014} exploited the Flush+Reload technique to attack the AES.
 
 For the asymmetric cryptography,
@@ -222,9 +222,10 @@ In 2006, the variants of Flush+Reload are presented such as Flush+Flush \cite{gr
 They exploited different methods to observe the cache access patterns to recover the private key.
  %and could be used in both local and virtualized environments.
 
-Cloud computing systems also can be attacked using the cache side channel attacks.
+In cloud computing environment, various cache side channel attacks are also proposed.
 In 2009, Ristenpart et al.~\cite{get-off-my-cloud} presented methods to co-locate two virtual machines (VMs) and successfully recovered keystrokes from the co-resident victim's VM by the cache side-channel attacks.
-This work was the basis of the cache attacks cross VMs because the caches were only shared with co-resident VMs.
+Based on this work~\cite{get-off-my-cloud}, various attacks are extended to the co-resident VMs.
+%This work was the basis of the cache attacks cross VMs because the caches were only shared with co-resident VMs.
 For instance, Flush+Reload was used to attack AES \cite{Irazoqui2014} and RSA\cite{flushreload} in the cross-VM scenario.
 Also, the Prime+Probe method was
 adapted to work in virtualized environments by Zhang et al.~\cite{YinqianZhang2012-cross-vm} and Liu~\cite{liu2015last} to recover ElGamal encryption keys.
@@ -232,8 +233,8 @@ Irazoqui et al.~\cite{fine2014} recovered AES keys in virtualized environments w
 
 %Many attack methods are proposed \cite{Bonneau2006, Bernstein2005Cache, Osvik2006, cachegame2011, flushreload}
 % since it is demonstrated feasible in theory \cite{Page2002}.
-Then we introduce two typical attacks called Flush+Reload \cite{flushreload} and Flush+Flush \cite{gruss2016flush}
- that can be used to monitor the functions of the implementation of ECDSA.
+Here, we provide the detailed processes of Flush+Reload \cite{flushreload} and Flush+Flush \cite{gruss2016flush},
+ which can be used to monitor the execution sequence of functions in the implementation of ECDSA.
 %在近些年的研究中，访问驱动的攻击受到研究者们的青睐，因为其具有更高的攻击精度，能够很准确的获取到目标进程对cache的访问情况，以及更广的使用场景，例如对虚拟化云环境进行攻击。接下来，我们对两种典型的访问驱动攻击进行介绍，这两种攻击和本文相关。
 
 The Flush+Reload attack \cite{flushreload} employs a spy process to monitor whether the specific memory lines have been accessed or not by the victim process.
@@ -241,7 +242,6 @@ So this attack relies on shared memory between the spy and the victim processes.
 For attacks in the same machine, the spy can map the victim program file, the victim data file or shared libraries into its own address space to share these pages with the victim.
 While in the virtualization environments, the page de-duplication technique of the VMM ensures the page sharing between the spy and the victim.
 %监控LLC，需要写一下
-
 The execution of such an attack consists of three phases:
 \begin{itemize}
   \item
@@ -256,7 +256,7 @@ The execution of such an attack consists of three phases:
     This phase detects whether the victim accesses the memory lines flushed in the first phase during the waiting time.
     The attacker accesses the desired memory lines to reload them into caches, and measures the time.
 %From the reload time, the attacker determines whether the memory lines are accessed by the victim.
-    The longer reload time means that the attacker reloads the data from the memory and the victim does not access the data.
+    The longer reload time means that the victim does not access the data and the attacker has to reload the data from the memory.
     Otherwise, it means that the victim accesses the data.
 %    So these memory lines are accessed by the victim during the waiting time.%需要精简
 \end{itemize}
@@ -272,12 +272,12 @@ So according to this time, the attackers determine the victim's cache activities
 In general, the Flush+Flush attack also consists of three phases.
 The first two phases are the same as in the Flush+Reload attack.
 But in the third phase, it flushes the cache again and measures the flush time instead of the reload time.
-As the third phase flushes the caches, it doubles as the first phase for subsequent observations.
+%As the third phase flushes the caches, it doubles as the first phase for subsequent observations.
 
 %再一段F+F 和 F+R进行对比：更加高效，精度更高，F阶段可以当成是下一循环的F，
 The execution time of \verb+clflush+ is less than the reload time on average,
     and the first and the third phase are merged together in the Flush+Flush attack.
-  Therefore the Flush+Flush attack is more accurate than the Flush+Reload attack.
+  Therefore, the Flush+Flush attack is more accurate than the Flush+Reload attack.
 %Thus, the Flush+Flush attack has a better accuracy.
 %Furthermore, compared with the Flush+Reload attack,
 %the Flush+Flush attack does not trigger prefetches when monitoring consecutive memory lines, otherwise, it may affect the validity of the attack.
@@ -292,10 +292,10 @@ The execution time of \verb+clflush+ is less than the reload time on average,
 For the wNAF algorithm,
  the if-then block (Line 4 in Algorithm~\ref{alg:kg}) is vulnerable to side channel attacks.
 An attacker can use a spy process to monitor the conditional branches through side channels.
-Then he can get a ``double-add'' chain, and through it, whether the value of $k_i$ is zero can be inferred.
+Then he can get a Double-Add chain, and determine whether  $k_i$ is zero or not from this chain.
 But this is not enough to determine the complete ephemeral key,
  only some bits of the ephemeral key are obtained.
-The attacker then use this information to launch a lattice attack to recover the private key.
+The attacker then use this extracted information to launch a lattice attack to recover the private key.
 
 
 The Hidden Number Problem (HNP) is first presented by Boneh and Venkatesan~\cite{boneh1996} in 1996.
@@ -319,7 +319,7 @@ where $k_{i,j}$ and $x$ are unknown variables satisfying $0 \leq k_{i,j} \leq 2^
 %The EHNP can be further converted to the approximate SVP in some suitable lattice to find the unknown $x$ (the hidden number) which satisfies the conditions above.
 The EHNP is to find the unknown $x$ satisfying the conditions above.
 
-For ECDSA algorithm, attackers take advantage of the form of equation $s = k^{-1} (h(m) + r\cdot\alpha) \bmod q$.
+For ECDSA algorithm, attackers take advantage of the equation $s = k^{-1} (h(m) + r\cdot\alpha) \bmod q$.
 Based on the partial information about the ephemeral key obtained by the attackers through the cache side channels,
  they transform this equation to satisfy the form of HNP or EHNP.
    Then the private key as the hidden number can be recovered
@@ -401,7 +401,7 @@ Based on the partial information about the ephemeral key obtained by the attacke
 
 
 \subsection{Partial Nonce Disclosure Attacks on DSA/ECDSA}
-Several works have proposed different attacks that exploit partial nonce disclosure to recover long-term private keys
+Various attacks are proposed to exploit partial nonce disclosure to recover long-term private keys
  of the algorithms based on the discrete logarithm problem.
 Some of them focus on
 proving that exploiting the partial information can recover the whole private key.
