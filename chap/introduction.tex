@@ -145,13 +145,10 @@ Our contributions are summarized as follows:
       It is the first work to extract all signs of the non-zero digits of the ephemeral key in side channel attacks.
 
   \item
-  We present new lattice attacks to recover the private key of ECDSA with the wNAF representation. 
-  We construct the HNP and EHNP instances respectively, to utilize the positions and signs of all non-zero digits in the ephemeral key¡¯s wNAF
-representation.   First,
-    we extract multiple consecutive bits of the ephemeral key by converting the wNAF representation to the binary representation and
-     construct the HNP instance to recover the ECDSA private key.
-  Second,
-   we propose a novel method to construct an EHNP instance to recover the ECDSA private key which is better than \cite{Fan2016}.
+  We present two new lattice attacks to exploit the positions and signs of all non-zero digits in the ephemeral key's wNAF
+  representation.  That is,  we translate the problem of ECDSA private key recovery to the HNP and ENHP respectively.
+  Moreover, the attack based on EHNP works better than all known works.
+% First,   we extract multiple consecutive bits of the ephemeral key by converting the wNAF representation to the binary representation and construct the HNP instance to recover the ECDSA private key.   Second,  we propose a novel method to construct an EHNP instance to recover the ECDSA private key which is better than \cite{Fan2016}.
 
   \item
     We apply our methods to attack the secp256k1 curve in OpenSSL 1.1.0h. %2018-Mar-27
@@ -160,10 +157,10 @@ representation.   First,
 \end{itemize}
 
 The rest of this paper is organized as follows.
-Section \ref{sec:background} presents some preliminaries.
+Section \ref{sec:background} presents the preliminaries.
 Section \ref{sec:attack} shows how to improve the cache side channel to obtain more information.
-Section \ref{sec:recoverHNP} and \ref{sec:recoverEHNP} show how to set the lattice attacks with HNP and EHNP problems, respectively.
-Section \ref{sec:compare} compares different lattice attacks.
+Section \ref{sec:recoverHNP} and \ref{sec:recoverEHNP} provide how to construct the lattice attacks with HNP and EHNP, respectively.
+Section \ref{sec:compare} compares our attacks with existing works.
 Section \ref{sec:discussion} contains some extended discussions.
 %Section \ref{sec:relatedwork} introduces some related works.
 Section \ref{sec:conclusion} draws the conclusion.
