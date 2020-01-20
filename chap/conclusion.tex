@@ -2,8 +2,8 @@
 \label{sec:conclusion}
 In this paper, we demonstrate a practical attack on the ECDSA algorithm implemented  with the scalar multiplication using the wNAF representation, which is adopted in OpenSSL versions between 0.9.7 and 1.1.0h.
 We improve the original cache side channel attack
- by adding an extra monitor to the invert function and get the extra information, i.e., the signs of all non-zero digits of the ephemeral key. 
-Then, we construct the HNP and EHNP instances respectively,  to utilize the extracted information for the ECDSA private key recovery. 
+ by adding an extra monitor to the invert function and get the extra information, i.e., the signs of all non-zero digits of the ephemeral key.
+Then, we construct the HNP and EHNP instances respectively,  to utilize the extracted information for the ECDSA private key recovery.
 
 %Then we get the consecutive bits of the ephemeral key at each position of the non-zero digits through the Double-Add-Invert chain obtained by the cache side channel attack and
 %construct a lattice attack using the HNP problem to recover the ECDSA private key.
