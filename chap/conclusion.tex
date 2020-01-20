@@ -11,7 +11,7 @@ key by converting it to the SVP problem and solving it with lattice reduction al
 
 This is the first work to obtain the information about the signs of the non-zero digits of the ephemeral key and make use of it to recover the ECDSA private key.
 We applied our attack methods to the secp256k1 curve in OpenSSL 1.1.0h.
-We extract on average 156.2 bits of information from the Double-Add-Invert Chain per signature for the 256-bit elliptic curve. We use the Flush+Flush attack to verify the availability of monitoring the invert function in OpenSSL.
+We extract on average 154.2 bits of information from the Double-Add-Invert Chain per signature for the 256-bit elliptic curve. We use the Flush+Flush attack to verify the availability of monitoring the invert function in OpenSSL.
 If the obtained Double-Add-Invert chain is perfect,
 2 signatures are enough to recover the ECDSA private by using the EHNP problem with a success probability no less than $24.3\%$.
 This result attains the optimal bound and is the best one as ever known.
