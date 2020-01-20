@@ -5,13 +5,13 @@ The Elliptic Curve Digital Signature Algorithm (ECDSA) \cite{Johnson2001, ansi20
     which is widely used in many popular applications, such as TLS \cite{rfc5246}, OpenPGP \cite{openpgp2007}, smart card \cite{smartcard2007}, and Bitcoin \cite{bitcoin2008}.
 The core operation of ECDSA is the scalar multiplication of a base point (or generator) over elliptic curves
     by a random nonce (or ephemeral key).
- And its semantical security relies on computational intractability to find the ephemeral key for
+ And its semantical security relies on the computational intractability to find the ephemeral key for
 any given pair of a scalar multiplication and a base point, i.e., the elliptic curve
 discrete logarithm problem (ECDLP).
 % the intractability of the elliptic curve discrete logarithm problem (ECDLP), that is
 % the inability to compute the scalar (ephemeral key) given the original (base) and product points.
 
-However, there are side channel attacks to obtain the information on the ephemeral key, during the scalar multiplication.
+However, side channel attacks can obtain the information on the ephemeral key, during the scalar multiplication.
 As long as some bits of the ephemeral key are leaked,
     the ECDSA private key will be recovered \cite{Nguyen2001,HG2001,Nguyen2002,Nguyen2003}.
 %The partial ephemeral key exposure attack was first proposed by
@@ -66,8 +66,8 @@ In this paper, we propose a more efficient attack against the wNAF implementatio
 which obtains  $154.2$ bits per signature for 256-bit ECDSA on average and requires only $2$ signatures to recover the ECDSA private key.
 To achieve this, we obtain more information from the side channel than the methods based on the Double-Add chain~\cite{Benger2014,Van2015,Fan2016,Wang2017},
  and then translate the problem of ECDSA private key recovery to HNP and EHNP with the extracted information respectively, attempting to fully utilize these information.
- 
- 
+
+
 First, we monitor the invert function in addition to points addition and doubling functions in the cache side channel, and construct a Double-Add-Invert chain instead of the Double-Add chain~\cite{Benger2014,Van2015,Fan2016,Wang2017}.
 The analyse on the ECDSA implementation in OpenSSL, demonstrates that the invert function is invoked only when the sign of current non-zero digit of the ephemeral key's wNAF representation is opposite to the previous one in the scalar multiplication.
 Therefore, in addition to the positions of all digits in the ephemeral key's wNAF representation, we can extract the signs of the non-zero digits by monitoring the invert function.
@@ -77,9 +77,9 @@ Then, with these extracted information, we construct the HNP and EHNP instances 
 To construct the HNP instance,
 we first recover the consecutive bits at the position of every non-zero digits of the ephemeral key based on the Double-Add-Invert chain,
  and then use these bits to construct an HNP instance for the ECDSA private key recovery.
-However, as analyzed in Section~\ref{data_proc2}, the construction of the HNP instance requires the length of the consecutive bits larger than $7$, 
+However, as analyzed in Section~\ref{data_proc2}, the construction of the HNP instance requires the length of the consecutive bits larger than $7$,
  and therefore needs more signatures, i.e., $60$.
-To improve the utilizing method, 
+To improve the utilizing method,
 we construct an EHNP \cite{ehnp} instance to recover the ECDSA private key,
  which is further transformed to the approximate SVP in some suitable lattice.
 Compared to~\cite{Fan2016}, the constructed lattice is improved with the extra information extracted from the Double-Add-Invert chain.
@@ -135,7 +135,7 @@ This result attains the optimal bound and is the best one as ever known.
 %and our attack needs the least number of signatures to recover the ECDSA private key.
 
 %We have improved the attacks against ECDSA in two aspects.
-%And 
+%And
 Our contributions are summarized as follows:
 \begin{itemize}
   \item
