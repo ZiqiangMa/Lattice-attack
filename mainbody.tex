@@ -138,27 +138,27 @@
 This paper presents a practical cache side channel attack on ECDSA implementations which use
  the windowed Non-Adjacent-Form (wNAF) representation to compute the scalar multiplication over elliptic curves.
 Compared with the existing works,
-    our method extracts more information from the side channels 
+    our method extracts more information from the side channels
       and makes efficient use of these information to construct lattice attacks to recover the ECDSA private key.
- First, 
+ First,
   unlike previous works only monitoring the double and add functions of the scalar multiplication in the cache side channel attack,
-   we add an extra monitor to the invert function 
-    and get a Double-Add-Invert chain through the side channel. 
-   %and 
+   we add an extra monitor to the invert function
+    and get a Double-Add-Invert chain through the side channel.
+   %and
     %obtain the sign information of the wNAF representation of an ephemeral key through it.
  %we monitor the invert function in the OpenSSL implementation of the scalar multiplication,
   %  in addition to the functions of double and add which are the only ones exploited in the literature.
 %By monitoring the invert function,
     %we obtain the signs of the wNAF representation of an ephemeral key.
 % Through this improvement, we obtain the extra information about the sign of the wNAF representations the ephemeral key.
-Then we develop effective methods extracting
+Then, we develop effective methods extracting
     $153.2$ bits information of the ephemeral key per signature
     for 256-bit ECDSA from this chain,
     much more than existing methods.
-Finally, to efficiently use the extracted information, 
+Finally, to efficiently use the extracted information,
     we convert the problem of recovering the private key to the Hidden Number Problem (HNP) and Extended Hidden Number Problem (EHNP) respectively,
  which are solved by lattice reduction algorithms.
-We implemented the Flush+Flush method to attack the ECDSA with the secp256k1 curve in OpenSSL 1.1.1b.
+We implemented the Flush+Flush method to attack the ECDSA with the secp256k1 curve in OpenSSL 1.1.0h.
 The experimental results show that the private key is successfully recovered from only $2$ signatures,
     if the side channel is built without any error.
 To the best of our knowledge, this is the first time to obtain and exploit all signs of the wNAF representations
