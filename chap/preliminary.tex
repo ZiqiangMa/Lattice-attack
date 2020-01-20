@@ -1,10 +1,9 @@
 \section{Preliminaries and Related Works}
 \label{sec:background}
-In this section, we present the background knowledge about the attack.
-First we describe the ECDSA and its implementation using the wNAF representation in OpenSSL.
-Then we explain the attack method of the cache side channels.
-Also, the hidden number problem and the extended hidden number problem are introduced
- to dispose the data obtained from cache side channels.
+In this section, we first present the basic knowledge about the ECDSA and its implementation using the wNAF representation in OpenSSL.
+Then, we describe the attack method of the cache side channels.
+Also, the hidden number problem and the extended hidden number problem are introduced to utilize the data obtained from cache side channels.
+Finally, we provide the related works.
 
 \subsection{The Elliptic Curve Digital Signature Algorithm}
 \label{intro_ecdsa}
@@ -18,7 +17,7 @@ The private key of ECDSA is an integer $\alpha$ that satisfies $0 < \alpha < q$,
 Given a hash function $h$, the ECDSA signature of a message $m$ is computed as follows:
 \begin{enumerate}
   \item
-    Select a random integer as the ephemeral key $0 < k < q$.
+    Select a random ephemeral key $0 < k < q$.
   \item
     Compute the point $(x, y) = kG$, and let $r = x$ mod $q$;
     if $r = 0$, then go back to the first step.
@@ -32,7 +31,7 @@ For ECDSA signature, the ephemeral key $k$ must be kept random and secret.
 The equation in the third step shows the private key can be computed if $k$ is leaked.
 %If some signatures use the same $k$, or the random number generator in use is predictable, attackers can obtain the private key directly. 这个事情，与我们无关；相同k
 Even if a portion of $k$ is known, the private key can be recovered by lattice attacks.
-Therefore, the target of most attackers is the scalar multiplication $kG$ expecting to get some effective bits information about $k$.
+Therefore, the scalar multiplication $kG$ becomes the target of most attackers. % who expect to get the information about $k$.
 
 %Given the knowledge of the ephemeral key k and all the
 %known information of (s, r,m), the secret key can be easily
@@ -50,8 +49,8 @@ where $G$ is a point defined on the elliptic curve over the finite field,
  and the scalar $k$ is a big integer.
 There are several algorithms to implement the scalar multiplication.
 In OpenSSL, scalar multiplication in the prime field is implemented using the wNAF representation \cite{GORDON1998129,Miyaji1997,Koyama1002,Solinas2000} of the scalar $k$.
-In wNAF, a number $k$ is represented by a sequence of digits which value is either zero or an odd number satisfying $-2^{w} < k_{i} < 2^{w}$,
- where $w$ is the window size. In this representation, any continuous non-zero digit interval is with at least $w$ zero digits.
+In wNAF, a number $k$ is represented by a sequence of digits which is either zero or an odd number satisfying $-2^{w} < k_{i} < 2^{w}$,
+ where $w$ is the window size. In this representation, any  non-zero digit  is followed by at least $w$ zero digits.
 The value of $k$ can be expressed as $k = \sum{2^{i} k_{i}}$.
 Algorithm \ref{alg:wnaf} introduces the concrete method for converting a scalar into its wNAF representation.
 
@@ -84,11 +83,9 @@ Algorithm \ref{alg:wnaf} introduces the concrete method for converting a scalar 
 
 %二进制转化成naf
 %转化后如何计算标量乘法
-When computing the scalar multiplication $kG$,
-first, a window size $w$ is chosen.
-Then precomputation and storage of the points $\{\pm G, \pm 3G, ..., \pm(2^{w}-1)G\}$ are executed.
-After converting $k$ to the wNAF form, the multiplication $kG$ is executed as described in Algorithm \ref{alg:kg}.
-
+For the scalar multiplication using wNAF representation, during the initialization phase,
+  a window size $w$ is chosen, and the points $\{\pm G, \pm 3G, ..., \pm(2^{w}-1)G\}$ are precomputed and stored. 
+Then, for each $k$, after converting it to the wNAF form, the multiplication $kG$ is executed as described in Algorithm \ref{alg:kg}.
 
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
@@ -113,19 +110,20 @@ After converting $k$ to the wNAF form, the multiplication $kG$ is executed as de
 
 From the Algorithm~\ref{alg:kg}, we can find that the if-then block (Line 4) is vulnerable to side channel attacks.
 An attacker can use a spy process to monitor the conditional branches through side channels.
-Then he can get a ``double-add'' chain, and through it, whether the value of $k_i$ is zero can be inferred.
-The attacker can use this information to recover the private key.
+Then he can get a Double-Add chain, and determine  whether $k_i$ is zero or not based on this chain. 
+The attacker can  use this  information to recover the  private key.
 
-In OpenSSL, the bit length of $k$ is set to a fixed value$\lfloor\log_{2}{q}\rfloor + 1$ of by adding itself $q$
+In OpenSSL, the bit length of $k$ is set to a fixed value$\lfloor\log_{2}{q}\rfloor + 1$ of by adding itself with $q$
 or $2q$, which can resist the remote timing side channel attack \cite{Brumley2011}.
-In most cases, the multiplication is done as $(k + q)G$, but it can still be vulnerable in lattice attacks \cite{Dahmun2016}.
+In most cases, the multiplication is done as $(k + q)G$, but it is still vulnerable in lattice attacks \cite{Dahmun2016}.
 
-Also, OpenSSL uses the modified wNAF representation instead of the generalized one as stated in Algorithm~\ref{alg:wnaf} to avoid length expansion in some cases and to make more efficient exponentiation.
+Also, OpenSSL uses the modified wNAF representation instead of the generalized one stated in Algorithm~\ref{alg:wnaf} to avoid length expansion in some cases and to make more efficient exponentiation.
 The representation of modified wNAF is very similar to the wNAF.
 Each non-zero coefficient is followed by at least $w$ zero coefficients,
  except for the most significant digit which is allowed to violate this condition in some cases.
-As the use of modified wNAF affects the attack results little,
- we only consider the case of the wNAF for simplification. %最后一段需要修改，且这一节需要和多篇文章对比完善, 还有需要在合适的位置加上我们使用256的曲线，window 大小为3
+As the modification on wNAF has little affects on the attack results,
+%the use of modified wNAF affects the attack results little,
+ we only consider the case of the generalized wNAF for clarity. %最后一段需要修改，且这一节需要和多篇文章对比完善, 还有需要在合适的位置加上我们使用256的曲线，window 大小为3
 
 
 %对其进行一些分析，有条件判断 可以通过侧信道获取信息。
@@ -133,7 +131,7 @@ As the use of modified wNAF affects the attack results little,
 %实际中的使用k+q
 \subsection{The Scalar Multiplication in OpenSSL}
 \label{intro_smulinssl}
-In OpenSSL 1.1.1b \cite{openssl}, the scalar multiplication with wNAF representation is implemented in the function \verb+ec_wNAF_mul()+.
+In OpenSSL versions between 0.9.7 and 1.1.0h~\cite{openssl}, the scalar multiplication with wNAF representation is implemented in the function \verb+ec_wNAF_mul()+.
 The core computation of the function is shown in Algorithm  \ref{alg:smopenssl}.
 
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
@@ -175,22 +173,22 @@ The core computation of the function is shown in Algorithm  \ref{alg:smopenssl}.
 
 In this function, it iterates the $k$ from the most significant digit to the least significant digit in its wNAF representation.
  In each digit, it performs a double operation (the \verb+EC_POINT_dbl()+ function).
-  If the digit is not zero, it runs into the if-then block in Line 6, and first determines whether an invert function is needed to execute.
+  If the digit is not zero, it runs into the if-then block in Line 6, and first determines whether an invert function is needed.% to execute.
    The invert function is to compute the inverse of a number.
 If the sign of the non-zero digit $k_i$ is opposite to the previous  non-zero digit,
  the invert operation (\verb+EC_POINT_invert()+) is performed (Line 13),
-which makes it only need the precomputation and storage of the points $\{G, 3G, ..., (2^{w} - 1)G\}$ and saves a half of storage space.
-Then it performs an addition operation (the \verb+EC_POINT_add()+ function) with  indexing from the precomputed points using the
+which makes it only need to precompute and store the points $\{G, 3G, ..., (2^{w} - 1)G\}$, and saves a half of storage space.
+Then it performs an addition operation (the \verb+EC_POINT_add()+ function) with   the precomputed point indexed by  the
 absolute value of the digit.
 
 
 From Algorithm \ref{alg:smopenssl}, it can be found that two conditional branches are vulnerable.
 In each loop, the double operation is always performed.
-But the add operation is only performed if the digit is not zero and the invert operation is only performed if the sign of the digit is opposite to previous one.
+But the add operation is only performed when the digit is not zero and the invert operation is only performed when the sign of the digit is opposite to previous one.
 Therefore, if a spy process can obtain the execution sequence of
-  the double and addition operations while this function is running,
+  the double and addition operations,
 one can determine whether each digit of $k$ is zero or not according to this sequence.
-Also,  the execution sequence of the invert operation can be used to determine the sign of the non-zero digits combining the former sequence.
+Also,  the execution sequence of the invert operation can be used to determine the signs of the non-zero digits combining with the former sequence.
 
 
 
@@ -440,7 +438,7 @@ Their attack could extract the entire private key using a 5-bit leak of the ephe
 %Benger et al. \cite{Benger2014} and Van de Pol et al. \cite{Van2015} used the Flush+Reload technique to acquire the information of the ephemeral key.
 In 2014, Benger et al. \cite{Benger2014} extended the technique in \cite{Nguyen2002} to use a different length of leaked LSBs for each signature.
  They recovered the secret key of OpenSSL's ECDSA implementation for the curve secp256k1 using about $200$ signatures.
-Then in 2015, 
+Then in 2015,
 Van de Pol et al. \cite{Van2015} exploited the property of the modulus in some elliptic curves so that they could use all of the information leaked in the top half of the ephemeral keys to construct the HNP instance, allowing them to recover the secret key after observing only $14$ signatures.
 In 2016, Allan et al. \cite{Allan2016} improved the results in \cite{Van2015} by using a performance-degradation attack to amplify the side-channel. The amplification allowed them to recover a 256-bit private key in OpenSSL 1.0.2a after observing only 6 signatures.
 Fan et al. \cite{Fan2016} transformed the problem of recovering the secret key to the extended hidden number problem (EHNP)
