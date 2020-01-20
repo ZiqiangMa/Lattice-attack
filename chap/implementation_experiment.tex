@@ -93,7 +93,7 @@ To construct an HNP instance using arbitrary consecutive bits,
  we use the standard analysis from \cite{Nguyen2002}.
  Assuming that we have the $l$ consecutive bits of $k$ with the value of $a$, starting at some known position $j$.
  So $k$ is represented as $k = 2^{j}a + 2^{l+j}b +c$ for $0 \leq a \leq 2^l -1$, $0\leq b \leq q/2^{l+j}$ and $0 \leq c < 2^j$.
-We determine the following values 
+We determine the following values
 %To construct an HNP instance using arbitrary consecutive bits, we need to use the following theorem\cite{Nguyen2002}:
 %\begin{theorem}
 % \label{theorem1}
@@ -131,16 +131,16 @@ We determine the following values
  \end{aligned}
  \right. ,
  \end{equation}
- where $(r,s)$ is the ECDSA signature, 
-  $\lambda$ is , 
+ where $(r,s)$ is the ECDSA signature,
+  $\lambda$ satisfies that $|\lambda |_q < q2^{-j-l/2}$ and $|\lambda 2^{j+l}|_q \leq q/2^{j+l/2}$,
   and $\lfloor \cdot\rfloor_q$ denotes the reduction modulo $q$ into range $[0, ..., q)$.
 
-We then have that
+It satisfies that
  \begin{equation}
 \label{lattice}
     |\alpha t - u|_q < q/2^{(l/2-1)}.
 \end{equation}
-This way, we transform to an HNP instance.
+This way, an HNP instance is constructed.
 
 In practice, OpenSSL uses $k+q$ as the ephemeral key. So the Equation \ref{tu} remains the same, but the Inequality~\ref{lattice} turns into
  \begin{equation}
@@ -173,11 +173,11 @@ Let the vector $\textbf{u} = (2^{l_1+1}u_1, ..., 2^{l_d+1}u_d, 0)$,
  so the distance between $\textbf{x}$ and $\textbf{u}$ is $\|\textbf{x} - \textbf{u}\| \leq q\sqrt{d+1}$.
 While the lattice determinant of $L(B)$ is $2^{d + \sum{l_i}}q^d$,
  thus the vector $\textbf{x}$ is very close to the vector $\textbf{u}$.
-By solving the CVP problem with the input $B$ and $\textbf{u}$, the vector $\textbf{x}$ is revealed,
+By solving the approximate CVP problem with the input $B$ and $\textbf{u}$, the vector $\textbf{x}$ is revealed,
  hence the private key $\alpha$ is recovered as it is the last element of the vector $\textbf{x}$.
 
-To solve the CVP problem in polynomial time,
-we transform it to an SVP instance.
+To solve the approximate CVP problem in polynomial time,
+we transform it to an approximate SVP instance.
  We use $d$ triples $(t_i, u_i, l_i)$ to construct a $d+2$ dimensional lattice $L(B')$ spanned by the rows of the matrix
 $$B' =
 \left(
@@ -212,13 +212,12 @@ Then we acquire the secret key $\alpha$.
 %分析为什么我们没有利用全部的信息，理论上怎样，实际怎样
 We apply this lattice attack to the curve secp256k1 and assume that the Flush+Flush attack is perfect, which means we correctly obtain the Double-Add-Invert chain and recover all the information about the digits of the ephemeral key it contains.
 
-The HNP problem can be solved by exploiting both the CVP and SVP instances.
-However, the CVP problem does not have a polynomial time solution while the SVP problem has.
-So, with the growth of the dimension of the lattice, the time cost of finding the closest vector grows very fast.
- Actually, the CVP problem is often solved through embedding itself into an SVP problem and using the polynomial time solution in practice.
-Therefore, we only demonstrate the result of using the SVP problem to solve the HNP instance.
-
- We use the BKZ algorithm implemented in \verb+fplll+~\cite{fplll} to solve the SVP problem.
+%The HNP problem can be solved by exploiting both the CVP and SVP instances.
+%However, the CVP problem does not have a polynomial time solution while the SVP problem has.
+%So, with the growth of the dimension of the lattice, the time cost of finding the closest vector grows very fast.
+% Actually, the CVP problem is often solved through embedding itself into an SVP problem and using the polynomial time solution in practice.
+In the experiments,
+ we use the BKZ algorithm implemented in \verb+fplll+~\cite{fplll} to solve the SVP problem converted from the HNP problem.
 %When solving an SVP instance, there are two outcomes that either we obtain the private key or a wrong answer.
  %So w
  We denote the success probability as the amount of successfully recovering the private key divided by the total number of the lattice attacks.
@@ -234,7 +233,7 @@ We want to find the optimal strategy for our attack in terms of the following pa
 
 Thus we perform a number of experiments with different values of the parameters.
  In each case, we run $200$ experiments and compute the success probability.
-Because in Section \ref{sec:attack} the HNP problem introduced requires $l/2 - \log_{2}{3} -1 \geq 1$ to contain more than one bit information, the value of $l$ should be larger than $7$.
+Because in Section \ref{data_proc2} the HNP problem introduced requires that $l$ should be larger than $7$.
  But in our experiments, when $l = 8$, the private key can not be successfully recovered.
   The reason is that the HNP instance contains not enough information in this case.
 So the minimal length of the consecutive bits of $k$ is set ranging from $9$ to $11$ in the experiments.
