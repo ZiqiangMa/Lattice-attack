@@ -159,8 +159,8 @@ Finally, to efficiently use the extracted information,
     we convert the problem of recovering the private key to the Hidden Number Problem (HNP) and Extended Hidden Number Problem (EHNP) respectively,
  which are solved by lattice reduction algorithms.
 We implemented the Flush+Flush method to attack the ECDSA with the secp256k1 curve in OpenSSL 1.1.0h.
-The experimental results show that the private key is successfully recovered from only $2$ signatures,
-    if the side channel is built without any error.
+The experimental results show that only $2$ signatures are enough to recover the private key,  % is successfully recovered from only $2$ signatures,
+    if the side channel is built without any error. %, which is also required in other works and can be achieved with existing cache side channel attacks.
 To the best of our knowledge, this work is the first one to obtain and exploit all signs of the wNAF representations
     in the side channel attacks against ECDSA,
      and requires the least number of signatures for ECDSA private key recovery.
