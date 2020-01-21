@@ -89,34 +89,37 @@ First, the length of the consecutive bits used to construct the lattice is varia
 Second,  in our method the position of consecutive bits is arbitrary in the ephemeral key and does not need to be fixed, while the prior work needs all the consecutive bits at the same position.
 Finally, from one signature we obtain multiple sequences of consecutive bits, and all of them can be used for constructing the lattice as long as the length of the sequence is satisfied, while the prior work only generates one sequence of consecutive bits for one signature.
 
-To construct an HNP instance using arbitrary consecutive bits, we need to use the following theorem\cite{Nguyen2002}:
-\begin{theorem}
- \label{theorem1}
-There exists a polynomial-time algorithm which, given $A$ and $B$ in $[1, q]$, finds $\lambda \in Z^{*}_{q}$ such that
-$$
-|\lambda |_q < B  \ \  \text{and} \ \  |\lambda A|_q \leq q/B .
-$$
-\end{theorem}
-The value of $\lambda$ can be computed exploiting the continued fractions.
-
-Recall the ECDSA signature, $s = k^{-1} (h(m) + r\cdot\alpha) \bmod q$.
-We rewrite it as
-\begin{equation}
-\label{sig}
-\alpha rs^{-1} = k - s^{-1}h(m)  \ \  \text{mod} \ \ q.
-\end{equation}
-Then assume that we have the $l$ consecutive bits of $k$ with the value of $a$, starting at some known position $j$.
- So $k$ is represented as $k = 2^{j}a + 2^{l+j}b +c$ for $0 \leq a \leq 2^l -1$, $0\leq b \leq q/2^{l+j}$ and $0 \leq c < 2^j$.
- We apply the theorem with $A = 2^{j+l}$ and $B = q2^{-j-l/2}$, to obtain $\lambda$ such that
-$$
-|\lambda |_q < q2^{-j-l/2}  \ \  \text{and} \ \  |\lambda 2^{j+l}|_q \leq q/2^{j+l/2} .
-$$
-
-Plugging the value of $k$ and multiplying by $\lambda$, Equation \ref{sig} is transformed to
-$$
-\alpha r\lambda s^{-1} = (2^{j}a - s^{-1}h(m))\lambda +(c\lambda + 2^{l+j}b\lambda)  \ \  \bmod \ \ q.
-$$
-
+To construct an HNP instance using arbitrary consecutive bits,
+  we use the standard analysis from \cite{Nguyen2002}.
+  Assuming that we have the $l$ consecutive bits of $k$ with the value of $a$, starting at some known position $j$.
+  So $k$ is represented as $k = 2^{j}a + 2^{l+j}b +c$ for $0 \leq a \leq 2^l -1$, $0\leq b \leq q/2^{l+j}$ and $0 \leq c < 2^j$.
+%To construct an HNP instance using arbitrary consecutive bits, we need to use the following theorem\cite{Nguyen2002}:
+%\begin{theorem}
+% \label{theorem1}
+%There exists a polynomial-time algorithm which, given $A$ and $B$ in $[1, q]$, finds $\lambda \in Z^{*}_{q}$ such that
+%$$
+%|\lambda |_q < B  \ \  \text{and} \ \  |\lambda A|_q \leq q/B .
+%$$
+%\end{theorem}
+%The value of $\lambda$ can be computed exploiting the continued fractions.
+%
+%Recall the ECDSA signature, $s = k^{-1} (h(m) + r\cdot\alpha) \bmod q$.
+%We rewrite it as
+%\begin{equation}
+%\label{sig}
+%\alpha rs^{-1} = k - s^{-1}h(m)  \ \  \text{mod} \ \ q.
+%\end{equation}
+%Then assume that we have the $l$ consecutive bits of $k$ with the value of $a$, starting at some known position $j$.
+% So $k$ is represented as $k = 2^{j}a + 2^{l+j}b +c$ for $0 \leq a \leq 2^l -1$, $0\leq b \leq q/2^{l+j}$ and $0 \leq c < 2^j$.
+% We apply the theorem with $A = 2^{j+l}$ and $B = q2^{-j-l/2}$, to obtain $\lambda$ such that
+%$$
+%|\lambda |_q < q2^{-j-l/2}  \ \  \text{and} \ \  |\lambda 2^{j+l}|_q \leq q/2^{j+l/2} .
+%$$
+%
+%Plugging the value of $k$ and multiplying by $\lambda$, Equation \ref{sig} is transformed to
+%$$
+%\alpha r\lambda s^{-1} = (2^{j}a - s^{-1}h(m))\lambda +(c\lambda + 2^{l+j}b\lambda)  \ \  \bmod \ \ q.
+%$$
 We determine the following values
 %To construct an HNP instance using arbitrary consecutive bits, we need to use the following theorem\cite{Nguyen2002}:
 %\begin{theorem}
@@ -146,7 +149,6 @@ We determine the following values
 %\alpha r\lambda s^{-1} = (2^{j}a - s^{-1}h(m))\lambda +(c\lambda + 2^{l+j}b\lambda)  \ \  \bmod \ \ q.
 %$$
 
- Let
  \begin{equation}
  \label{tu}
  \left\{
