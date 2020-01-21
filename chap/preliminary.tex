@@ -113,7 +113,7 @@ An attacker can use a spy process to monitor the conditional branches through si
 Then he can get a Double-Add chain, and determine  whether $k_i$ is zero or not based on this chain.
 The attacker can  use this  information to recover the  private key.
 
-In OpenSSL, the bit length of $k$ is set to a fixed value$\lfloor\log_{2}{q}\rfloor + 1$ of by adding itself with $q$
+In OpenSSL, the bit length of $k$ is set to a fixed value$\lceil\log_{2}{q} \rceil + 1$ of by adding itself with $q$
 or $2q$, which can resist the remote timing side channel attack \cite{Brumley2011}.
 In most cases, the multiplication is done as $(k + q)G$, but it is still vulnerable in lattice attacks \cite{Dahmun2016}.
 
