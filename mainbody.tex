@@ -138,11 +138,11 @@
 This paper presents a practical cache side channel attack on ECDSA implementations which use
  the windowed Non-Adjacent-Form (wNAF) representation to compute the scalar multiplication over elliptic curves.
 Compared with the existing works,
-    our method extracts more information from the side channels
-      and makes efficient use of these information to construct lattice attacks to recover the ECDSA private key.
+    our method extracts more information from the side channels,
+      which is then  efficiently used to construct lattice attacks for the ECDSA private key recovery.
  First,
-  unlike previous works only monitoring the double and add functions of the scalar multiplication in the cache side channel attack,
-   we add an extra monitor to the invert function
+  unlike previous works only monitoring the double and add functions of the scalar multiplication in the cache side channel attacks,
+   we add an extra monitor on the invert function
     and get a Double-Add-Invert chain through the side channel.
    %and
     %obtain the sign information of the wNAF representation of an ephemeral key through it.
@@ -154,14 +154,14 @@ Compared with the existing works,
 Then, we develop effective methods extracting
     $154.2$ bits information of the ephemeral key per signature
     for 256-bit ECDSA from this chain,
-    much more than existing methods.
+    much more than the best known result which extracts $105.8$ bits per signature.
 Finally, to efficiently use the extracted information,
     we convert the problem of recovering the private key to the Hidden Number Problem (HNP) and Extended Hidden Number Problem (EHNP) respectively,
  which are solved by lattice reduction algorithms.
 We implemented the Flush+Flush method to attack the ECDSA with the secp256k1 curve in OpenSSL 1.1.0h.
 The experimental results show that the private key is successfully recovered from only $2$ signatures,
     if the side channel is built without any error.
-To the best of our knowledge, this is the first time to obtain and exploit all signs of the wNAF representations
+To the best of our knowledge, this work is the first one to obtain and exploit all signs of the wNAF representations
     in the side channel attacks against ECDSA,
      and requires the least number of signatures for ECDSA private key recovery.
 \end{abstract}
