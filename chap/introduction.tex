@@ -1,7 +1,7 @@
 \section{Introduction}
 \label{sec:intro}
 
-The Elliptic Curve Digital Signature Algorithm (ECDSA) \cite{Johnson2001, ansi2005} is a digital signature scheme based on the elliptic-curve cryptography (ECC),
+The Elliptic Curve Digital Signature Algorithm (ECDSA) \cite{Johnson2001, ansi2005} is a digital signature scheme based on the elliptic-curve \hyphenation{crypto-graphy} cryptography (ECC),
     which is widely used in many popular applications, such as TLS \cite{rfc5246}, OpenPGP \cite{openpgp2007}, smart card \cite{smartcard2007}, and Bitcoin \cite{bitcoin2008}.
 The core operation of ECDSA is the scalar multiplication of a base point (or generator) over elliptic curves
     by a random nonce (or ephemeral key).
@@ -107,7 +107,7 @@ Therefore, the lattice reduction algorithm to find the target vector becomes eas
 
 We applied our attack methods to the secp256k1 curve in OpenSSL 1.1.0h.
 We choose the Flush+Flush~\cite{gruss2016flush} attack to monitor the functions of double, add and invert, and construct the Double-Add-Invert chain.
-From this chain, we successfully determine whether each digit of the ephemeral key is zero or not,
+From this chain, we successfully determine whether each digit of the ephemeral key's wNAF representation is zero or not,
  and also the signs of the non-zero digits.
  %We extract $153.2$ bits on average per signature for the 256-bit ECDSA.
 We extract on average 154.2 bits from
