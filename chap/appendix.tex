@@ -1,0 +1,100 @@
+\section{Prior Review}
+\label{sec:Appendix}
+The previous version of this paper was rejected by Asiacrypt 2019. %And, we have made the significant improvements  based on the reviews.
+In this section, we list the comments from Asiacrypt reviewers.
+
+\subsection{Reviewer 1}
+\noindent{\textbf{Paper summary.}}
+This paper presents a new attack on the ECDSA signature algorithm. The authors are able to recover more information from the traces of the nonce $k$. 
+In particular, the extra information they are able to recover is the sign of the non-zero coefficients of the wNAF representation of $k$.
+They use the FLUSH+FLUSH side channel attack to recover traces, and then the Hidden Number Problem (HNP) to recover the secret key via some lattice construction. 
+During the side channel attack, the authors analyse the invert function in the scalar multiplication step to obtain the signs of the digits.
+For the lattice part, the instance of HNP is not directly constructed from the data outputted by the side-channel attack, but concatenated to form multiple
+consecutive bits of $k$. They claim to be able to recover the secret key using $60$ signatures with probability of success equal to $3\%$, but I doubt on that probability. 
+
+\noindent{\textbf{Strengths.}}
+ The paper presents some novelties both in the side-channel part and in the lattice construction. To the best of my knowledge it is the \textbf{first} time someone
+manage to recover the signs of the digits of the nonce with a side channel attack. Moreover it is well written and thus is enjoyable to read. 
+
+\noindent{\textbf{Weaknesses.}}
+\begin{itemize}
+  \item The overall advantage of using this extra information in practical attacks in unclear. It seems that some attacks use less signatures (Van de Pol et al) or some
+find the key with greater probability of success (the authors only mention $3\%$ for $60$ signatures, and then say it increases if you get more signatures).
+Perhaps it would be useful to have a more detailed comparison with other attacks and point out where and how this technique is more advantageous. 
+In particular, the paper lacks of timing. Is it because of time that BKZ-25 or BKZ-30 is never used, as it would improve the probability of success but level
+up the total time to recover the key?
+  \item I doubt in the feasibility of this attack in practice (not even in the fact that it is competitive).
+Indeed, to work in the lattice part, the attack needs to use traces with a consecutive number of known bits of the nonce $k$, that correspond to a given
+number of consecutive zeros. This is the purpose of the parameter $l$ in the paper, that should be greater (or equal than) $8$ to let the lattice reduction
+works. The probability for a trace to belong in the set of traces where $l\geq 9$, $l\geq 10$ and $l\geq 10$ may be remarkably slow, and then a large number of signatures are needed.
+  \item The OpenSSL version is not the latest version. And, OpenSSL version 1.1.1c (28 May 2019) moves away from the wNAF representation. 
+\end{itemize}
+
+\noindent{\textbf{Detailed comments for authors.}}
+I recommend rejection for this paper if weaknesses 1 and 2 are not addressed, but acceptance if they are and if the technical details below are all addressed too. 
+The side channel work is overall interesting and presents new ideas concerning an attack which has been studied a lot.
+The detailed technical comments are as follows:
+\begin{itemize}
+  \item The paper considers the FLUSH + FLUSH side channel to be built without any errors. It has been shown in Dall et al (CHES 2018) that even if a trace contains some errors (error needing to be defined depending on the attack scenario), the key can still be recovered. Something similar could be done here.
+  \item The paper mentions that ``all information exploited in these attacks are the positions of the non-zero digits, ..".  This is not entirely true. Fan et al in the EHNP setup also use as extra information the MSB of $k$ and the sign of the second MSB. This greatly improves their probability of success. In your paper, you get the signs of all non-zero digits. You can perhaps improve your probability of success by using Fan et al method to know the MSB (compare the length of the add-and-double chain to the length of the wNAF representation), or at least mention it.
+  \item It is not clear why FLUSH+FLUSH attack has better accuracy than FLUSH+RELOAD ?
+\end{itemize}
+
+\subsection{Reviewer 2}
+\noindent{\textbf{Paper summary.}}
+This paper presents another lattice attack on ECDSA that is implemented with the windowed Non-Adjacent-Form (wNAF) representations to compute the scalar multiplication operation. 
+The authors claim attack being practical and they recover more bits per signature when compared to other previously known methods.
+Concretely, they implemented the Flush+Flush cache based attack and applied it to ECDSA with the secp256k1 curve in OpenSSL 1.1.0h, to monitor the functions of double, add and invert.
+Monitoring the invert function is a new idea but this does not apply to all commonly used libraries, as also noted by the authors e.g. mbedTLS.
+Experiments show this approach valid as the results show that the private key can be successfully recovered from $60$ signatures, if the Flush+Flush side channel is perfectly exploited
+Actually, if this is the case, with $60$ signatures the private key can be recovered with a probability of $3\%$.
+
+\noindent{\textbf{Strengths.}}
+\begin{itemize}
+\item This work is well written and all relevant previous works are listed. The authors also properly position their result with those published before. Hence, this paper gives also a nice introduction to the topic.
+\item The paper is well structured and the authors gave all relevant details. The scenario of attacking ECDSA is first introduced and the attack through cache side channel is motivated for the OpenSSL library. The strategy of recovering consecutive bits is clearly outlined and finally lattice attacks is used to recover the remaining bits. The paper end with giving experimental results and conclusions. The paper gives a good comparison with previous attack methods.
+\end{itemize}
+
+\noindent{\textbf{Weaknesses.}}
+The practicality of this attack is questionable. In which real-world use case could this be set-up and how the probabilities evolve with respect to less perfect extraction of information through the cache side channel?
+
+\subsection{Reviewer 3}
+\noindent{\textbf{Paper summary.}}
+This side-channel-attack paper claims two major contributions. First, it is claimed to be the first paper that extracts information from the invert function (applied as part of scalar multiplication). 
+Secondly, they claim to construct a new lattice attack that solves the hidden number problem (as part of recovering the ``ephemeral key", a nonce, then the private key). 
+
+\noindent{\textbf{Weaknesses.}}
+\begin{itemize}
+\item This work is merely focused on providing the presented attack on secp256k. Thus, one cannot infer when the proposed attack would work on different curves or when
+the bit length varies. The fact that the authors use the BKZ algorithm, instead of LLL, is a red flag that may indicate that when the bit length grows, one would need stronger algorithms (e.g. BKZ with larger block size).
+\item While the attack can recover many bits (which in theory requires only $2$ signatures), the attack also needs many signatures. The reason is that the lattice attack needs (many) consecutive bits, and so when the recovered bits don't answer this criteria they are basically discarded (the attack does not exploit them). Thus, it is not clear that the fact that so many bits could be recovered has any benefit. 
+\end{itemize}
+
+
+\section{Response}
+We have made the following improvements based on the reviewers' comments. 
+\begin{itemize}
+  \item The most significant one is that we improve the \textbf{practicality} of our attack, by constructing an EHNP \cite{ehnp} instance to fully utilize all the extracted bits (i.e., 154.2) per signature.    Now, our method only needs $2$ signatures for the 256-bit curve. The details are provided in  Section~\ref{sec:recoverEHNP}.
+  \item For the method based on HNP, we analyze probability that one signature satisfying the requirement and then provide the number of signatures needed to recover the private key.
+    To be used in the construction of HNP,  the signature needs to satisfy that the length ($l$) of the consecutive bits being not less than $9$. 
+   Among $10,000$ signatures, $32.33\%$ contain the consecutive bits that $l\geq9$, $17.44\%$ for $l\geq10$ and $9.08\%$ for $l\geq11$. 
+   Therefore, $60$ valid signatures ($l\geq11$) can be obtained from $661$ signatures. The details are provided in Section~\ref{latticeattack}.
+  \item We compare the Flush+Flush and Flush+Reload attacks briefly in Section~\ref{intro_cacheattack}. The Flush+Flush attack runs in a higher frequency than the Flush+Reload attack, as
+   the execution time of \verb+clflush+ is less than the reload time on average,   and the first and  third phases are merged together in the Flush+Flush attack.
+  \item We provide the process on the imperfect data obtained from the cache side channel in Section~\ref{subsec:unperfect}. 
+  \item We revise the description on the OpenSSL version due to the update of OpenSSL. That is, our attack is effective to all the OpenSSL versions between 0.9.7 and 1.1.0h.
+  \item Our attack can be mounted to all types of curves, as it does not rely on the property of any special elliptic curve.
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+
