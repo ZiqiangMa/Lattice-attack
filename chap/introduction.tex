@@ -70,14 +70,14 @@ To achieve this, we obtain more information from the side channel than the metho
 
 First, we monitor the invert function in addition to points addition and doubling functions in the cache side channel, and construct a Double-Add-Invert chain instead of the Double-Add chain~\cite{Benger2014,Van2015,Fan2016,Wang2017}.
 The analyse on the ECDSA implementation in OpenSSL, demonstrates that the invert function is invoked only when the sign of current non-zero digit of the ephemeral key's wNAF representation is opposite to the previous one in the scalar multiplication.
-Therefore, in addition to the positions of all digits in the ephemeral key's wNAF representation, we can extract the signs of the non-zero digits by monitoring the invert function.
+Therefore, in addition to the positions of all non-zero digits in the ephemeral key's wNAF representation, we can extract the signs of the non-zero digits by monitoring the invert function.
 
 %the length of the consecutive bits used to construct the HNP instance should be larger than 7
 Then, with these extracted information, we construct the HNP and EHNP instances respectively, attempting to fully utilize the extracted information.
 To construct the HNP instance,
-we first recover the consecutive bits at the position of every non-zero digits of the ephemeral key based on the Double-Add-Invert chain,
+we first recover the consecutive bits at the position of each non-zero digit of the ephemeral key based on the Double-Add-Invert chain,
  and then use these bits to construct an HNP instance for the ECDSA private key recovery.
-However, as analyzed in Section~\ref{data_proc2}, the construction of the HNP instance requires the length of the consecutive bits larger than $7$,
+However, as analyzed in Section~\ref{data_proc2}, the construction of the HNP instance requires the length of the consecutive bits to be larger than $7$,
  and therefore needs more signatures, i.e., $60$.
 To improve the utilizing method,
 we construct an EHNP \cite{ehnp} instance to recover the ECDSA private key,
@@ -146,7 +146,7 @@ Our contributions are summarized as follows:
   \item
   We present two new lattice attacks to exploit the positions and signs of all non-zero digits in the ephemeral key's wNAF
   representation.  That is,  we translate the problem of ECDSA private key recovery to the HNP and ENHP respectively.
-  Moreover, the attack based on EHNP works better than all known works.
+  Moreover, the attack based on EHNP works better than all known attacks.
 % First,   we extract multiple consecutive bits of the ephemeral key by converting the wNAF representation to the binary representation and construct the HNP instance to recover the ECDSA private key.   Second,  we propose a novel method to construct an EHNP instance to recover the ECDSA private key which is better than \cite{Fan2016}.
 
   \item
@@ -162,7 +162,7 @@ Section \ref{sec:recoverHNP} and \ref{sec:recoverEHNP} provide how to construct 
 Section \ref{sec:compare} compares our attacks with existing works.
 Section \ref{sec:discussion} contains some extended discussions.
 %Section \ref{sec:relatedwork} introduces some related works.
-Section \ref{sec:conclusion} draws the conclusion.
+And, Section \ref{sec:conclusion} draws the conclusion.
 
 %ECDSA被广泛应用
 %基于椭圆曲线离散对数问题
