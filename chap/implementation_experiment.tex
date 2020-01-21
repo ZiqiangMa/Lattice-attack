@@ -325,11 +325,24 @@ i.e. the dimension of the lattice for the SVP is $d + 2$.
     \end{tabular}
 \end{table}
 
-Table \ref{svp9} shows the success probability for different dimensions and block sizes of solving the SVP instance in the
-             cases that the minimal length of the consecutive bits ranges from $9$ to $11$.
-As shown in the table, we successfully recover the private key of a 256-bit ECDSA only need $60$ sequences of consecutive bits with a success probability of $3.0\%$.
+Table \ref{svp9} shows the success probability for different dimensions and block sizes of solving the SVP instance %in the
+            % cases that the minimal length of the consecutive bits ranges from $9$ to $11$.
+%As shown in the table, 
+we can successfully recover the private key of a 256-bit ECDSA only need $60$ sequences of consecutive bits with a success probability of $3.0\%$.
 These $60$ sequences come from up to $60$ signatures.
-Therefore we just need about $60$ signatures to successfully recover the ECDSA private key.
+That means we just need about $60$ signatures satisfied the length requirement to successfully recover the ECDSA private key.
+
+We analyse 10000 signatures.
+$32.33\%$ signatures contain the sequence of consecutive bits that $l \geq 9$, 
+$17.44\%$ signatures contain the sequence that $l \geq 10$
+ and $9.08\%$ signatures contain the sequence that $l \geq 11$.
+ So, obtaining 60 satisfying signatures ($l \geq 11$) needs 661 signatures totally.
+However, when using 80 signatures that satisfy $l \geq 9$, the total number of signatures needed is the least, just $247.45$.
+ 
+ %因此60 个满足条件的签名需要的总签名数量为661。而当使用80 个
+%满足条件的签名，要求连续比特长度大于等于9 时，攻击需要的总签名数最少，
+%为247.45。
+
 
   For the fixed  minimal length of consecutive bits,
  increasing the dimension generally increases the probability of success.
