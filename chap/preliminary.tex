@@ -84,7 +84,7 @@ Algorithm \ref{alg:wnaf} introduces the concrete method for converting a scalar 
 %二进制转化成naf
 %转化后如何计算标量乘法
 For the scalar multiplication using wNAF representation, during the initialization phase,
-  a window size $w$ is chosen, and the points $\{\pm G, \pm 3G, ..., \pm(2^{w}-1)G\}$ are precomputed and stored. 
+  a window size $w$ is chosen, and the points $\{\pm G, \pm 3G, ..., \pm(2^{w}-1)G\}$ are precomputed and stored.
 Then, for each $k$, after converting it to the wNAF form, the multiplication $kG$ is executed as described in Algorithm \ref{alg:kg}.
 
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
@@ -110,7 +110,7 @@ Then, for each $k$, after converting it to the wNAF form, the multiplication $kG
 
 From the Algorithm~\ref{alg:kg}, we can find that the if-then block (Line 4) is vulnerable to side channel attacks.
 An attacker can use a spy process to monitor the conditional branches through side channels.
-Then he can get a Double-Add chain, and determine  whether $k_i$ is zero or not based on this chain. 
+Then he can get a Double-Add chain, and determine  whether $k_i$ is zero or not based on this chain.
 The attacker can  use this  information to recover the  private key.
 
 In OpenSSL, the bit length of $k$ is set to a fixed value$\lfloor\log_{2}{q}\rfloor + 1$ of by adding itself with $q$
@@ -277,7 +277,7 @@ But in the third phase, it flushes the cache again and measures the flush time i
 %再一段F+F 和 F+R进行对比：更加高效，精度更高，F阶段可以当成是下一循环的F，
 The execution time of \verb+clflush+ is less than the reload time on average,
     and the first and the third phase are merged together in the Flush+Flush attack.
-  Therefore, the Flush+Flush attack is more accurate than the Flush+Reload attack.
+  Therefore, the Flush+Flush attack runs in a higher frequency than the Flush+Reload attack.
 %Thus, the Flush+Flush attack has a better accuracy.
 %Furthermore, compared with the Flush+Reload attack,
 %the Flush+Flush attack does not trigger prefetches when monitoring consecutive memory lines, otherwise, it may affect the validity of the attack.
@@ -402,7 +402,7 @@ Based on the partial information about the ephemeral key obtained by the attacke
 
 \subsection{Partial Nonce Disclosure Attacks on DSA/ECDSA}
 Various works are proposed to exploit partial nonce disclosure to recover long-term private keys
- of the algorithms based on the discrete logarithm problem. 
+ of the algorithms based on the discrete logarithm problem.
 In this section, we provide a brief description of these works.
 %They can be classified into (1) ones proving that exploiting the partial information can recover the whole private key,
 % and (2) ones that focus on how to obtain the partial information and construct appropriate lattice attacks to recover the private key.
