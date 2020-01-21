@@ -197,11 +197,11 @@ Also,  the execution sequence of the invert operation can be used to determine t
 
 \subsection{Cache Side Channel Attacks}
 \label{intro_cacheattack}
-Cache side-channel attacks, firstly proposed in 2002~\cite{Page2002},  take advantage of the characteristic of the cache activity
+Cache side-channel attacks, firstly proposed in 2002~\cite{Page2002},  take advantage of the characteristic of cache activity
  that accessing data from caches is much faster than from memory.
 Attackers exploit these time variations to deduce the operations of the target process and then infer the key information.
 In this section, we introduce the side channel attacks on the symmetric and asymmetric cryptography,
- then describe the extension of these attacks in cloud environment,
+ then describe the extension of these attacks in cloud computing environment,
   and finally provide the details of the Flush+Reload \cite{flushreload} and Flush+Flush \cite{gruss2016flush} which are widely in the attacks on the ECDSA.
 
 For the symmetric cryptography,
@@ -281,7 +281,7 @@ But in the third phase, it flushes the cache again and measures the flush time i
 
 %再一段F+F 和 F+R进行对比：更加高效，精度更高，F阶段可以当成是下一循环的F，
 The execution time of \verb+clflush+ is less than the reload time on average,
-    and the first and  third phase are merged together in the Flush+Flush attack.
+    and the first and  third phases are merged together in the Flush+Flush attack.
   Therefore, the Flush+Flush attack runs in a higher frequency than the Flush+Reload attack.
 %Thus, the Flush+Flush attack has a better accuracy.
 %Furthermore, compared with the Flush+Reload attack,
