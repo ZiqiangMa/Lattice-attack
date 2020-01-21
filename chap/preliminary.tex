@@ -130,8 +130,8 @@ As the modification on wNAF has little affects on the attack results,
 %
 %实际中的使用k+q
 \subsection{The Scalar Multiplication in OpenSSL}
-\label{intro_smulinssl} 
-In OpenSSL versions between 0.9.7 and 1.1.0h~\cite{openssl}, the processes of scalar multiplication with wNAF representation are the same, 
+\label{intro_smulinssl}
+In OpenSSL versions between 0.9.7 and 1.1.0h~\cite{openssl}, the processes of scalar multiplication with wNAF representation are the same,
  while  the processes are encapsulated in different functions for different versions.
 Here, we adopt OpenSSL 1.1.0h as  the example to describe the process.
 In OpenSSL 1.1.0h, the scalar multiplication with wNAF representation is implemented in the function \verb+ec_wNAF_mul()+.
@@ -197,11 +197,11 @@ Also,  the execution sequence of the invert operation can be used to determine t
 
 \subsection{Cache Side Channel Attacks}
 \label{intro_cacheattack}
-Cache side-channel attacks, firstly proposed in 2002~\cite{Page2002},  take advantage of the characteristic of cache activity
+Cache side-channel attacks, firstly proposed in 2002~\cite{Page2002},  take advantage of the characteristic of the cache activity
  that accessing data from caches is much faster than from memory.
 Attackers exploit these time variations to deduce the operations of the target process and then infer the key information.
 In this section, we introduce the side channel attacks on the symmetric and asymmetric cryptography,
- then describe the extension of these attacks in cloud computing environment,
+ then describe the extension of these attacks in cloud environment,
   and finally provide the details of the Flush+Reload \cite{flushreload} and Flush+Flush \cite{gruss2016flush} which are widely in the attacks on the ECDSA.
 
 For the symmetric cryptography,

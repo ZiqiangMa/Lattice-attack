@@ -332,7 +332,7 @@ we can successfully recover the private key of a 256-bit ECDSA only need $60$ se
 These $60$ sequences come from up to $60$ signatures.
 That means we just need about $60$ signatures satisfied the length requirement to successfully recover the ECDSA private key.
 
-We analyse 10000 signatures.
+We analysed 10000 signatures.
 $32.33\%$ signatures contain the sequence of consecutive bits that $l \geq 9$, 
 $17.44\%$ signatures contain the sequence that $l \geq 10$
  and $9.08\%$ signatures contain the sequence that $l \geq 11$.
@@ -346,16 +346,15 @@ However, when using 80 signatures that satisfy $l \geq 9$, the total number of s
 
   For the fixed  minimal length of consecutive bits,
  increasing the dimension generally increases the probability of success.
-In some sense, as the dimension increases,
-     more information is being added to the lattice, and this makes the desired solution vector stand out more.
+%In some sense, as the dimension increases,
+    % more information is being added to the lattice, and this makes the desired solution vector stand out more.
 Also, the higher block sizes perform with a higher success probability,
  as the stronger reduction allows them to isolate the solution vector better.
   We believe that the success probability would be surely higher with the block size $30$ or the BKZ 2.0~\cite{bkz2}.
-
-When $l$ is fixed, to get a suitable success probability, attackers can either increase the dimension or use stronger algorithms (increasing the block size).
-However, increasing the dimension requires more signatures
- and enlarging the block size increases the computation time.
-So attackers can balance the two factors according to their resources and needs.
+%When $l$ is fixed, to get a suitable success probability, attackers can either increase the dimension or use stronger algorithms (increasing the block size).
+%However, increasing the dimension requires more signatures
+% and enlarging the block size increases the computation time.
+%So attackers can balance the two factors according to their resources and needs.
 
 The success probability also increases as the minimal length of consecutive bits increases.
 It is because more information is added to the lattice making it easier to search for the desired solution vector.
