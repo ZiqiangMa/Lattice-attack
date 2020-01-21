@@ -34,7 +34,7 @@ However,
  the invert function is also vulnerable, because it is called conditionally.
 Only when the sign of the non-zero digit is opposite to the previous one, the invert function will be performed.
 Because the first non-zero digit is positive,
-   then the signs of all the non-zero digit are deduced based on the execution of the invert function.
+   then the signs of all the non-zero digits are deduced based on the execution of the invert function.
 
 
 We use a spy process to monitor  the double, add and invert functions during computing the scalar multiplication.
@@ -46,7 +46,7 @@ According to the Double and Add in this chain, we determine whether each digit o
 Then, based on the Invert in this chain, we infer the sign of each non-zero digit.
 
 
-In the OpenSSL versions between 0.9.7 and 1.1.0h,
+In the OpenSSL  1.1.0h,
  the functions of double, add and invert are implemented as \verb+EC_POINT_dbl()+, \verb+EC_POINT_add()+ and \verb+EC_POINT_invert()+.
  Existing attacks only monitor the functions \verb+EC_POINT_dbl()+ and \verb+EC_POINT_add()+.
 In our attack, we improve the cache side channel attacks by adding an extra monitor to the \verb+EC_POINT_invert()+ function.
@@ -135,7 +135,7 @@ Typically the debugging symbols are not available for attackers,
 
 \noindent\textbf{Threshold.}
 We monitor the execution time of the \verb+clflush+ instruction to flush the monitored functions.
-If the time is larger than the threshold, meaning the memory line is accessed by the victim.
+If the time is larger than the threshold,  the memory line is accessed by the victim.
 Otherwise, the memory line is not accessed.
 The thresholds are calculated for every monitored function.
 For each address of the monitored functions, we record the time of flushing the cache 1000 times, and take the time larger than 99 percent samples plus 6 cycles as the threshold for this address.
@@ -152,8 +152,8 @@ The thresholds are recalculated every time before the attack is mounted.
 We monitor the flushing time of the address of the three functions.
 When the time of any one is larger than the corresponding threshold,
  we start to record the flushing times.
-The record stops when the number of the consecutive flushing time of all the monitored addresses less than the threshold  is larger than 300.
-If the number of record is less than 1000, we re-record the execution time.
+The record stops when the number of the consecutive flushing time of all the monitored addresses less than the threshold,  is larger than $300$.
+If the number of record is less than $1000$, we re-record the execution time.
 Then we have a valid record.
  Due to the  disturbance of noise,
   the valid record does not necessarily contain the activities in the scalar multiplication.

@@ -82,9 +82,9 @@ In theory, two signatures would be enough to recover the 256-bit private key as 
 
 \subsection{Constructing the Lattice Attack with HNP}
 \label{data_proc2}
-In this section, we transform the problem of recovering the private key to the HNP instance, and further convert to the CVP/SVP instance in a lattice.
+In this section, we transform the problem of recovering the private key to the HNP instance, and further convert it to the CVP/SVP instance in a lattice.
 Our method is based on the analysis from \cite{Nguyen2002}.
-But we make some improvements to it.
+And we make the following improvements to it.
 First, the length of the consecutive bits used to construct the lattice is variable while the prior work fixes the length, which may lose some information.
 Second,  in our method the position of consecutive bits is arbitrary in the ephemeral key and does not need to be fixed, while the prior work needs all the consecutive bits at the same position.
 Finally, from one signature we obtain multiple sequences of consecutive bits, and all of them can be used for constructing the lattice as long as the length of the sequence is satisfied, while the prior work only generates one sequence of consecutive bits for one signature.
@@ -261,7 +261,7 @@ We want to find the optimal strategy for our attack in terms of the following pa
 
 Thus we perform a number of experiments with different values of the parameters.
  In each case, we run $200$ experiments and compute the success probability.
-Because in Section \ref{data_proc2} the HNP problem introduced requires that $l$ should be larger than $7$.
+Although in Section \ref{data_proc2} the HNP problem introduced requires that $l$ should be larger than $7$.
  But in our experiments, when $l = 8$, the private key can not be successfully recovered.
   The reason is that the HNP instance contains not enough information in this case.
 So the minimal length of the consecutive bits of $k$ is set ranging from $9$ to $11$ in the experiments.
@@ -324,20 +324,20 @@ i.e. the dimension of the lattice for the SVP is $d + 2$.
     \end{tabular}
 \end{table}
 
-Table \ref{svp9} shows the success probability for different dimensions and block sizes of solving the SVP instance %in the
+Table \ref{svp9} shows the success probability for different dimensions and block sizes of solving the SVP instance. %in the
             % cases that the minimal length of the consecutive bits ranges from $9$ to $11$.
-%As shown in the table, 
-we can successfully recover the private key of a 256-bit ECDSA only need $60$ sequences of consecutive bits with a success probability of $7.5\%$.
+%As shown in the table,
+We can successfully recover the private key of a 256-bit ECDSA only need $60$ sequences of consecutive bits with a success probability of $7.5\%$.
 These $60$ sequences come from up to $60$ signatures.
 That means we just need about $60$ signatures satisfied the length requirement to successfully recover the ECDSA private key.
 
 We analysed 10000 signatures.
-$32.33\%$ signatures contain the sequence of consecutive bits that $l \geq 9$, 
+$32.33\%$ signatures contain the sequence of consecutive bits that $l \geq 9$,
 $17.44\%$ signatures contain the sequence that $l \geq 10$
  and $9.08\%$ signatures contain the sequence that $l \geq 11$.
  So, obtaining 60 satisfying signatures ($l \geq 11$) needs 661 signatures totally.
 However, when using 80 signatures that satisfy $l \geq 9$, the total number of signatures needed is the least, just $248$.
- 
+
  %因此60 个满足条件的签名需要的总签名数量为661。而当使用80 个
 %满足条件的签名，要求连续比特长度大于等于9 时，攻击需要的总签名数最少，
 %为247.45。
@@ -349,7 +349,7 @@ However, when using 80 signatures that satisfy $l \geq 9$, the total number of s
     % more information is being added to the lattice, and this makes the desired solution vector stand out more.
 Also, the higher block sizes perform with a higher success probability,
  as the stronger reduction allows them to isolate the solution vector better.
-  We believe that the success probability would be surely higher with the block size $30$ or the BKZ 2.0~\cite{bkz2}.
+  We believe that the success probability would be  higher with the block size $30$ or the BKZ 2.0~\cite{bkz2}.
 %When $l$ is fixed, to get a suitable success probability, attackers can either increase the dimension or use stronger algorithms (increasing the block size).
 %However, increasing the dimension requires more signatures
 % and enlarging the block size increases the computation time.
@@ -460,7 +460,7 @@ where $\bar{k}=\sum\limits_{i=1}^{l}{(-1)^{h_i}2^{\lambda_i} }$, $h_i$, $\lambda
 where $\alpha, k_i (1\leq i \leq l)\text{ and } h$ is unknown.
 
 Assuming we got $u$ signature pairs $(r_i,s_i)$ of different messages $m_i$($1\leq i\leq u$) with the same secret key $\alpha$.
-Suppose we get the Double-ADD-Invert Chain of each ephemeral key. From  (\ref{SigEqu22}) we can easily have
+Suppose we get the Double-Add-Invert chain of each ephemeral key. From  (\ref{SigEqu22}) we can easily have
  \begin{equation}
 \begin{cases}
 \label{SigEqu2}
