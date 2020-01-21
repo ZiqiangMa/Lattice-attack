@@ -78,7 +78,7 @@ To construct the HNP instance,
 we first recover the consecutive bits at the position of each non-zero digit of the ephemeral key based on the Double-Add-Invert chain,
  and then use these bits to construct an HNP instance for the ECDSA private key recovery.
 However, as analyzed in Section~\ref{data_proc2}, the construction of the HNP instance requires the length of the consecutive bits to be larger than $7$,
- and therefore needs more signatures, i.e., $60$.
+ and therefore needs more signatures, i.e., $248$.
 To improve the utilizing method,
 we construct an EHNP \cite{ehnp} instance to recover the ECDSA private key,
  which is further transformed to the approximate SVP in some suitable lattice.
@@ -113,7 +113,7 @@ From this chain, we successfully determine whether each digit of the ephemeral k
 We extract on average 154.2 bits from
 the perfect Double-Add-Invert chain per signature for the 256-bit
 elliptic curve.
-When using the HNP to recover the ECDSA private key, we need about $60$ signatures to recover the private key with a probability of $3\%$.
+When using the HNP to recover the ECDSA private key, we need about $248$ signatures to recover the private key with a probability of $1.5\%$.
 While using the EHNP, $3$ signatures would be enough to recover the 256-bit ECDSA private key with probability no less than $73\%$,
  and  $2$ signatures with a success probability being not less than $24.3\%$.
 %only 3 signatures are needed  to recover the secret key with a high success probability no less than $73\%$.

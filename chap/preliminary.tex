@@ -282,7 +282,7 @@ But in the third phase, it flushes the cache again and measures the flush time i
 %再一段F+F 和 F+R进行对比：更加高效，精度更高，F阶段可以当成是下一循环的F，
 The execution time of \verb+clflush+ is less than the reload time on average,
     and the first and  third phase are merged together in the Flush+Flush attack.
-  Therefore, the Flush+Flush attack is more accurate than the Flush+Reload attack.
+  Therefore, the Flush+Flush attack runs in a higher frequency than the Flush+Reload attack.
 %Thus, the Flush+Flush attack has a better accuracy.
 %Furthermore, compared with the Flush+Reload attack,
 %the Flush+Flush attack does not trigger prefetches when monitoring consecutive memory lines, otherwise, it may affect the validity of the attack.
