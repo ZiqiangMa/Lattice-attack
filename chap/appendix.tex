@@ -46,7 +46,7 @@ This paper presents another lattice attack on ECDSA that is implemented with the
 The authors claim attack being practical and they recover more bits per signature when compared to other previously known methods.
 Concretely, they implemented the Flush+Flush cache based attack and applied it to ECDSA with the secp256k1 curve in OpenSSL 1.1.0h, to monitor the functions of double, add and invert.
 Monitoring the invert function is a new idea but this does not apply to all commonly used libraries, as also noted by the authors e.g. mbedTLS.
-Experiments show this approach valid as the results show that the private key can be successfully recovered from $60$ signatures, if the Flush+Flush side channel is perfectly exploited
+Experiments show this approach valid as the results show that the private key can be successfully recovered from $60$ signatures, if the Flush+Flush side channel is perfectly exploited.
 Actually, if this is the case, with $60$ signatures the private key can be recovered with a probability of $3\%$.
 
 \noindent{\textbf{Strengths.}}
