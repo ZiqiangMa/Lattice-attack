@@ -3,11 +3,11 @@
 \section{Recover the ECDSA Private Key with HNP}
 \label{sec:recoverHNP}
 After we obtain the data from the Cache side channel, we will use this data to recover the ECDSA private key.
- The most intuitive idea is that first recovering some bits of the ephemeral key $k$ from the Double-Add-Invert chain and 
+ The most intuitive idea is that first recovering some bits of the ephemeral key $k$ from the Double-Add-Invert chain and
   then constructing the HNP or EHNP with these bits.
- Another method is like Fan~\cite{Fan2016} and Van de Pol~\cite{Van2015}, directly exploiting the wNAF representation to construct the  HNP or EHNP with the known information from the Double-Add-Invert chain. 
- So we first try to recover the bits of the ephemeral key and construct the HNP problem to recover the ECDSA private key. 
-Then we directly construct the EHNP problem  with the wNAF representation referring to Fan's method in the next section. 
+ Another method is like Fan~\cite{Fan2016} and Van de Pol~\cite{Van2015}, directly exploiting the wNAF representation to construct the  HNP or EHNP with the known information from the Double-Add-Invert chain.
+ So we first try to recover the bits of the ephemeral key and construct the HNP problem to recover the ECDSA private key.
+Then we directly construct the EHNP problem  with the wNAF representation referring to Fan's method in the next section.
 
 In this section, we first recover the consecutive bits at the position of every non-zero digits for the ephemeral key $k$, exploiting the information obtained from the side channel.
 Then we translate the problem of recovering the ECDSA private key to the HNP problem
@@ -419,7 +419,7 @@ But the increase of the minimal length would lead to requiring more signatures t
 \label{sec:recoverEHNP}
 We can see that the restriction on the length of the bits has a great influence on the number of signatures we need to observe.
 Although we exploit the sign information of the wNAF representation, the result is not good, worse than Allan's attack~\cite{Allan2016}, which only needs 6 signatures.
-So, in this section, we directly use the wNAF representation of $k$ to construct an EHNP problem to recover the ECDSA private key. 
+So, in this section, we directly use the wNAF representation of $k$ to construct an EHNP problem to recover the ECDSA private key.
 The final result shows that this method only needs 2 signatures, better than existing results.
 
 
@@ -513,7 +513,7 @@ c_{2,l_2}&&&&&&&&\frac{\delta}{3}&&&&&\\
 
 \end{matrix}\right)
   \end{equation}
-  
+
 
   \subsubsection {Balancing the target vector}
 
@@ -631,10 +631,10 @@ Finally, through being converted to the CVP/SVP problem in the lattice, the ECDS
 
 
 
-\begin{table*}[!t]
+\begin{table}[!t]
   \centering
    \caption{Comparison with previous attack methods}\label{compare1}
-\begin{tabular}{|c|m{120pt}|c|c|c|}
+\begin{tabular}{|c|m{90pt}|c|c|c|}
   \hline
   % after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
   Methods & Exploited information & HNP or EHNP & \# of bits & \# of signatures \\
@@ -643,26 +643,28 @@ Finally, through being converted to the CVP/SVP problem in the lattice, the ECDS
   \hline
   Van de Pol et al. \cite{Van2015} & half positions of non-zero digits & HNP & 47.6 & 13 \\
   \hline
+  Allan et al.~\cite{Allan2016} & half positions and signs of non-zero digits & HNP & 71.4 & 6 \\
+  \hline
   Fan et al. \cite{Fan2016} & all positions of non-zero digits & EHNP & 105.8 & 4 \\
   \hline
   Wang et al. \cite{Wang2017} & positions of two non-zero digits and the length of the wNAF representation of $k$ & HNP & $\geq$ 2.99 & 85 \\
   \hline
-  \multirow{2}{1.1in}{\centering Ours}&\multirow{2}{120pt}{all positions and signs of non-zero digits} & HNP & 154.2  & 248 \\ %
+  \multirow{2}{1.2in}{\centering Ours}&\multirow{2}{90pt}{all positions and signs of non-zero digits} & HNP & 154.2  & 248 \\ %
     \cline{3-5}
   ~& ~& EHNP & 154.2  & 2  \\
 %  \hline
 %  190 & 39.3 & 63.5 & & \\
   \hline
 \end{tabular}
-\end{table*}
+\end{table}
 
-Benger et al. \cite{Benger2014} got the least significant bits (LSBs) of the ephemeral key through the Flush+Reload attack
+Benger et al.~\cite{Benger2014} got the least significant bits (LSBs) of the ephemeral key through the Flush+Reload attack
 although this is not all the information obtained from the side channel.
 Then they constructed an HNP problem and successfully recovered the private key by solving the CVP/SVP problem converted from the HNP problem.
 The number of bits extracted is only an average of 2,
 thus making it require more than $200$ signatures to recover a 256-bit private key with the probability being $3.5\%$.
 
-Van de Pol et al. \cite{Van2015} improved Benger's attack
+Van de Pol et al.~\cite{Van2015} improved Benger's attack
   %relying on the property of some specific elliptic curves, that is the order $q$ of the base point is a pseudo-Mersenne prime which can be expressed as $2^n - \epsilon$, where $|\epsilon| < 2^p $, $p \approx n/2$ and $n$ is the length of $q$.
 %With this property, this attack
 and used the information from the consecutive non-zero digits whose positions are larger than the half of the length of the Double-Add chain extracted from the Flush+Reload attack.
@@ -673,8 +675,11 @@ It is able to extract $47.6$ bits per signature on average for the secp256k1 cur
 %the information from the cache side channel is not fully utilized.
 %Moreover, their work is only effective to some special curves.
 
+Allan et al.~\cite{Allan2016} first used the Flush+Reload attack to monitor the invert function and used a performance degradation attack to increase the attack accuracy. 
+ Then they exploited Van de Pol's method to construct the HNP problem with the extra information to recover the ECDSA private key.
+  This method can extract $71.4$ bits per signature on average for the secp256k1 curve and recover the private with 6 signatures.
 
-Fan et al.\cite{Fan2016} extracted all positions of digits from the Flush+Reload attack and took advantage of them to construct an EHNP instance.
+Fan et al.~\cite{Fan2016} extracted all positions of digits from the Flush+Reload attack and took advantage of them to construct an EHNP instance.
 They managed to obtain on average 105.8 bits per signature for the secp256k1 curve.
  With some optimization only 4 signatures are needed to recover the private key with the probability being $8\%$.
 % Compared with their work, ours obtains more information about the ephemeral key, i.e. the sign of all non-zero digits, from the side channel by analysing the OpenSSL implementation.
@@ -682,7 +687,7 @@ They managed to obtain on average 105.8 bits per signature for the secp256k1 cur
 %Although it uses more signatures to recover the private key in our lattice attack,
 %theoretically, the number of signatures needed is less than Fan's if a more suitable lattice is constructed.
 
-Wang et al. \cite{Wang2017} obtained the positions of two non-zero digits and the length of the wNAF representation of $k$ from the Flush+Reload attack.
+Wang et al.~\cite{Wang2017} obtained the positions of two non-zero digits and the length of the wNAF representation of $k$ from the Flush+Reload attack.
 They could obtain no less than 2.99 bits information per signature and exploit the HNP to recover the private key for the 256-bit curve using $85$ signatures.
 %Obviously, our method obtains more information and uses fewer signatures to recover the private key.
 
@@ -691,7 +696,7 @@ Our method exploits both the signs and the positions  of the non-zero digits of 
 It extracts the largest amount of information, on average $156.2$ bits per signature for the secp256k1 curve.
 We  use both the HNP and EHNP problems to recover the ECDSA private key.
 Although the using HNP problem needs 248 signatures,
-using EHNP problem the number of signatures needed to recover the private key is only $2$ with the success probability being not less than $24.3\%$..
+using EHNP problem the number of signatures needed to recover the private key is only $2$ with the success probability being not less than $24.3\%$.
 
 %2017年，范团队还在science China information sciences 上发了一篇，使用HNP的文章，
 %这是一个b类的期刊。(交叉综合新兴)
