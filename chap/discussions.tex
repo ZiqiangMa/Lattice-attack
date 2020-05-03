@@ -65,7 +65,7 @@
 %而我们在实验时选择了使用ff攻击，它和fr攻击类似，因此也可以用同样的方法来对其进行分析。
 
 Our lattice attack analysis is based on the perfect Double-Add-Invert chain, which means no errors exist in the chain.
-But, achieving the perfect chain is almost impossible from the practical cache side channels.
+But, achieving the perfect chain is difficult from the practical cache side channels.
 Van de Pol et al.~\cite{Van2015} analysed the actual data obtained from the Flush+Reload attack.
 Their statistical results show that $57.7\%$ of the obtained Double-Add chains are perfect.
 We also can monitor the functions using the Flush+Reload attack,
@@ -73,11 +73,37 @@ We also can monitor the functions using the Flush+Reload attack,
 Thus, the actual number of signatures needed to recover the 256-bit ECDSA private key is $4$.
 
 While in our experiments, we use the Flush+Flush attack to obtain the Double-Add-Invert chain.
-Compared with Flush+Reload, the Flush+Flush is more easily to have errors, because the distributions of the execution time of the \verb+clflush+ instruction on cached and non-cached memory have some overlapping and the
+Compared with Flush+Reload, the Flush+Flush is more easily to have errors, because the distributions of the execution time of the \verb+clflush+ instruction on cached and non-cached memory have some overlap and the
 difference in timing of this instruction is less.
 So the probability to obtain the perfect chain is less than $57.7\%$.
 We can re-measure the probability of obtaining the perfect chain using the same method with Van de Pol
  and achieve the actual number of needed signatures.
+
+
+\subsection{Scalar Multiplication in Other Cryptographic Libraries}
+
+Besides the OpenSSL library, there are many cryptographic libraries that implement the scalar multiplication.
+But not all of them use the wNAF representation.
+We introduce some implementations of the scalar multiplication in some popular cryptographic libraries.
+
+The mbed TLS \cite{polarssl} is an open source SSL library licensed by ARM Limited.
+It does not use the wNAF algorithm to represent the scalar.
+It uses a comb method that generates a sequence of bit-strings to represent the scalar $k$ so that every bit-string represents an odd number based on modifying the method in \cite{Hedabou2004ACM}.
+When computing the scalar multiplication, it traverses the sequence and directly indexes the value in the precomputed points to perform the addition.
+It does not use the invert function,
+and this representation is hard to attack by the cache side channels because all the elements of the sequence are not zero.
+
+Libgcrypt \cite{libgcrypt} is a cryptography library developed as a separated module of GnuPG.
+It directly uses the binary representation of the scalar instead of the wNAF representation to compute the scalar multiplication in the prime field.
+%Although it does not exploit the wNAF algorithm, it is vulnerable to the cache side channel attacks.
+To resist the side channel attacks, it performs an extra addition operation when the binary bit of the scalar is zero so that in every bit the double and addition are both performed.
+Therefore, lattice attacks to this library are invalid.
+
+%Crypto++ Library \cite{cryptopp} is a free C++ class library of cryptographic algorithms and schemes.
+
+
+
+
 
 
 %\subsection{The Precision of the Cache Side Channel Attacks}
