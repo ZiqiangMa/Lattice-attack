@@ -238,15 +238,20 @@ Irazoqui et al.~\cite{fine2014} recovered AES keys in virtualized environments w
 
 %Many attack methods are proposed \cite{Bonneau2006, Bernstein2005Cache, Osvik2006, cachegame2011, flushreload}
 % since it is demonstrated feasible in theory \cite{Page2002}.
-Here, we provide the detailed processes of Flush+Reload \cite{flushreload} and Flush+Flush \cite{gruss2016flush},
+Here, we provide the detailed process of Flush+Flush \cite{gruss2016flush},
  which are used to monitor the execution sequence of functions in the implementation of ECDSA.
 %在近些年的研究中，访问驱动的攻击受到研究者们的青睐，因为其具有更高的攻击精度，能够很准确的获取到目标进程对cache的访问情况，以及更广的使用场景，例如对虚拟化云环境进行攻击。接下来，我们对两种典型的访问驱动攻击进行介绍，这两种攻击和本文相关。
 
-The Flush+Reload attack \cite{flushreload} employs a spy process to monitor whether the specific memory lines have been accessed or not by the victim process.
+The Flush+Flush~\cite{gruss2016flush} employs a spy process to monitor whether the specific memory lines have been accessed or not by the victim process.
 So this attack relies on shared memory between the spy and the victim processes.
 For attacks in the same machine, the spy can map the victim program file, the victim data file or shared libraries into its own address space to share these pages with the victim.
 While in the virtualization environments, the page de-duplication technique of the VMM ensures the page sharing between the spy and the victim.
-%监控LLC，需要写一下
+
+The Flush+Flush relies on the execution time of the \verb+clflush+ instruction,
+  which is affected by whether the to-be-flushed data are cached or not.
+The execution time of \verb+clflush+ is shorter if the data are not cached
+ and longer if the data are cached.
+So according to this time, the attackers determine the victim's cache activities.
 The execution of such an attack consists of three phases:
 \begin{itemize}
   \item
@@ -257,39 +262,26 @@ The execution of such an attack consists of three phases:
     \textbf{Wait:}
     The attacker waits a moment while the victim is running.
   \item
-    \textbf{Reload:}
+    \textbf{Flush:}
     This phase detects whether the victim accesses the memory lines flushed in the first phase during the waiting time.
-    The attacker accesses the desired memory lines to reload them into caches, and measures the time.
-%From the reload time, the attacker determines whether the memory lines are accessed by the victim.
-    The longer reload time means that the victim does not access the data and the attacker has to reload the data from the memory.
+    The attacker executes the \verb+clflush+ instruction again and measures the execution time.
+    The shorter time means that the victim does not access the data.
     Otherwise, it means that the victim accesses the data.
 %    So these memory lines are accessed by the victim during the waiting time.%需要精简
 \end{itemize}
 
-The Flush+Flush attack \cite{gruss2016flush} also assumes the shared memory.
-%Unlike measuring the reload time directly affected by the cache access,
-It relies on the execution time of the \verb+clflush+ instruction,
-  which is affected by whether the to-be-flushed data are cached or not.
-The execution time of \verb+clflush+ is shorter if the data are not cached
- and longer if the data are cached.
-So according to this time, the attackers determine the victim's cache activities.
+%In general, the Flush+Flush attack also consists of three phases.
+%The first two phases are the same as in the Flush+Reload attack.
+%But in the third phase, it flushes the cache again and measures the flush time instead of the reload time.
+%%As the third phase flushes the caches, it doubles as the first phase for subsequent observations.
 
-In general, the Flush+Flush attack also consists of three phases.
-The first two phases are the same as in the Flush+Reload attack.
-But in the third phase, it flushes the cache again and measures the flush time instead of the reload time.
-%As the third phase flushes the caches, it doubles as the first phase for subsequent observations.
 
-%再一段F+F 和 F+R进行对比：更加高效，精度更高，F阶段可以当成是下一循环的F，
-The execution time of \verb+clflush+ is less than the reload time on average,
+Compared with Flush+Reload, the execution time of \verb+clflush+ is less than the reload time on average,
     and the first and  third phases are merged together in the Flush+Flush attack.
   Therefore, the Flush+Flush attack runs in a higher frequency than the Flush+Reload attack.
 %Thus, the Flush+Flush attack has a better accuracy.
 %Furthermore, compared with the Flush+Reload attack,
 %the Flush+Flush attack does not trigger prefetches when monitoring consecutive memory lines, otherwise, it may affect the validity of the attack.
-
-
-%这一节要和多篇文章进行对比改进，f+r攻击需要精简。
-%f+r的算法伪代码考虑需不需要添加。
 
 \subsection{The Hidden Number Problem and Lattice Attack}
 \label{intro_hnp}
@@ -450,7 +442,7 @@ In 2014, Benger et al. \cite{Benger2014} extended the technique in \cite{Nguyen2
  They recovered the secret key of OpenSSL's ECDSA implementation for the curve secp256k1 using about $200$ signatures.
 Then in 2015,
 Van de Pol et al. \cite{Van2015} exploited the property of the modulus in some elliptic curves so that they could use all of the information leaked in the top half of the ephemeral keys to construct the HNP instance, allowing them to recover the secret key after observing only $14$ signatures.
-In 2016, Allan et al. \cite{Allan2016} improved the results in \cite{Van2015} by using a performance-degradation attack to amplify the side-channel. The amplification allowed them to recover a 256-bit private key in OpenSSL 1.0.2a after observing only 6 signatures.
+In 2016, Allan et al. \cite{Allan2016} improved the results in \cite{Van2015} by using a performance-degradation attack to amplify the side-channel and monitoring the extra inversion function. These allowed them to recover a 256-bit private key in OpenSSL 1.0.2a after observing only 6 signatures.
 Fan et al. \cite{Fan2016} transformed the problem of recovering the secret key to the extended hidden number problem (EHNP)
  which was solved by the lattice reduction algorithm.
   Then the number of signatures needed was reduced to $4$.

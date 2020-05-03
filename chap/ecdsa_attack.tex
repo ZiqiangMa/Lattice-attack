@@ -25,18 +25,21 @@ In each digit, it performs a double function.
 If the digit is not zero and the sign of the digit is opposite to the prior one, the invert function is called.
 Finally,  the addition function is called to add the internal value of $kG$ with a precomputed point indexed by  the absolute value of the digit. % and performs an addition operation.
 
-Originally, the vulnerability comes from the double and add function.
-The double function is called at every digit, and this reveals the digit sequence.
-The add function is called just when the digit is non-zero,
-  which makes it possible to distinguish whether the digit is zero or not.
-  That reveals the position of all non-zero digits.
-However,
- the invert function is also vulnerable, because it is called conditionally.
-Only when the sign of the non-zero digit is opposite to the previous one, the invert function will be performed.
-Because the first non-zero digit is positive,
-   then the signs of all the non-zero digits are deduced based on the execution of the invert function.
+
+%Originally, the vulnerability comes from the double and add function.
+%The double function is called at every digit, and this reveals the digit sequence.
+%The add function is called just when the digit is non-zero,
+%  which makes it possible to distinguish whether the digit is zero or not.
+%  That reveals the position of all non-zero digits.
+%However,
+% the invert function is also vulnerable, because it is called conditionally.
+%Only when the sign of the non-zero digit is opposite to the previous one, the invert function will be performed.
+%Because the first non-zero digit is positive,
+%   then the signs of all the non-zero digits are deduced based on the execution of the invert function.
 
 
+The vulnerability that the invert function is called conditionally was first be exploited by Allan~\cite{Allan2016}.
+We also use this vulnerability to improve the attack to obtain more valid data.
 We use a spy process to monitor  the double, add and invert functions during computing the scalar multiplication.
 The time is divided into slots, and in each slot,
   the spy determines whether the three functions are performed or not by monitoring the cache hits/misses.
@@ -80,28 +83,51 @@ In the wNAF representation of $k$, the most significant digit is always positive
 In this way, we obtain both the positions and signs of all non-zero digits.
 
 
-% In our work, we implement the Flush+Flush attack to obtain the ''double-add-invert'' chain because it has a better precision.
-%%这里还需要再多说两句，为什么要精度更高，因为reload时间长，多监控一个函数，在一个slot中花费时间更多， 容易造成失误。 flush的时间短，slot可以更短。
+\subsection{Improvement Through the Flush+Flush Attack}
 
+When we use the Cache side channel attack, we divide the time into fixed length slots and in each slot we take a measurement.
+The slot must be longer than the time of a set of attack operations(e.g. the time of Flush and Reload).
+While if the slot is too long, several victim accesses occur in the same slot and attackers cannot distinguish.
+So the length of the time slot needs short enough to guarantee the attack granularity while the attack working properly.
 
-%openssl的实现是XXXX，
-%传统的攻击对double 和add进行监控
-%我们增加对invert进行监控
-%然后如何得到digit的正负信息
-%在我们的实现中，通过对比f_f和f+r 选择f+f进行攻击
+  Also, victim access to a memory location can occur at the same time the adversary test if it is cached.
+ In such a case, missing a victim access probably occurs due to the time overlap.
+Besides, the operating system activity may cause the occurrence of missing a victim access.
 
+For the Flush+Reload attack, the cost of Reload is about 300 cycle~\cite{flushreload}.
+When to attack the ECDSA, the double and add functions need to be monitored.
+ In order to obtain enough attack accuracy, the time slot is chosen as 10240 cycles in ~\cite{yarom2014recovering} and 3000 cycles in \cite{Benger2014}.
+However, in our attack, we need to add a monitor for the invert function, so we need a larger time slot.
+This may reduce the attack accuracy and add the probability of the time overlap.
+Allan's method~\cite{Allan2016} is to use a performance degradation attack to slow the group operations down,
+ so that using large time slot still can guarantee the attack accuracy.
+While this method presents some questions.
+ First, the performance degradation attack  significantly reduces the performance of the system.
+Second, the victim is also greatly affected so that it can be easily detected.
 
-%问题是：标量乘法运算的起始位置很重要。
+ In our attack, we use the Flush+Flush technique instead of the Flush+Reload to monitor the functions.
+First, the cost of Flush is about 160 cycles less than the cost of Reload.
+The time slot can be chosen shorter.
+Second, the measurement stage and flush stage are merged into one stage,
+ because in the measurement stage the execution of \verb+clflush+ also plays the role of flushing the cache.
+ Thus, the time overlap is reduced.
+
+ In one time slot, we need to flush three memory lines corresponding to the add, double and invert functions for once.
+Besides, we need to consider the attack accuracy and the effect of the time overlap.
+ When using Flush+Flush,
+   even if an extra  monitoring is added, the time slot do not need to be longer to ensure the accuracy.
+ Also, the probability of the time overlap does not increase. 
+Compared with  Allan's method, using Flush+Flush does not additionally degrade the performance of the system,
+ nor does it increase the risk of being detected by the victim.
 
 
 
 \subsection{The Implementation of Flush+Flush Attack}
 \label{ffattack}
-We launched the cache side channel attack to obtain the partial information of the ECDSA on an Acer Veriton T830 running Ubuntu 16.04.
+We launched the Flush+Flush attack to obtain the partial information of the ECDSA on an Acer Veriton T830 running Ubuntu 16.04.
 The machine features an Intel Core i7-6700 processor with four execution cores and an $8$ MB LLC.
 The attacking target is the ECDSA implemented in OpenSSL 1.1.0h, which uses wNAF representation in the scalar multiplication.
-Both the Flush+Reload and Flush+Flush attacks can be used, but we choose
-the Flush+Flush to attack the 256-bit curve secp256k1 for the experiments due to the accuracy as described in Section~\ref{intro_cacheattack}.
+We attack the 256-bit curve secp256k1 for the experiments.
 
 %平台
 
@@ -166,7 +192,7 @@ So we continuously obtain 10 valid records.
 
 
 \noindent\textbf{Time slot.}
-For the attack, the spy process divides time into time slots of approximately $2500$ cycles.
+For the attack, the spy process divides time into time slots of approximately $2000$ cycles.
 In each slot, the spy flushes the memory lines in the add, double and invert functions (\verb+EC_POINT_dbl()+,  \verb+EC_POINT_add()+ and \verb+EC_POINT_invert()+) out of the caches.
 %Also, the length of the time slot is chosen to ensure that the three functions only execute once.
 %This allows the spy to correctly distinguish consecutive doubles.
@@ -199,7 +225,7 @@ From this fragment, three operations are clearly distinguished,
 
 \begin{figure*}
 \centering
-\includegraphics[width=0.9\textwidth]{pic/slot2500.pdf}
+\includegraphics[width=0.95\textwidth]{pic/slot2500.pdf}
 \caption{A fragment of the output of the Flush+Flush attack.} \label{fig1}
 \end{figure*}
 

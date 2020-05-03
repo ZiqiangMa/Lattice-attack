@@ -106,7 +106,7 @@ Therefore, the lattice reduction algorithm to find the target vector becomes eas
 %And the signatures needed to recover the ECDSA private key are significantly reduced, which can attain the optimal bound (i.e. 2 for the 256-bit curve).
 
 We applied our attack methods to the secp256k1 curve in OpenSSL 1.1.0h.
-We choose the Flush+Flush~\cite{gruss2016flush} attack to monitor the functions of double, add and invert, and construct the Double-Add-Invert chain.
+We use the Flush+Flush~\cite{gruss2016flush} attack to monitor the functions of double, add and invert, and construct the Double-Add-Invert chain.
 From this chain, we successfully determine whether each digit of the ephemeral key's wNAF representation is zero or not,
  and also the signs of the non-zero digits.
  %We extract $153.2$ bits on average per signature for the 256-bit ECDSA.
@@ -139,13 +139,14 @@ This result attains the optimal bound and is the best one as ever known.
 Our contributions are summarized as follows:
 \begin{itemize}
   \item
-    We
-    improve the cache side channel attacks by monitoring
-      the invert function. % to obtain the more information of the ephemeral key.
-      It is the first work to extract all signs of the non-zero digits of the ephemeral key in side channel attacks.
+%    We
+%    improve the cache side channel attacks by monitoring
+%      the invert function. % to obtain the more information of the ephemeral key.
+%      It is the first work to extract all signs of the non-zero digits of the ephemeral key in side channel attacks.
+    We use the Flush+Flush technique to improve the cache side channel attacks proposed by Allan~\cite{Allan2016} to get higher resolution without using the performance degradation.
   \item
   We present two new lattice attacks to exploit the positions and signs of all non-zero digits in the ephemeral key's wNAF
-  representation.  That is,  we translate the problem of ECDSA private key recovery to the HNP and ENHP respectively.
+  representation obtained from the Double-Add-Invert chain.  That is,  we translate the problem of ECDSA private key recovery to the HNP and ENHP respectively.
   Moreover, the attack based on EHNP works better than all known attacks.
 % First,   we extract multiple consecutive bits of the ephemeral key by converting the wNAF representation to the binary representation and construct the HNP instance to recover the ECDSA private key.   Second,  we propose a novel method to construct an EHNP instance to recover the ECDSA private key which is better than \cite{Fan2016}.
 
