@@ -81,23 +81,28 @@ We can re-measure the probability of obtaining the perfect chain using the same 
 
 
 \subsection{Scalar Multiplication in Other Cryptographic Libraries}
+The OpenSSL library used the wNAF representation to compute the scalar multiplication from the version 0.9.7 to 1.1.0h.
+After the version 1.1.0h, the function of computing wNAF is redirected to the modified Montgomery ladder which is a constant time implementation against the cache side channels.
 
 Besides the OpenSSL library, there are many cryptographic libraries that implement the scalar multiplication.
-But not all of them use the wNAF representation.
-We introduce some implementations of the scalar multiplication in some popular cryptographic libraries.
+We investigate the latest version of 7 commonly used code cryptographic libraries except OpenSSL.
+Two libraries still use the wNAF algorithm but none of them exploited the invert function.
+Others use different algorithms to implement the scalar multiplication, such as comb method, binary algorithm, etc. The details are as follows.
 
-The mbed TLS \cite{polarssl} is an open source SSL library licensed by ARM Limited.
-It does not use the wNAF algorithm to represent the scalar.
-It uses a comb method that generates a sequence of bit-strings to represent the scalar $k$ so that every bit-string represents an odd number based on modifying the method in \cite{Hedabou2004ACM}.
-When computing the scalar multiplication, it traverses the sequence and directly indexes the value in the precomputed points to perform the addition.
-It does not use the invert function,
-and this representation is hard to attack by the cache side channels because all the elements of the sequence are not zero.
+Bouncy Castle~\cite{bouncycastle} and Cryptlib~\cite{Cryptlib} libraries have the wNAF algorithm, but they do not use the invert function.
+Although our attack method is not applicable, these two libraries are vulnerable to the Cache side channel attacks. 
 
-Libgcrypt \cite{libgcrypt} is a cryptography library developed as a separated module of GnuPG.
-It directly uses the binary representation of the scalar instead of the wNAF representation to compute the scalar multiplication in the prime field.
-%Although it does not exploit the wNAF algorithm, it is vulnerable to the cache side channel attacks.
+The mbed TLS \cite{polarssl} uses a comb method that generates a sequence of bit-strings to represent the scalar $k$ so that every bit-string represents an odd number based on modifying the method in \cite{Hedabou2004ACM}.
+When computing the scalar multiplication, it traverses the sequence and directly indexes the value in the precomputed points to perform the addition. 
+This representation is hard to attack by the cache side channels because all the elements of the sequence are not zero.
+
+Libgcrypt \cite{libgcrypt} directly uses the binary representation of the scalar instead of the wNAF representation to compute the scalar multiplication in the prime field.
 To resist the side channel attacks, it performs an extra addition operation when the binary bit of the scalar is zero so that in every bit the double and addition are both performed.
 Therefore, lattice attacks to this library are invalid.
+
+Botan~\cite{Botan}, Crypto++~\cite{Cryptopp} and wolfCrypt~\cite{wolfCrypt} libraries all have their own implementations of the scalar multiplication instead of the wNAF algorithm.
+So our method does not work. 
+While these implementations all  take into account the influence of side channels, whether they can be attacked by Cache side channels still needs detailed analysis.
 
 %Crypto++ Library \cite{cryptopp} is a free C++ class library of cryptographic algorithms and schemes.
 
