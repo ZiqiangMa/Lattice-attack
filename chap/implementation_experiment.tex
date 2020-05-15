@@ -26,7 +26,7 @@ First, we denote the wNAF representation of $k$ as $k = \sum{k_{i}2^{i}}$,
  and the binary representation as $k = \sum{b_{i}2^{i}}$.
  When we know the information about whether $k_i$ is zero and the sign of the non-zero $k_i$, we can simply determine some bits of $k$.
  For example, if we obtain the sign of the least non-zero $k_j$, we can infer that $b_j$ is one and $b_i$ is zero for $0\leq i<j$.
- But for arbitrary non-zero digits, it can not directly determine whether the bit is zero or one.
+ But for arbitrary non-zero digits, it can not directly determine whether the bit corresponding to the position of the digit is zero or one.
 
  Let $m$ and $m + n$ be the positions of two consecutive non-zero digits of the wNAF representation, and $w$ be the window size.
  That is, $k_m, k_{m+n} \neq 0$ and $k_{m+i} = 0$ for all $0 < i < n$.
@@ -418,7 +418,7 @@ But the increase of the minimal length would lead to requiring more signatures t
 \section{Recover the ECDSA Private Key with EHNP}
 \label{sec:recoverEHNP}
 We can see that the restriction on the length of the bits has a great influence on the number of signatures we need to observe.
-Although we exploit the sign information of the wNAF representation, the result is not good, worse than Allan's attack~\cite{Allan2016}, which only needs 6 signatures.
+Although we have exploited the sign information of the wNAF representation, the result is not as expected, worse than Allan's attack~\cite{Allan2016}, which only needs 6 signatures.
 So, in this section, we directly use the wNAF representation of $k$ to construct an EHNP problem to recover the ECDSA private key.
 The final result shows that this method only needs 2 signatures, better than existing results.
 
@@ -456,7 +456,7 @@ where $\bar{k}=\sum\limits_{i=1}^{l}{(-1)^{h_i}2^{\lambda_i} }$, $h_i$, $\lambda
 
       First and most importantly, we  observe the components of target vector in \cite{Fan2016} isn't balanced,  so we reconstruct the lattice in \cite{Fan2016}, which reduces the length of target vector much, especially when the number of possible values of unknown $k_i$ is small.
 
-     Then, we reduce the dimension of lattice and improve the success probability by guessing $k_{i}$. Finally, we observe that lattice reduction algorithm will recover different samples with different $\delta$'s, therefore, we provide some plausible reasonable $\delta$'s and use them to improve success probability.
+     Then, we reduce the dimension of lattice and improve the success probability by guessing $k_{i}$. Finally, we observe that lattice reduction algorithm will recover different samples with different $\delta$s, therefore, we provide some plausible reasonable $\delta$s and use them to improve success probability.
 
 
      In this section, we applies our attack to the secp256k1 curve. Three signatures are enough to recover the secret key with a high success probability no less than $73\%$. If we have only two signatures, we can recover the secret key with a success probability no less than $24.3\%$.
@@ -552,12 +552,12 @@ $\mu$&samples&balance&block&probability&time(s)\\
 
 \end{tabular}
 \caption{The advantage of balancing}\label{table1}
-"samples" represents the number of samples, "block" is the blocksize of BKZ and "time(s)" is the time of BKZ on each sample.
+``samples" represents the number of samples, ``block" is the blocksize of BKZ and ``time(s)" is the time of BKZ on each sample.
 \end{table}
 
 
 
-\subsubsection{Guessing some $k_{i,j}$'s}
+\subsubsection{Guessing some $k_{i,j}$s}
 \label{section3.3}
 In this section, we will analyse the way of guessing which can balance the success probability and time complexity of BKZ.
 Considering that the set of $k_{i,j}$ is small, we guess the value of $k_{i,j}$ to improve the success probability. Each $k_{i,j}$ has 2 bits information, thus, the expectation of the number of guessing to gain the right $k_{i,j}$ is $\frac{1}{4}(1+2+3+4)=\frac{5}{2}$. Every time we guess $k_{i,j}$, the expected time complexity will increase to $\frac{5}{2}$ times and the dimension will decrease 1.
@@ -578,22 +578,22 @@ $\mu$&samples&guessing&block&$\delta$&probability&time(s)\\
 \hline
 \end{tabular}
 \caption{Balancing and guessing}\label{table2}
-"guessing" represents the number of $k_{i,j}$ guessed, "$\delta_0$" will be explained in section \ref{3.4}.
+``guessing" represents the number of $k_{i,j}$ guessed, ``$\delta_0$" will be explained in section \ref{3.4}.
 \end{table}
 
 
-\subsubsection{Choosing different $\delta$'s}\label{3.4}
-Finally, based on the experimental phenomena: 1. the success probability will change with different $\delta$'s, 2. different samples  will be recovered if we select different $\delta$'s, we  analyse how to select the parameter $\delta$ and utilize different $\delta$'s to improve the success probability.
+\subsubsection{Choosing different $\delta$s}\label{3.4}
+Finally, based on the experimental phenomena: 1. the success probability will change with different $\delta$s, 2. different samples  will be recovered if we select different $\delta$s, we  analyse how to select the parameter $\delta$ and utilize different $\delta$s to improve the success probability.
 
 
-We observe some situations that lattice can produce vector set $T$ consisting of shorter vectors than target vector. Based on these observations, we expect to reduce the size of $T$ by selecting suitable parameter $\delta$ to improve success probability. The followings are some heuristic $\delta$'s.
+We observe some situations that lattice can produce vector set $T$ consisting of shorter vectors than target vector. Based on these observations, we expect to reduce the size of $T$ by selecting suitable parameter $\delta$ to improve success probability. The followings are some heuristic $\delta$s.
 
 1. If the target vector is enough short, we can recover it with high success probability. Therefore, we choose $\delta_0=\frac{2}{\sqrt{n-\mu+1}}$ to guarantee any lattice vector $\textbf{a}$ which exists $\textbf{a}_i\neq0$, for $i\in[0,m-1]$, is much longer than target vector $\textbf{w}$. Because, for $i\in[0,m-1]$, when $\textbf{a}_i\neq0$, $|\textbf{a}_i|\geq1$ then $\|\textbf{a}\|\geq 1\geq\|\textbf{w}\|$. Therefore, by setting $\delta=\frac{2}{\sqrt{n-\mu+1}}$, the size of set $T$ will decrease, which will improve the probability of lattice reduction algorithm.
 
-2. We try some other $\delta$'s, just like $2\delta_0,\frac{\delta_0}{2}$ and so on because we notice that different $\delta$'s may recover different samples. For example, for 5 examples, setting $\delta=\delta_0$ will recover the secret key of 1-th, 3-th and 4-th samples, however, the samples recovered will be 1, 2 if we let $\delta=\frac{\delta_0}{2}$. Therefore, for the same samples, if we choose several $\delta$'s to construct different lattices, we can improve the success probability.
+2. We try some other $\delta$s, just like $2\delta_0,\frac{\delta_0}{2}$ and so on because we notice that different $\delta$s may recover different samples. For example, for 5 examples, setting $\delta=\delta_0$ will recover the secret key of 1-th, 3-th and 4-th samples, however, the samples recovered will be 1, 2 if we let $\delta=\frac{\delta_0}{2}$. Therefore, for the same samples, if we choose several $\delta$s to construct different lattices, we can improve the success probability.
 
 
-Of course, this method will enlarge the time complexity, however, comparing with the improvement of success probability, the increment of time complexity is acceptable. The related data basing on the ways of balancing and guessing and different $\delta$'s can be found in Table \ref{table3}. We can see the probability will increase to $24.3\%$ when using 3 different $\delta$'s, however, the time complexity will approximately increase by 2 times. Compared with the experiment using guessing 4 $k_{i,j}$'s in Table \ref{table2}, the way of combining guessing 2 $k_{i,j}$'s and different $\delta$'s is more efficient.
+Of course, this method will enlarge the time complexity, however, comparing with the improvement of success probability, the increment of time complexity is acceptable. The related data basing on the ways of balancing, guessing and different $\delta$s can be found in Table \ref{table3}. We can see the probability will increase to $24.3\%$ when using 3 different $\delta$s, while the time complexity will approximately increase by 2 times. Compared with the experiment using guessing 4 $k_{i,j}$s in Table \ref{table2}, the way of combining guessing 2 $k_{i,j}$s and different $\delta$s is more efficient.
 
 \begin{table}[!hbp]
 \centering
@@ -611,8 +611,8 @@ total&&&&&24.3\%&1633.4\\
 \hline
 
 \end{tabular}
-\caption{Balancing, guessing and different $\delta$'s}\label{table3}
-The last line records the total success probability and the average time using three different $\delta$`s .
+\caption{Balancing, guessing and different $\delta$s}\label{table3}
+The last line records the total success probability and the average time using three different $\delta$s .
 \end{table}
 
 
@@ -675,7 +675,7 @@ It is able to extract $47.6$ bits per signature on average for the secp256k1 cur
 %the information from the cache side channel is not fully utilized.
 %Moreover, their work is only effective to some special curves.
 
-Allan et al.~\cite{Allan2016} first used the Flush+Reload attack to monitor the invert function and used a performance degradation attack to increase the attack accuracy. 
+Allan et al.~\cite{Allan2016} first used the Flush+Reload attack to monitor the invert function and used a performance degradation attack to increase the attack accuracy.
  Then they exploited Van de Pol's method to construct the HNP problem with the extra information to recover the ECDSA private key.
   This method can extract $71.4$ bits per signature on average for the secp256k1 curve and recover the private with 6 signatures.
 

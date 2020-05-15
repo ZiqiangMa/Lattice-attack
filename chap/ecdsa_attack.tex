@@ -85,7 +85,7 @@ In this way, we obtain both the positions and signs of all non-zero digits.
 
 \subsection{Improvement Through the Flush+Flush Attack}
 
-When we use the Cache side channel attack, we divide the time into fixed length slots and in each slot we take a measurement.
+When we use the cache side channel attack, we divide the time into fixed length slots and in each slot we take a measurement.
 The slot must be longer than the time of a set of attack operations(e.g. the time of Flush and Reload).
 While if the slot is too long, several victim accesses occur in the same slot and attackers cannot distinguish.
 So the length of the time slot needs short enough to guarantee the attack granularity while the attack working properly.
@@ -116,7 +116,7 @@ Second, the measurement stage and flush stage are merged into one stage,
 Besides, we need to consider the attack accuracy and the effect of the time overlap.
  When using Flush+Flush,
    even if an extra  monitoring is added, the time slot do not need to be longer to ensure the accuracy.
- Also, the probability of the time overlap does not increase. 
+ Also, the probability of the time overlap does not increase.
 Compared with  Allan's method, using Flush+Flush does not additionally degrade the performance of the system,
  nor does it increase the risk of being detected by the victim.
 

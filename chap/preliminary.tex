@@ -131,9 +131,8 @@ As the modification on wNAF has little affects on the attack results,
 %实际中的使用k+q
 \subsection{The Scalar Multiplication in OpenSSL}
 \label{intro_smulinssl}
-In OpenSSL versions between 0.9.7 and 1.1.0h~\cite{openssl}, the processes of scalar multiplication with wNAF representation are the same,
- while  the processes are encapsulated in different functions for various versions.
-Here, we adopt OpenSSL 1.1.0h as  the example to describe the process.
+In OpenSSL versions between 0.9.7 and 1.1.0h~\cite{openssl}, the scalar multiplication is implemented with the wNAF representation.
+Here, we adopt OpenSSL 1.1.0h as  the example to describe the implementation.
 In OpenSSL 1.1.0h, the scalar multiplication with wNAF representation is implemented in the function \verb+ec_wNAF_mul()+.
 The core computation of the function is shown in Algorithm  \ref{alg:smopenssl}.
 
@@ -425,7 +424,7 @@ Liu and Nguyen \cite{Liu2013} improved the results that only 2 LSBs were require
 %   Then the number of signatures needed was reduced to $4$.
 
 %second
-To make the attacks more practical,
+To make the attacks practical,
 the works \cite{Brumley2009,Brumley2010,Brumley2011,Mulder2013,Benger2014,Van2015,Allan2016,Fan2016,Genkin2016,Pereida2016,Wang2017,Zhang2017} focus on how to obtain the  partial information and construct appropriate lattice attacks to recover the private key.
 Brumley and Hakala \cite{Brumley2009} used an L1 data cache-timing attack to recover the LSBs of ECDSA ephemeral keys in OpenSSL 0.9.8k.
  They recovered a 160-bit ECDSA private key using the attack in \cite{HG2001} with  $2,600$ signatures ($8K$ with noise).

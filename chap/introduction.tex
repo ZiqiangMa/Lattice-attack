@@ -4,7 +4,7 @@
 The Elliptic Curve Digital Signature Algorithm (ECDSA)~\cite{Johnson2001,ansi2005} is a digital signature scheme based on the elliptic-curve \hyphenation{crypto-graphy} cryptography (ECC),
     which is widely used in many popular applications, such as TLS \cite{rfc5246}, OpenPGP \cite{openpgp2007}, smart card \cite{smartcard2007}, and Bitcoin \cite{bitcoin2008}.
 The core operation of ECDSA is the scalar multiplication of a base point (or generator) over elliptic curves
-    by a random nonce (or ephemeral key).
+    by a random nonce (called ephemeral key).
  And its semantical security relies on the computational intractability to find the ephemeral key for
 any given pair of a scalar multiplication and a base point, i.e., the elliptic curve
 discrete logarithm problem (ECDLP).
@@ -30,7 +30,7 @@ and constructed a more efficient lattice attack.
 
 %The cache side channel attack is an efficient way to obtain the partial information of the ephemeral key,
 % and various practical attacks are proposed to recover the ECDSA private key with these information.
-With the Flush+Reload cache side channels \cite{flushreload}, various practical attacks~\cite{Benger2014,Van2015,Fan2016,Wang2017} are proposed to attack OpenSSL implementation~\cite{openssl} of ECDSA, in which the windowed Non-Adjacent Form (wNAF) implementation is adopted as the default one for scalar multiplication between  version 0.9.7 and 1.1.0h.
+With the Flush+Reload cache side channels \cite{flushreload}, various practical attacks~\cite{Benger2014,Van2015,Fan2016,Wang2017} are proposed to attack  the ECDSA implementation of OpenSSL~\cite{openssl}, in which the windowed Non-Adjacent Form (wNAF) implementation is adopted as the default one for scalar multiplication between  version 0.9.7 and 1.1.0h.
 Using the side channel attacks, these works~\cite{Benger2014,Van2015,Fan2016,Wang2017} observe the execution of ECDSA, and get the sequence of points additions and doubling (denoted as Double-Add chain) during the generation of an ECDSA signature.
 Then, they extract and exploit the different information of the ephemeral key from this chain,
  and translate the problem of recovering the ECDSA private key to the HNP or EHNP, which is solved by lattice reduction algorithms.
@@ -68,8 +68,8 @@ To achieve this, we obtain more information from the side channel than the metho
  and then translate the problem of ECDSA private key recovery to HNP and EHNP with the extracted information respectively, attempting to fully utilize these information.
 
 %in fact we do the work without previously know Allan's work
-%First, we learn from  Allan's work~\cite{Allan2016} 
-After analyzing the implementation code of ECDSA in OpenSSL, we find that the invert function is another exploitable vulnerability~\cite{Allan2016} in the implementation of the scalar multiplication. We monitor the invert function in addition to points addition and doubling functions in the cache side channel, and and then construct a Double-Add-Invert chain instead of the Double-Add chain~\cite{Benger2014,Van2015,Fan2016,Wang2017}.
+%First, we learn from  Allan's work~\cite{Allan2016}
+After analyzing the implementation code of ECDSA in OpenSSL, we find that the invert function is another exploitable vulnerability~\cite{Allan2016} in the implementation of the scalar multiplication. We monitor the invert function in addition to points addition and doubling functions in the cache side channel, and then construct a Double-Add-Invert chain instead of the Double-Add chain~\cite{Benger2014,Van2015,Fan2016,Wang2017}.
 The invert function of the ECDSA implementation in OpenSSL is invoked only when the sign of current non-zero digit of the ephemeral key's wNAF representation is opposite to the previous one in the scalar multiplication.
 Therefore, in addition to the positions of all non-zero digits in the ephemeral key's wNAF representation, we can extract the signs of the non-zero digits by monitoring the invert function.
 
