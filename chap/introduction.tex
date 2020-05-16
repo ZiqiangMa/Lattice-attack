@@ -6,22 +6,22 @@ The Elliptic Curve Digital Signature Algorithm (ECDSA)~\cite{Johnson2001,ansi200
 The core operation of ECDSA is the scalar multiplication of a base point (or generator) over elliptic curves
     by a random nonce (called ephemeral key).
  And its semantical security relies on the computational intractability to find the ephemeral key for
-any given pair of a scalar multiplication and a base point, i.e., the elliptic curve
+any given pairs of a scalar multiplication and a base point, i.e., the elliptic curve
 discrete logarithm problem (ECDLP).
 % the intractability of the elliptic curve discrete logarithm problem (ECDLP), that is
 % the inability to compute the scalar (ephemeral key) given the original (base) and product points.
 
 However, side channel attacks can obtain the information on the ephemeral key, during the scalar multiplication.
 As long as some bits of the ephemeral key are leaked,
-    the ECDSA private key will be recovered \cite{Nguyen2001,HG2001,Nguyen2002,Nguyen2003}.
-%The partial ephemeral key exposure attack was first proposed by
-Howgrave-Graham and Smart~\cite{HG2001} theoretically showed that DSA was vulnerable to such
+    the ECDSA private key will be recovered \cite{Nguyen2001,Nguyen2002,Nguyen2003}, which is called the 
+ partial ephemeral key exposure attack.
+This attack was first proposed by Howgrave-Graham and Smart~\cite{HG2001}, who theoretically showed that DSA was vulnerable to such
 partial ephemeral key exposures in 2001.
 %in 2001 to recover the whole DSA private key.
 Then, Nguyen and Shparlinski \cite{Nguyen2002} improved this theoretical attack, and extended it from DSA
 to ECDSA \cite{Nguyen2003}.
 The basic idea is to reduce the problem of private key recovery to  an instance of  Hidden Number Problem (HNP) with the partial knowledge of the ephemeral keys,
- and then reduce it to the Closest Vector Problem (CVP) or the Shortest Vector Problem (SVP) in a lattice.
+ and then reduce it to the Closest Vector Problem (CVP) or the Shortest Vector Problem (SVP) in the lattice.
 Instead of HNP, Fan~\cite{Fan2016} translated the problem of private key recovery to the Extended Hidden Number Problem (EHNP)~\cite{ehnp},
 and constructed a more efficient lattice attack.
 %The Extended Hidden Number Problem (EHNP)~\cite{ehnp}. was introduced as another way to construct the problem to be solved in the lattice to recover the private key using the partial ephemeral key information.
@@ -106,7 +106,7 @@ Therefore, the lattice reduction algorithm to find the target vector becomes eas
 %In the novel method, the short vectors are  much easier to be found by the lattice reduction algorithm comparing to the constructed lattice in \cite{Fan2016}.
 %And the signatures needed to recover the ECDSA private key are significantly reduced, which can attain the optimal bound (i.e. 2 for the 256-bit curve).
 
-We applied our attack methods to the secp256k1 curve in OpenSSL 1.1.0h.
+We apply our attack methods to the secp256k1 curve in OpenSSL 1.1.0h.
 We use the Flush+Flush~\cite{gruss2016flush} attack to monitor the functions of double, add and invert, and construct the Double-Add-Invert chain.
 From this chain, we successfully determine whether each digit of the ephemeral key's wNAF representation is zero or not,
  and also the signs of the non-zero digits.
@@ -147,7 +147,7 @@ Our contributions are summarized as follows:
 %    We use the Flush+Flush technique to improve the cache side channel attacks proposed by Allan~\cite{Allan2016} to get higher resolution without using the performance degradation.
   \item We present a new lattice attack to recover the private key of ECDSA with the wNAF representation. First, we construct a Double-Add-Invert chain instead of the commonly used Double-Add chain by monitoring the invert function. Then,
   We propose two new lattice attacks to exploit the positions and signs of all non-zero digits in the ephemeral key's wNAF
-  representation obtained from the Double-Add-Invert chain.  That is,  we translate the problem of ECDSA private key recovery to the HNP and ENHP respectively.
+  representation obtained from the Double-Add-Invert chain.  That is,  we translate the problem of ECDSA private key recovery to the HNP and EHNP respectively.
   The attack based on EHNP works better than all known attacks.
 % First,   we extract multiple consecutive bits of the ephemeral key by converting the wNAF representation to the binary representation and construct the HNP instance to recover the ECDSA private key.   Second,  we propose a novel method to construct an EHNP instance to recover the ECDSA private key which is better than \cite{Fan2016}.
 
