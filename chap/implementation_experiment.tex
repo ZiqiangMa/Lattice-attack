@@ -2,18 +2,23 @@
 
 \section{Recover the ECDSA Private Key with HNP}
 \label{sec:recoverHNP}
-After we obtain the data from the Cache side channel, we will use this data to recover the ECDSA private key.
+After we obtain the data from the cache side channel, we will use this data to recover the ECDSA private key.
  The most intuitive idea is that first recovering some bits of the ephemeral key $k$ from the Double-Add-Invert chain and
   then constructing the HNP or EHNP with these bits.
- Another method is like Fan~\cite{Fan2016} and Van de Pol~\cite{Van2015}, directly exploiting the wNAF representation to construct the  HNP or EHNP with the known information from the Double-Add-Invert chain.
- So we first try to recover the bits of the ephemeral key and construct the HNP problem to recover the ECDSA private key.
-Then we directly construct the EHNP problem  with the wNAF representation referring to Fan's method in the next section.
+% So we first try to recover the bits of the ephemeral key and construct the HNP problem to recover the ECDSA private key.
+So we first recover the consecutive bits at the position of every non-zero digits for the ephemeral key $k$.
+ Then we construct the HNP problem using these bits and solve it by the approximate CVP/SVP Problem with the lattice reduction algorithm to recover the ECDSA private key.
+ 
+%Another method is like Fan~\cite{Fan2016} and Van de Pol~\cite{Van2015}, directly exploiting the wNAF representation to construct the  HNP or EHNP with the known information from the Double-Add-Invert chain.
+%Then we directly construct the EHNP problem  with the wNAF representation referring to Fan's method in the next section.
 
-In this section, we first recover the consecutive bits at the position of every non-zero digits for the ephemeral key $k$, exploiting the information obtained from the side channel.
-Then we translate the problem of recovering the ECDSA private key to the HNP problem
- and work it out by solving the approximate CVP/SVP Problem with the lattice reduction algorithm.
+%In this section, we first recover the consecutive bits at the position of every non-zero digits for the ephemeral key $k$, exploiting the information obtained from the side channel.
+%Then we translate the problem of recovering the ECDSA private key to the HNP problem
+% and work it out by solving the approximate CVP/SVP Problem with the lattice reduction algorithm.
 
-We applied our attack to the secp256k1 curve.
+
+
+We applied the attack to the secp256k1 curve.
 We measured the success probability of recovering the ECDSA private key in different minimal values of $l$ (length of the consecutive bits of k),
 block sizes of BKZ and lattice dimensions.
 Due to the limitation of $l$, we need at least 247.45 signatures to recover the ECDSA private key using the HNP problem.
@@ -419,9 +424,12 @@ But the increase of the minimal length would lead to requiring more signatures t
 \label{sec:recoverEHNP}
 We can see that the restriction on the length of the bits has a great influence on the number of signatures we need to observe.
 Although we have exploited the sign information of the wNAF representation, the result is not as expected, worse than Allan's attack~\cite{Allan2016}, which only needs 6 signatures.
-So, in this section, we directly use the wNAF representation of $k$ to construct an EHNP problem to recover the ECDSA private key.
+So, in this section, we directly exploiting the wNAF representation to construct EHNP problem with the known information from the Double-Add-Invert chain
+    to recover the ECDSA private key.
 The final result shows that this method only needs 2 signatures, better than existing results.
 
+%Another method is like Fan~\cite{Fan2016} and Van de Pol~\cite{Van2015}, directly exploiting the wNAF representation to construct the  HNP or EHNP with the known information from the Double-Add-Invert chain.
+%Then we directly construct the EHNP problem  with the wNAF representation referring to Fan's method in the next section.
 
 \subsection{ Extracting more Information }
 

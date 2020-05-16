@@ -83,21 +83,21 @@ In the wNAF representation of $k$, the most significant digit is always positive
 In this way, we obtain both the positions and signs of all non-zero digits.
 
 
-\subsection{Improvement Through the Flush+Flush Attack}
+\subsection{The Improvement Through the Flush+Flush Attack}
 
 When we use the cache side channel attack, we divide the time into fixed length slots and in each slot we take a measurement.
 The slot must be longer than the time of a set of attack operations(e.g. the time of Flush and Reload).
 While if the slot is too long, several victim accesses occur in the same slot and attackers cannot distinguish.
 So the length of the time slot needs short enough to guarantee the attack granularity while the attack working properly.
 
-  Also, victim access to a memory location can occur at the same time the adversary test if it is cached.
+  Also, the victim accesses to a memory location can occur at the same time the adversary tests if it is cached.
  In such a case, missing a victim access probably occurs due to the time overlap.
 Besides, the operating system activity may cause the occurrence of missing a victim access.
 
-For the Flush+Reload attack, the cost of Reload is about 300 cycle~\cite{flushreload}.
-When to attack the ECDSA, the double and add functions need to be monitored.
+For the Flush+Reload attack, %the cost of Reload is about 300 cycle~\cite{flushreload}.
+when to attack the ECDSA, the double and add functions need to be monitored.
  In order to obtain enough attack accuracy, the time slot is chosen as 10240 cycles in ~\cite{yarom2014recovering} and 3000 cycles in \cite{Benger2014}.
-However, in our attack, we need to add a monitor for the invert function, so we need a larger time slot.
+However, in our attack, we need to add a monitor for the invert function, so time slot should be larger.
 This may reduce the attack accuracy and add the probability of the time overlap.
 Allan's method~\cite{Allan2016} is to use a performance degradation attack to slow the group operations down,
  so that using large time slot still can guarantee the attack accuracy.
@@ -106,7 +106,7 @@ While this method presents some questions.
 Second, the victim is also greatly affected so that it can be easily detected.
 
  In our attack, we use the Flush+Flush technique instead of the Flush+Reload to monitor the functions.
-First, the cost of Flush is about 160 cycles less than the cost of Reload.
+First, the cost of Flush is about 160 cycles~\cite{gruss2016flush} less than the cost of Reload.
 The time slot can be chosen shorter.
 Second, the measurement stage and flush stage are merged into one stage,
  because in the measurement stage the execution of \verb+clflush+ also plays the role of flushing the cache.
@@ -124,7 +124,7 @@ Compared with  Allan's method, using Flush+Flush does not additionally degrade t
 
 \subsection{The Implementation of Flush+Flush Attack}
 \label{ffattack}
-We launched the Flush+Flush attack to obtain the partial information of the ECDSA on an Acer Veriton T830 running Ubuntu 16.04.
+We launched the Flush+Flush attack on an Acer Veriton T830 running Ubuntu 16.04.
 The machine features an Intel Core i7-6700 processor with four execution cores and an $8$ MB LLC.
 The attacking target is the ECDSA implemented in OpenSSL 1.1.0h, which uses wNAF representation in the scalar multiplication.
 We attack the 256-bit curve secp256k1 for the experiments.
