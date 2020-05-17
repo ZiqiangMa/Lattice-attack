@@ -64,7 +64,7 @@ Compared with the existing works,
  First,
   unlike previous works only monitoring the double and add functions of the scalar multiplication in the cache side channel attacks,
    we add an extra monitor on the invert function
-    and get a Double-Add-Invert chain through the side channel.
+    and get a Double-Add-Invert chain through the Flush+Flush side channel.
    %and
     %obtain the sign information of the wNAF representation of an ephemeral key through it.
  %we monitor the invert function in the OpenSSL implementation of the scalar multiplication,
@@ -79,12 +79,12 @@ Then, we develop effective methods extracting
 Finally, to efficiently use the extracted information,
     we convert the problem of recovering the private key to the Hidden Number Problem (HNP) and Extended Hidden Number Problem (EHNP) respectively,
  which are solved by lattice reduction algorithms.
-We implemented the Flush+Flush method to attack the ECDSA with the secp256k1 curve in OpenSSL 1.1.0h.
+We implemented  the attack on ECDSA with the secp256k1 curve in OpenSSL 1.1.0h.
 The experimental results show that only $2$ signatures are enough to recover the private key,  % is successfully recovered from only $2$ signatures,
     if the side channel is built without any error. %, which is also required in other works and can be achieved with existing cache side channel attacks.
-To the best of our knowledge, this work is the first one to obtain and exploit all signs of the wNAF representation
+To the best of our knowledge, this work is the first one to obtain and exploit \emph{\textbf{all signs}} of the wNAF representation
     in the side channel attacks against ECDSA,
-     and requires the least number of signatures for ECDSA private key recovery.
+     and requires the least number of signatures for the ECDSA private key recovery.
 
 \keywords{ECDSA \and windowed Non-Adjacent-Form \and  OpenSSL \and  Lattice Attack \and  Hidden Number Problem \and  Extended Hidden Number Problem \and  Cache Side Channel.}
 
