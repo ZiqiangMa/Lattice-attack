@@ -48,7 +48,7 @@ Scalar multiplication $kG$ on the elliptic curve means that the point $G$ is add
 where $G$ is a point defined on the elliptic curve over the finite field,
  and the scalar $k$ is a big integer.
 There are several algorithms to implement the scalar multiplication.
-In OpenSSL, scalar multiplication in the prime field is implemented using the wNAF representation \cite{GORDON1998129,Miyaji1997,Koyama1002,Solinas2000} of the scalar $k$,  between versions  0.9.7 and 1.1.0h.
+In OpenSSL, scalar multiplication in the prime field is implemented using the wNAF representation \cite{GORDON1998129,Miyaji1997,Koyama1002,Solinas2000} of the scalar $k$,  between versions  0.9.7 (Dec 2002) and 1.1.0h (Mar 2018).
 In wNAF, a number $k$ is represented by a sequence of digits which is either zero or an odd number satisfying $-2^{w} < k_{i} < 2^{w}$,
  where $w$ is the window size. In this representation, any  non-zero digit  is followed by at least $w$ zero digits.
 The value of $k$ can be expressed as $k = \sum{2^{i} k_{i}}$.
@@ -104,6 +104,7 @@ Then, for each $k$, after converting it to the wNAF representation, the multipli
                     \State $Q \gets Q + k_{i}G$
                 \EndIf
             \EndFor
+            \State \Return $Q$
         \end{algorithmic}
     \end{algorithm}
 
