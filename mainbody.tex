@@ -93,12 +93,12 @@
 \begin{abstract}
 This paper presents a practical cache side channel attack on ECDSA implementations which use
  the windowed Non-Adjacent-Form (wNAF) representation to compute the scalar multiplication over elliptic curves.
-Compared with the existing works,
-    our method exploits more information from the side channels,
+Compared with existing works,
+    our method exploits more information from the cache side channels,
       which is then efficiently used to construct lattice attacks in the ECDSA private key recovery.
 First,
   different from previous works only monitoring the double and add functions of the scalar multiplication in the cache side channel attacks,
-   we additionally monitor the invert function which is related to the sign of the wNAF digits, 
+   we additionally monitor the invert function which is related to the sign of the wNAF digits,
     and obtain a Double-Add-Invert chain through the cache side channel.
    %and
     %obtain the sign information of the wNAF representation of an ephemeral key through it.
@@ -112,7 +112,7 @@ Then, we develop effective methods extracting
     for 256-bit ECDSA from this chain,
     much more than the best known result which extracts $105.8$ bits per signature.
 Finally, to efficiently use the extracted information,
-    we convert the problem of recovering the private key to the Hidden Number Problem (HNP) and Extended Hidden Number Problem (EHNP) respectively,
+    we convert the problem of recovering the private key to the Hidden Number Problem (HNP) and the Extended Hidden Number Problem (EHNP) respectively,
  which are solved by lattice reduction algorithms.
 We implemented  the attack on ECDSA with the secp256k1 curve in OpenSSL 1.1.0h.
 The experimental results show that only $2$ signatures are enough to recover the private key.  % is successfully recovered from only $2$ signatures,
