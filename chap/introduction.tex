@@ -30,21 +30,22 @@ and constructed a more efficient lattice attack.
 
 %The cache side channel attack is an efficient way to obtain the partial information of the ephemeral key,
 % and various practical attacks are proposed to recover the ECDSA private key with these information.
-With the cache side channel attacks~\cite{flushreload, liu2015last, gruss2016flush}, various practical attacks~\cite{Benger2014,Van2015,Fan2016,Wang2017} are proposed to attack  the ECDSA implementation of OpenSSL~\cite{openssl}, in which the windowed Non-Adjacent Form (wNAF) implementation is adopted as the default one for scalar multiplication between  version 0.9.7 and 1.1.0h.
-Using the side channel attacks, these works~\cite{Benger2014,Van2015,Fan2016,Wang2017} observe the execution of ECDSA, and get the sequence of points additions and doubling (denoted as Double-Add chain) during the generation of an ECDSA signature.
+With the cache side channel attacks~\cite{gruss2016flush,liu2015last,flushreload}, various practical attacks~\cite{Allan2016,Benger2014,Fan2016,Van2015,Wang2017} are proposed to attack  the ECDSA implementation of OpenSSL~\cite{openssl}, in which the windowed Non-Adjacent Form (wNAF) implementation is adopted as the default one for scalar multiplication between  versions  0.9.7 (Dec 2002) and 1.1.0h (Mar 2018).
+ These works~\cite{Benger2014,Fan2016,Van2015,Wang2017} observe the execution of ECDSA through cache side channels, and get the sequence of points addition and doubling (denoted as Double-Add chain) during the generation of an ECDSA signature.
 Then, they extract and exploit the different information of the ephemeral key from this chain,
  and translate the problem of recovering the ECDSA private key to the HNP or EHNP, which is solved by lattice reduction algorithms.
 
- These attacks~\cite{Benger2014,Van2015,Fan2016,Wang2017} obtain the information of the ephemeral key's wNAF representation \emph{only} from the Double-Add chain, from which different numbers of bits are extracted and exploited to construct the lattice attacks for the private key  recovery.
+ These attacks~\cite{Benger2014,Fan2016,Van2015,Wang2017} obtain the information of the ephemeral key's wNAF representation \emph{only} from the Double-Add chain, from which different numbers of bits are extracted and exploited to construct the lattice attacks for the private key  recovery.
 However, the number of bits extracted from each signature reaches a bottleneck.
-The method proposed by Fan is believed to extract almost all the available information of the Double-Add chain~\cite{Fan2016}.
-This method~\cite{Fan2016} extracts all positions of digits and obtains $105.8$ bits per signature on average for the 256-bit elliptic curve, which performs remarkably better than other attacks~\cite{Benger2014,Van2015,Wang2017}.
+The method proposed by Fan~\cite{Fan2016} is believed to extract almost all the available information of the Double-Add chain.
+This method~\cite{Fan2016} extracted all positions of digits and obtained $105.8$ bits per signature on average for the 256-bit elliptic curve, which performs remarkably better than other attacks~\cite{Benger2014,Van2015,Wang2017}.
 Benger et al. \cite{Benger2014} extracted the LSBs of the ephemeral keys and obtained  $2$ bits per signature on average.
 Van de Pol et al.~\cite{Van2015}  exploited the positions of higher half non-zero digits and obtained on average $47.6$ bits per signature.
 %The number of required signatures  is reduced to $4$.
 While, Wang et al.~\cite{Wang2017} exploited the positions of two non-zero digits together with the length of the ephemeral key's wNAF representation, which obtained at least $2.99$ bits per signature on average.
+Another attack proposed by Allan~\cite{Allan2016} obtained information by additionally monitoring the invert function of the  scalar multiplication implementation. They exploited the analytical method of Van de Pol and obtained $71.4$ bits per signature.
 Naturally, more bits are obtained from the side channels,  fewer signatures are required for recovering the ECDSA private key.
-For example,  existing methods ~\cite{Fan2016,Benger2014,Van2015,Wang2017} require $4$, $200$, $13$ and $85$ signatures, respectively, to recover the private key.
+For example,  existing methods ~\cite{Allan2016,Fan2016,Benger2014,Van2015,Wang2017} require $6$, $4$, $200$, $13$ and $85$ signatures, respectively, to recover the private key.
 %这一部分仍需要修改
 
 %只是对数据分析进行了改进，并没有获得更多的数据
@@ -69,7 +70,8 @@ To achieve this, we obtain more information from the side channel than the metho
 
 %in fact we do the work without previously know Allan's work
 %First, we learn from  Allan's work~\cite{Allan2016}
-First, we find that the invert function is another exploitable vulnerability~\cite{Allan2016} in the implementation of the scalar multiplication in OpenSSL. We monitor the invert function in addition to points addition and doubling functions in the cache side channel, and then construct a Double-Add-Invert chain instead of the Double-Add chain~\cite{Benger2014,Van2015,Fan2016,Wang2017}.
+%we find that the invert function is another exploitable vulnerability~\cite{Allan2016} in the implementation of the scalar multiplication in OpenSSL. 
+First, we monitor the invert function of the implementation of the scalar multiplication in OpenSSL, in addition to points addition and doubling functions in the cache side channel, and then construct a Double-Add-Invert chain instead of the Double-Add chain~\cite{Benger2014,Van2015,Fan2016,Wang2017}.
 The invert function of the ECDSA implementation in OpenSSL is invoked only when the sign of current non-zero digit of the ephemeral key's wNAF representation is opposite to the previous one in the scalar multiplication.
 Therefore, in addition to the positions of all non-zero digits in the ephemeral key's wNAF representation, we can extract the signs of the non-zero digits by monitoring the invert function.
 
@@ -145,7 +147,7 @@ Our contributions are summarized as follows:
 %      the invert function. % to obtain the more information of the ephemeral key.
 %      It is the first work to extract all signs of the non-zero digits of the ephemeral key in side channel attacks.
 %    We use the Flush+Flush technique to improve the cache side channel attacks proposed by Allan~\cite{Allan2016} to get higher resolution without using the performance degradation.
-  \item We present an efficient cache side channel attack to recover the private key of ECDSA with the wNAF representation. First, we construct a Double-Add-Invert chain instead of the commonly used Double-Add chain by monitoring the invert function. Then,
+  \item We present an efficient cache side channel attack to recover the private key of ECDSA with the invertible wNAF representation. First, we construct a Double-Add-Invert chain instead of the commonly used Double-Add chain by additionally monitoring the invert function. Then,
       we propose two new lattice attacks to exploit the positions and signs of all non-zero digits in the ephemeral key's wNAF
   representation obtained from the Double-Add-Invert chain.  That is,  we translate the problem of ECDSA private key recovery to the HNP and EHNP respectively.
   The attack based on EHNP needs the least number of signatures to recover the private key.

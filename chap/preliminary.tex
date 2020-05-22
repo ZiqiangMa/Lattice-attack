@@ -47,8 +47,10 @@ Therefore, the scalar multiplication $kG$ becomes the target of most attackers. 
 Scalar multiplication $kG$ on the elliptic curve means that the point $G$ is added to itself $k$ times,
 where $G$ is a point defined on the elliptic curve over the finite field,
  and the scalar $k$ is a big integer.
+
 There are several algorithms to implement the scalar multiplication.
-In OpenSSL, scalar multiplication in the prime field is implemented using the wNAF representation \cite{GORDON1998129,Miyaji1997,Koyama1002,Solinas2000} of the scalar $k$,  between versions  0.9.7 (Dec 2002) and 1.1.0h (Mar 2018).
+%In OpenSSL, scalar multiplication in the prime field is implemented using the wNAF representation \cite{GORDON1998129,Miyaji1997,Koyama1002,Solinas2000} of the scalar $k$,  between version 0.9.7 (Dec 2002) and 1.1.0h (Mar 2018).
+Among them, the wNAF algorithm~\cite{GORDON1998129,Miyaji1997,Koyama1002,Solinas2000} is commonly used.
 In wNAF, a number $k$ is represented by a sequence of digits which is either zero or an odd number satisfying $-2^{w} < k_{i} < 2^{w}$,
  where $w$ is the window size. In this representation, any  non-zero digit  is followed by at least $w$ zero digits.
 The value of $k$ can be expressed as $k = \sum{2^{i} k_{i}}$.
@@ -83,7 +85,7 @@ Algorithm \ref{alg:wnaf} introduces the concrete method for converting a scalar 
 
 %二进制转化成naf
 %转化后如何计算标量乘法
-For the scalar multiplication using wNAF representation, during the initialization phase,
+For the scalar multiplication using wNAF algorithm, during the initialization phase,
   a window size $w$ is chosen, and the points $\{\pm G, \pm 3G, ..., \pm(2^{w}-1)G\}$ are precomputed and stored.
 Then, for each $k$, after converting it to the wNAF representation, the multiplication $kG$ is executed as described in Algorithm \ref{alg:kg}.
 
@@ -114,26 +116,13 @@ An attacker can use a spy process to monitor the conditional branches through si
 Then he can get a Double-Add chain, and determine  whether $k_i$ is zero or not based on this chain.
 The attacker can  use this  information to recover the  private key.
 
-In OpenSSL, the bit length of $k$ is set to a fixed value$\lceil\log_{2}{q} \rceil + 1$ of by adding itself with $q$
-or $2q$, which can resist the remote timing side channel attack \cite{Brumley2011}.
-In most cases, the multiplication is done as $(k + q)G$, but it is still vulnerable in lattice attacks \cite{Dahmun2016}.
-
-Also, OpenSSL uses the modified wNAF representation instead of the generalized one stated in Algorithm~\ref{alg:wnaf}, to avoid length expansion in some cases and achieve more efficient exponentiation.
-The representation of modified wNAF is very similar to the wNAF.
-Each non-zero coefficient is followed by at least $w$ zero coefficients,
- except for the most significant digit which is allowed to violate this condition in some cases.
-As the modification on wNAF has little affects on the attack results,
-%the use of modified wNAF affects the attack results little,
- we only consider the case of the generalized wNAF representation for clarity. %最后一段需要修改，且这一节需要和多篇文章对比完善, 还有需要在合适的位置加上我们使用256的曲线，window 大小为3
-
-
 %对其进行一些分析，有条件判断 可以通过侧信道获取信息。
 %
 %实际中的使用k+q
 \subsection{The Scalar Multiplication in OpenSSL}
 \label{intro_smulinssl}
-In OpenSSL versions between 0.9.7 and 1.1.0h~\cite{openssl}, the scalar multiplication is implemented with the wNAF representation.
-Here, we adopt OpenSSL 1.1.0h as  the example to describe the implementation.
+In OpenSSL versions between 0.9.7 (Dec 2002) and 1.1.0h (Mar 2018)~\cite{openssl}, the scalar multiplication is implemented with the wNAF algorithm.
+Here, we adopt OpenSSL 1.1.0h as  the example to describe the implementation of the wNAF in OpenSSL (called the invertible wNAF representation).
 In OpenSSL 1.1.0h, the scalar multiplication with wNAF representation is implemented in the function \verb+ec_wNAF_mul()+.
 The core computation of the function is shown in Algorithm  \ref{alg:smopenssl}.
 
@@ -184,6 +173,21 @@ which makes it only need to precompute and store the points $\{G, 3G, ..., (2^{w
 Then, an addition operation (the \verb+EC_POINT_add()+ function) is invoked to add the internal value of $kG$  with  a precomputed point indexed by  the
 absolute value of the digit.
 
+It is worth mentioning that the bit length of $k$ is set to a fixed value$\lceil\log_{2}{q} \rceil + 1$ in OpenSSL,
+ to resist the remote timing side channel attack~\cite{Brumley2011}. In most cases, the multiplication is done as $(k + q)G$, but it is still vulnerable in lattice attacks~\cite{Dahmun2016}.%Also in the wNAF implementation,
+
+
+%In OpenSSL, the bit length of $k$ is set to a fixed value$\lceil\log_{2}{q} \rceil + 1$ of by adding itself with $q$
+%or $2q$, which can resist the remote timing side channel attack \cite{Brumley2011}.
+%In most cases, the multiplication is done as $(k + q)G$, but it is still vulnerable in lattice attacks \cite{Dahmun2016}.
+
+%Also, OpenSSL uses the modified wNAF representation instead of the generalized one in Algorithm~\ref{alg:wnaf}, to avoid length expansion in some cases and achieve more efficient exponentiation.
+%The representation of modified wNAF is similar to the wNAF.
+%Each non-zero coefficient is followed by at least $w$ zero coefficients,
+% except for the most significant digit which is allowed to violate this condition in some cases.
+%As the modification on wNAF has little affects on the attack results,
+%%the use of modified wNAF affects the attack results little,
+% we only consider the case of the generalized wNAF representation for clarity. %最后一段需要修改，且这一节需要和多篇文章对比完善, 还有需要在合适的位置加上我们使用256的曲线，window 大小为3
 
 From Algorithm \ref{alg:smopenssl}, it can be found that two conditional branches are vulnerable.
 In each loop, the double operation is always performed.
@@ -192,7 +196,6 @@ Therefore, if a spy process can obtain the execution sequence of
   the double and addition operations,
 one can determine whether each digit of $k$ is zero or not according to this sequence.
 Also,  the execution sequence of the invert operation can be used to determine the signs of the non-zero digits combining with the sequence of the double and addition operations.
-
 
 
 \subsection{Cache Side Channel Attacks}
@@ -320,7 +323,7 @@ For ECDSA algorithm, attackers take advantage of the equation $s = k^{-1} (h(m) 
 Based on the partial information about the ephemeral key obtained by the attackers through the cache side channels,
  they transform this equation to satisfy the form of HNP or EHNP.
    Then the private key as the hidden number can be recovered
-      by solving the SVP/CVP problem in lattice converted from HNP or EHNP using the lattice reduction algorithm such as LLL \cite{Lenstra1982} or BKZ \cite{Schnorr1994}.
+      by solving the SVP/CVP problem in lattice converted from HNP or EHNP using the reduction algorithm such as LLL~\cite{Lenstra1982} or BKZ~\cite{Schnorr1994}.
 
 %we can use  algorithm to solve the SVP problem, while use Babai \cite{Babai1986} algorithm or Enumeration technique to solve the CVP problem.
 

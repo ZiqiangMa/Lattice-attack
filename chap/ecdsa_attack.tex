@@ -1,4 +1,4 @@
-\section{Improving Cache Side Channel Attack on wNAF Representation}
+\section{Improving Cache Side Channel Attack on Invertible wNAF Representation}
 \label{sec:attack}
 This section proposes how to get more information about the ephemeral key with the wNAF representation through the cache side channel.
 First, we analyse the invert function in the scalar multiplication with wNAF representation in the ECDSA implementation
@@ -14,7 +14,7 @@ The details of the implementation and the attack result are provided.
 %So we have to first obtain consecutive bits of the ephemeral key by converting the wNAF representation to the binary representation.
 %Then, we use these consecutive bits to construct the HNP instance.
 
-\subsection{Attacking wNAF through the Cache Side Channels}
+\subsection{Attacking Invertible wNAF through the Cache Side Channel}
 \label{data_get}
 As described in Section~\ref{intro_smulinssl}, the implementation of scalar multiplication in OpenSSL uses the invert function to
   compute the inverse element of a point.
@@ -38,8 +38,8 @@ Finally,  the addition function is called to add the internal value of $kG$ with
 %   then the signs of all the non-zero digits are deduced based on the execution of the invert function.
 
 
-The vulnerability that the invert function is called conditionally was first be exploited by Allan~\cite{Allan2016}.
-We also use this vulnerability to improve the attack to obtain more valid data.
+%The vulnerability that the invert function is called conditionally was first be exploited by Allan~\cite{Allan2016}.
+We use the vulnerability that the invert function is called conditionally to improve the attack to obtain more valid data.
 We use a spy process to monitor  the double, add and invert functions during computing the scalar multiplication.
 The time is divided into slots, and in each slot,
   the spy determines whether the three functions are performed or not by monitoring the cache hits/misses.
@@ -51,8 +51,9 @@ Then, based on the Invert in this chain, we infer the sign of each non-zero digi
 
 In the OpenSSL  1.1.0h,
  the functions of double, add and invert are implemented as \verb+EC_POINT_dbl()+, \verb+EC_POINT_add()+ and \verb+EC_POINT_invert()+.
- Existing attacks only monitor the functions \verb+EC_POINT_dbl()+ and \verb+EC_POINT_add()+.
-In our attack, we improve the cache side channel attacks by adding an extra monitor to the \verb+EC_POINT_invert()+ function.
+ %Existing attacks only monitor the functions \verb+EC_POINT_dbl()+ and \verb+EC_POINT_add()+.
+In our attack, we improve the cache side channel attacks by adding an extra monitor to the \verb+EC_POINT_invert()+ function
+ as well as monitoring the \verb+EC_POINT_dbl()+ and \verb+EC_POINT_add()+ functions.
  In each time slot,
   the spy determines whether three functions are performed or not.
 Then we get a new Double-Add-Invert chain through the cache side channel attack.
