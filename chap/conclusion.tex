@@ -12,7 +12,7 @@ Then, we construct the HNP and EHNP instances respectively,  to utilize the extr
 %key by converting it to the SVP problem and solving it with lattice reduction algorithms.
 %From the side channel, we obtain $153.2$ bits of information per signature for the 256-bit ECDSA secp256k1 curve.
 
-This is the first work to obtain the information about the signs of the non-zero digits of the ephemeral key without using performance degradation and make use of it to recover the ECDSA private key.
+This work obtains the information about the signs of the non-zero digits of the ephemeral key without using performance degradation and uses the least number of signatures to recover the ECDSA private key.
 We applied the Flush+Flush attack to the secp256k1 curve in OpenSSL 1.1.0h to verify the availability of monitoring the invert function.
 from the Double-Add-Invert chain we extract on average 154.2 bits of information per signature for the 256-bit elliptic curve.
 If the obtained Double-Add-Invert chain is perfect,
